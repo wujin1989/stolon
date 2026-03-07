@@ -73,6 +73,7 @@ tests/test-<module>.c                   # Unit tests
 4. Include in `include/{project}.h`
 5. Create `tests/test-<module>.c`
 6. Add `{project}_add_test(<module>)` to `tests/CMakeLists.txt`
+7. When adding files to `src/platform/win/` or `src/platform/unix/`, delete `.gitkeep` in that directory if it exists
 
 ## Headers
 
