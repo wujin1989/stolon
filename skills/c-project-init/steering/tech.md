@@ -4,6 +4,8 @@
 
 ## Stack
 - C11, CMake >= 3.16
+- `_Pragma("once")` instead of traditional include guards
+- C11 atomics (Windows requires `/experimental:c11atomics`)
 - Output: `out/`
 
 ## Options (Library)
@@ -29,9 +31,28 @@
 
 ## Commands
 ```bash
-cmake -B out && cmake --build out
-ctest --test-dir out -C Debug --output-on-failure  # Windows
-ctest --test-dir out --output-on-failure           # Linux/macOS
+# Configure & build (tests enabled by default)
+cmake -B out
+cmake --build out
+
+# Disable tests
+cmake -B out -D{PROJECT}_ENABLE_TESTING=OFF
+
+# Run tests — multi-config (Windows/MSVC)
+ctest --test-dir out -C Debug --output-on-failure
+
+# Run tests — single-config (Linux/macOS)
+ctest --test-dir out --output-on-failure
+
+# Sanitizer build
+cmake -B out -D{PROJECT}_ENABLE_ASAN=ON
+cmake --build out
+
+# Coverage (Linux)
+cmake -B out -D{PROJECT}_ENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug
+cmake --build out
+cmake --build out --target coverage
+# Report: out/coverage/
 ```
 
 ## Troubleshooting
