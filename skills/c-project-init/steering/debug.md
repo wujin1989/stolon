@@ -10,11 +10,16 @@
 | Linux | GDB | mcp-gdb (`uvx mcp-gdb`) |
 | macOS | LLDB | lldb-mcp (`git clone https://github.com/stass/lldb-mcp`) |
 
+## Debug Build Configuration
+
+```bash
+cmake -B out -DCMAKE_BUILD_TYPE=Debug
+cmake -B out -D{PROJECT}_ENABLE_ASAN=ON
+```
+
 ## MCP Remote Debugging (AI-Assisted)
 
-> **Note for AI agents:** When the user asks about debugging, check if the relevant MCP debugger server is enabled in the project's MCP configuration. If it is disabled, ask the user if they want to enable it and ensure dependencies are installed before proceeding.
-
-Start a debug server, then tell the AI agent to connect. The agent handles breakpoints, stepping, variable inspection, etc. via natural language.
+Start a debug server, then tell the AI agent to connect.
 
 ### Windows (CDB)
 
@@ -36,9 +41,9 @@ gdb -ex "target remote :5005" ./out/<program>
 lldb ./out/<program>
 ```
 
-## Tips
+## Cross-Platform Pitfalls
 
-- Reproduce with minimal test case first
-- Use sanitizers before reaching for a debugger
-- On Windows, use `-C Debug` for full symbol info
-- Core dumps on Linux: `ulimit -c unlimited`, then `gdb ./program core`
+- `long`: 4 bytes on Windows x64, 8 bytes on Linux/macOS x64
+- Stack size: Windows 1MB, Linux 8MB
+- Uninitialized memory may be zeroed in debug but not release — use ASAN
+- Signals: Windows uses SEH, Unix uses POSIX signals
