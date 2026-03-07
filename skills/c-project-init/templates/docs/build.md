@@ -1,34 +1,73 @@
 # Build Instructions
 
+This guide covers building, testing, and generating coverage reports on Windows and Unix using CMake.
+The exact commands depend on whether your CMake generator is single-config (e.g., Ninja, Unix Makefiles) or multi-config (e.g., Visual Studio, Ninja Multi-Config).
+
 ## Prerequisites
 
 - CMake >= 3.16
-- C11 compiler (MSVC, GCC, or Clang)
+- A C11-compatible compiler:
+  - Windows: MSVC (Visual Studio 2022+) or Clang-cl
+  - Linux/macOS: GCC >= 7 or Clang >= 6
+- (Optional) For code coverage:
+  - Linux: `lcov` and `genhtml` (`sudo apt install lcov`)
+  - Windows: OpenCppCoverage (install via `scripts/install-deps.ps1`)
 
-### Platform-Specific
+## Configure the Build
 
-- **Windows:** Visual Studio 2022 with C++ workload
-- **Linux:** `sudo apt install build-essential cmake`
-- **macOS:** `brew install cmake` + Xcode Command Line Tools
+### Generator Types
 
-Or run the install script:
-- Linux/macOS: `./scripts/install-deps.sh`
-- Windows: `scripts/install-deps.ps1` (requires admin)
+| Platform | Default Generator | Type |
+|----------|-------------------|------|
+| Windows | Visual Studio | Multi-config |
+| Linux/macOS | Unix Makefiles | Single-config |
+| Any (explicit) | Ninja | Single-config |
+| Any (explicit) | Ninja Multi-Config | Multi-config |
 
-## Configure & Build
+You can force a specific generator with `-G "Generator Name"`.
+
+### Multi-Config Generators
+
+Supports Debug, Release, etc. in one build directory.
 
 ```bash
 cmake -B out
-cmake --build out
+cmake -B out -G "Visual Studio 17 2022"
+cmake -B out -G "Ninja Multi-Config"
+```
+
+### Single-Config Generators
+
+One build type per directory — specify at configure time.
+
+```bash
+cmake -B out -DCMAKE_BUILD_TYPE=Debug
+cmake -B out -G Ninja -DCMAKE_BUILD_TYPE=Debug
+```
+
+Common values for `CMAKE_BUILD_TYPE`: Debug, Release, RelWithDebInfo, MinSizeRel
+
+## Build
+
+### Multi-Config
+```bash
+cmake --build out --config Debug -j 8
+```
+
+### Single-Config
+```bash
+cmake --build out -j 8
 ```
 
 ## Run Tests
 
+### Multi-Config
 ```bash
-# Windows (multi-config)
 ctest --test-dir out -C Debug --output-on-failure
+```
 
-# Linux/macOS (single-config)
+### Single-Config
+```bash
 ctest --test-dir out --output-on-failure
 ```
 
@@ -39,16 +78,49 @@ cmake -B out -D{PROJECT}_ENABLE_ASAN=ON
 cmake --build out
 ```
 
-## Coverage
+## Code Coverage
+
+### Linux/macOS
 
 ```bash
-# Linux/macOS
 cmake -B out -D{PROJECT}_ENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug
-cmake --build out
+cmake --build out -j 8
 cmake --build out --target coverage
+```
 
-# Windows (requires OpenCppCoverage)
+Requires `lcov` and `genhtml`.
+
+### Windows
+
+```bash
 cmake -B out -D{PROJECT}_ENABLE_COVERAGE=ON
 cmake --build out --config Debug
 cmake --build out --target coverage
 ```
+
+Requires OpenCppCoverage.
+
+HTML report is generated at `out/coverage/`.
+
+## Install
+
+### Multi-Config
+```bash
+cmake --install out --config Debug
+```
+
+### Single-Config
+```bash
+cmake --install out
+```
+
+## Quick Reference
+
+| Step | Multi-Config | Single-Config |
+|------|-------------|---------------|
+| Configure | No `-DCMAKE_BUILD_TYPE` | Must set `-DCMAKE_BUILD_TYPE=Debug` |
+| Build | `--build ... --config Debug` | `--build ...` (no `--config`) |
+| Test | `ctest ... -C Debug` | `ctest ...` (no `-C`) |
+| Install | `--install ... --config Debug` | `--install ...` (no `--config`) |
+
+> For CI scripts: always pass `--config` and `-C` — they are safely ignored on single-config generators.
