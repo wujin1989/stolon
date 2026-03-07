@@ -220,11 +220,14 @@ Rules:
 
 ### Internal / Static Functions
 
-No Doxygen tags required. Use `/** ... */` for multi-line comments, `/* ... */` for single-line:
+No Doxygen tags required. Use `/** ... */` for multi-line comments, `/* ... */` for single-line.
+Multi-line `/** ... */` must use the same block format as public API: `/**` on its own line, content on `*` lines, `*/` on its own line:
 
 ```c
-/** Common setup for a newly connected socket: init ringbuf, start IO,
- * start heartbeat/read timers. Does NOT call any handler callback. */
+/**
+ * Common setup for a newly connected socket: init ringbuf, start IO,
+ * start heartbeat/read timers. Does NOT call any handler callback.
+ */
 static void _conn_setup(...) { ... }
 
 /* Swap two heap nodes and update their positions. */
@@ -234,7 +237,7 @@ static inline void _heap_node_swap(...) { ... }
 ### Inline Comments
 
 - `/* ... */` style (C11 compatible)
-- `/** ... */` when spanning multiple lines
+- `/** ... */` when spanning multiple lines (block format: `/**` and `*/` on own lines)
 - Only where code is non-obvious
 - No decorative dividers
 - Keep short
