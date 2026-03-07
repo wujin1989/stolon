@@ -23,6 +23,9 @@ stolon/
 | Name | Description |
 |------|-------------|
 | [code-expert](agents/code-expert/) | General-purpose coding expert, language-agnostic |
+| [self-auditor](agents/self-auditor/) | Audits stolon itself against its own steering rules and principles |
+
+> Agents are internal to stolon and are NOT synced to target projects. Only `skills/` content (steering, templates, scripts) is synced.
 
 ## Usage
 
