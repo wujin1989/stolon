@@ -188,6 +188,7 @@ clang-format with LLVM base style:
 - No bin-packing of arguments/parameters
 - Aligned consecutive declarations
 - No single-line functions
+- All `if`/`else`/`for`/`while` bodies must use braces, even single statements
 
 ## Comments
 
@@ -219,9 +220,13 @@ Rules:
 
 ### Internal / Static Functions
 
-No Doxygen required. A short `/* ... */` one-liner if the name isn't self-explanatory:
+No Doxygen tags required. Use `/** ... */` for multi-line comments, `/* ... */` for single-line:
 
 ```c
+/** Common setup for a newly connected socket: init ringbuf, start IO,
+ * start heartbeat/read timers. Does NOT call any handler callback. */
+static void _conn_setup(...) { ... }
+
 /* Swap two heap nodes and update their positions. */
 static inline void _heap_node_swap(...) { ... }
 ```
@@ -229,6 +234,7 @@ static inline void _heap_node_swap(...) { ... }
 ### Inline Comments
 
 - `/* ... */` style (C11 compatible)
+- `/** ... */` when spanning multiple lines
 - Only where code is non-obvious
 - No decorative dividers
 - Keep short
