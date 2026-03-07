@@ -26,9 +26,20 @@ stolon/
 
 ## Usage
 
+Copy skills into your project's skills directory:
+
 ```bash
 cp -r skills/c-project-init/ <your-project-skills-dir>/
+cp -r skills/c-project-debug/ <your-project-skills-dir>/
 ```
+
+Copy MCP configurations into your project:
+
+```bash
+cp mcps/c-debugger.json <your-project-mcp-config>
+```
+
+Then replace placeholders (`{project}`, `{PROJECT}`, `{YEAR}`, `{AUTHOR}`, `{EMAIL}`) with your actual values.
 
 ## License
 
