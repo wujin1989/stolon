@@ -93,7 +93,7 @@ Intrusive data structures where users embed nodes into their own structs are exe
 
 ## File Organization
 
-Order: License → includes → macros → structs → static functions → public functions
+Order: License -> includes -> macros -> structs -> static functions -> public functions
 
 Static functions ordered by dependency (no forward declarations).
 
@@ -161,16 +161,6 @@ tests/test-<module>.c                   # Unit tests
 | `gets` | `fgets` | Removed in C11 — unconditional buffer overflow |
 | `atoi`, `atof`, `atol` | `strtol`, `strtod` | No error detection — overflow is undefined behavior |
 | `memcpy` with overlapping regions | `memmove` | Overlapping src/dst is undefined behavior |
-
-## Build Configuration
-
-```bash
-# Debug build with symbols
-cmake -B out -DCMAKE_BUILD_TYPE=Debug
-
-# With ASAN for memory error detection
-cmake -B out -D{PROJECT}_ENABLE_ASAN=ON
-```
 
 ## Cross-Platform Pitfalls
 
