@@ -39,7 +39,8 @@ Every `.c` and `.h` file must start with the project license block:
 | Types | `{project}_<module>_t` | `mylib_list_t` |
 | Internal/static helpers | `_<name>` prefix | `_helper_function` |
 | Internal types (file-scope) | `_<name>_t` prefix | `_node_t` |
-| Static global variables | `g_<name>` prefix | `g_echo_loop` |
+| Static variables (file-scope) | `_<name>` prefix | `_echo_loop` |
+| Global variables (non-static) | no prefix | `stop_io` |
 | Source files | `{project}-<module>.c` | `mylib-list.c` |
 
 Action (verb) goes last: `{project}_list_insert`, `{project}_heap_remove`.
@@ -94,7 +95,7 @@ Intrusive data structures where users embed nodes into their own structs are exe
 
 ## File Organization
 
-Order: License -> includes -> macros -> structs -> static variables -> static functions -> public functions
+Order: License -> includes -> macros -> structs -> variables -> static functions -> public functions
 
 Static functions ordered by dependency (no forward declarations).
 
