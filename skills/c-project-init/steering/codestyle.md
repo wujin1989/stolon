@@ -40,6 +40,9 @@ Every `.c` and `.h` file must start with the project license block:
 | Internal/static helpers | `_<name>` prefix | `_helper_function` |
 | Source files | `{project}-<module>.c` | `mylib-list.c` |
 
+Action (verb) goes last: `{project}_list_insert`, `{project}_heap_remove`.
+Compound actions stay together: `{project}_timer_set_time` (not `{project}_timer_time_set`).
+
 > The `_` prefix for static functions is technically reserved by C11 but commonly used (symbols never exported).
 
 ## Types
