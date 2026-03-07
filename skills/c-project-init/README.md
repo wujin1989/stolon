@@ -5,7 +5,7 @@ Supports Windows (MSVC), Linux (GCC/Clang), and macOS (Clang).
 
 ## Contents
 
-- `steering/` — AI steering files (codestyle, build system, license, product template)
+- `steering/` — AI steering files (codestyle, build system, product template)
 - `templates/` — CMake project templates (root CMakeLists.txt, utils, tests)
 - `scripts/` — Dependency installation scripts (sh + ps1)
 
@@ -27,6 +27,9 @@ Supports Windows (MSVC), Linux (GCC/Clang), and macOS (Clang).
 | tests/assert.h | Test assertion macro (ASSERT) |
 | examples/CMakeLists.txt | Examples CMake (empty scaffold) |
 | include/project.h | Umbrella header template (rename to `{project}.h`) |
+| src/platform/platform.h | Platform abstraction umbrella header |
+| src/platform/win/ | Windows platform code directory |
+| src/platform/unix/ | Linux/macOS platform code directory |
 | README.md | Project README template |
 | LICENSE | MIT license template |
 | AUTHORS | Authors file template |
