@@ -64,13 +64,30 @@ Templates are split into `common/` (shared by all project types), `lib/` (librar
 ## Placeholders
 
 Replace before use:
-- `{project}` — project name in lowercase (e.g. `mylib`)
-- `{PROJECT}` — project name in UPPERCASE (e.g. `MYLIB`)
+- `{project}` — project folder name in lowercase, including hyphens if any (e.g. `mylib`, `hello-lib`). Must match the directory name.
+- `{PROJECT}` — project folder name in UPPERCASE, hyphens become underscores (e.g. `MYLIB`, `HELLO_LIB`)
 - `{YEAR}`, `{AUTHOR}`, `{EMAIL}` — license info
+
+### Derived Forms
+
+The placeholder value is used as-is in file names and CMake identifiers. In C identifiers (function names, type names, macros), hyphens are replaced with underscores:
+
+| Context | `{project}` = `hello-lib` | `{PROJECT}` = `HELLO_LIB` |
+|---------|--------------------------|---------------------------|
+| File names | `hello-lib-list.c` | — |
+| CMake target | `add_library(hello-lib ...)` | — |
+| CMake options | — | `HELLO_LIB_ENABLE_TESTING` |
+| CMake functions | `hello-lib_apply_sanitizer(...)` | — |
+| C function prefix | `hello_lib_list_insert()` | — |
+| C type prefix | `hello_lib_list_t` | — |
+| Include directory | `include/hello-lib/` | — |
+| Umbrella header | `hello-lib.h` | — |
+
+> When the project name has no hyphens (e.g. `xylem`), all forms are identical — no conversion needed.
 
 Also rename:
 - `cmake/utils.cmake` → `cmake/{project}-utils.cmake`
-- (lib only) `include/project.h` → `include/{project}.h`
+- (lib only) `include/project.h` → `include/{project}.h`, `include/` directory → `include/{project}/`
 
 ## Dependencies
 
