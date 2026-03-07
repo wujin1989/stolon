@@ -10,16 +10,6 @@
 | Linux | GDB | mcp-gdb (`uvx mcp-gdb`) |
 | macOS | LLDB | lldb-mcp (`git clone https://github.com/stass/lldb-mcp`) |
 
-## Debug Build Configuration
-
-```bash
-# Debug build with symbols
-cmake -B out -DCMAKE_BUILD_TYPE=Debug
-
-# With ASAN for memory error detection
-cmake -B out -D{PROJECT}_ENABLE_ASAN=ON
-```
-
 ## MCP Remote Debugging (AI-Assisted)
 
 > **Note for AI agents:** When the user asks about debugging, check if the relevant MCP debugger server is enabled in the project's MCP configuration. If it is disabled, ask the user if they want to enable it and ensure dependencies are installed before proceeding.
@@ -46,14 +36,6 @@ gdb -ex "target remote :5005" ./out/<program>
 ```bash
 lldb ./out/<program>
 ```
-
-## Cross-Platform Pitfalls
-
-- `long`: 4 bytes on Windows x64, 8 bytes on Linux/macOS x64
-- Stack size: Windows 1MB, Linux 8MB
-- Uninitialized memory may be zeroed in debug but not release — use ASAN
-- Signals: Windows uses SEH, Unix uses POSIX signals
-- Paths: `\` on Windows, `/` on Unix
 
 ## Tips
 
