@@ -26,20 +26,34 @@ stolon/
 
 ## Usage
 
-Copy skills into your project's skills directory:
+### If your IDE supports skills
+
+Copy skills directly into your IDE's skills directory:
 
 ```bash
 cp -r skills/c-project-init/ <your-project-skills-dir>/
 cp -r skills/c-project-debug/ <your-project-skills-dir>/
 ```
 
-Copy MCP configurations into your project:
+### If your IDE does not support skills
+
+Copy steering files into your IDE's supported location (e.g. a steering or rules directory), and scripts into the project root:
+
+```bash
+cp skills/c-project-init/steering/* <your-project-steering-dir>/
+cp skills/c-project-debug/steering/* <your-project-steering-dir>/
+cp -r skills/c-project-init/scripts/ <your-project>/scripts/
+```
+
+### MCP configurations
 
 ```bash
 cp mcps/c-debugger.json <your-project-mcp-config>
 ```
 
-Then replace placeholders (`{project}`, `{PROJECT}`, `{YEAR}`, `{AUTHOR}`, `{EMAIL}`) with your actual values.
+### Placeholders
+
+Replace before use: `{project}`, `{PROJECT}`, `{YEAR}`, `{AUTHOR}`, `{EMAIL}`
 
 ## License
 
