@@ -49,10 +49,10 @@ Public function names have exactly three logical segments: `{project}`, `<module
 | Function pointer typedefs | `{project}_<module>_<purpose>_fn_t` | `mylib_rbtree_cmp_fn_t` |
 | Internal/static helpers | `_<module>_<action>` | `_tcp_flush_writes` |
 
-Static function names have two logical segments: `<module>` and `<action>`, prefixed with `_`. Same rules as public functions: module is a single word, action may be compound:
-- `_heap_node_swap` — module=`heap`, action=`node_swap`
+Static function names have two logical segments: `<module>` and `<action>`, prefixed with `_`. Same rules as public functions: module is a single word, action may be compound (verb first, object last):
+- `_heap_swap_node` — module=`heap`, action=`swap_node`
 - `_tcp_flush_writes` — module=`tcp`, action=`flush_writes`
-- `_tcp_conn_setup` — module=`tcp`, action=`conn_setup`
+- `_tcp_setup_conn` — module=`tcp`, action=`setup_conn`
 | Internal types (file-scope) | `_<name>_t` prefix | `_node_t` |
 | Static variables (file-scope) | `_<name>` prefix | `_echo_loop` |
 | Global variables (non-static) | no prefix | `stop_io` |
