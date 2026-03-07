@@ -8,14 +8,14 @@
       },
       "disabled": false,
       "autoApprove": [],
-      "_comment": "Windows: CDB/WinDbg crash dump analysis & remote debugging (svnscha/mcp-windbg, pip install mcp-windbg)"
+      "_comment": "Windows: CDB/WinDbg (pip install mcp-windbg) — https://github.com/svnscha/mcp-windbg"
     },
     "lldb": {
       "command": "python3",
       "args": ["/path/to/lldb-mcp/lldb_mcp.py"],
       "disabled": false,
       "autoApprove": [],
-      "_comment": "macOS/Linux: LLDB debugger (stass/lldb-mcp, git clone https://github.com/stass/lldb-mcp.git)"
+      "_comment": "macOS/Linux: LLDB (git clone + python) — https://github.com/stass/lldb-mcp"
     },
     "gdb": {
       "command": "uvx",
@@ -23,7 +23,7 @@
       "env": {},
       "disabled": false,
       "autoApprove": [],
-      "_comment": "Linux: GDB debugger MCP (signal-slot/mcp-gdb)"
+      "_comment": "Linux: GDB (uvx mcp-gdb) — https://github.com/signal-slot/mcp-gdb"
     }
   }
 }
