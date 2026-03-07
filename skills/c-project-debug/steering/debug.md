@@ -49,16 +49,15 @@ lldb ./out/<program>
 
 ## Cross-Platform Pitfalls
 
-- `long` is 4 bytes on Windows x64, 8 bytes on Linux/macOS x64 — watch for truncation
-- Stack size defaults differ: Windows 1MB, Linux 8MB
-- Uninitialized memory may be zeroed in debug builds but not release — use ASAN
-- Signal handling differs: Windows uses SEH, Unix uses POSIX signals
-- File path separators: `\` on Windows, `/` on Unix
+- `long`: 4 bytes on Windows x64, 8 bytes on Linux/macOS x64
+- Stack size: Windows 1MB, Linux 8MB
+- Uninitialized memory may be zeroed in debug but not release — use ASAN
+- Signals: Windows uses SEH, Unix uses POSIX signals
+- Paths: `\` on Windows, `/` on Unix
 
 ## Tips
 
-- Always reproduce with a minimal test case first
-- Use sanitizers (ASAN/TSAN/UBSAN) before reaching for a debugger
-- Check compiler warnings — many bugs are caught at compile time
-- On Windows, use Debug configuration (`-C Debug`) for full symbol info
-- Core dumps: `ulimit -c unlimited` on Linux, then `gdb ./program core`
+- Reproduce with minimal test case first
+- Use sanitizers before reaching for a debugger
+- On Windows, use `-C Debug` for full symbol info
+- Core dumps on Linux: `ulimit -c unlimited`, then `gdb ./program core`

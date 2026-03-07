@@ -13,10 +13,9 @@ Supports Windows (MSVC), Linux (GCC/Clang), and macOS (Clang).
 
 | File | Inclusion | Description |
 |------|-----------|-------------|
-| codestyle.md | fileMatch `*.{c,h}` | Code style, naming, project structure |
+| codestyle.md | fileMatch `*.{c,h}` | Code style, naming, license header, project structure |
 | tech.md | fileMatch `CMakeLists.txt,*.cmake` | Build system configuration |
-| license.md | auto | License header requirement |
-| product.md | auto | Project description template (fill on init) |
+| product.md | manual | Project description template (fill on init, then change to always-include) |
 
 ## Templates
 

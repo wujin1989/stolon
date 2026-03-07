@@ -1,6 +1,6 @@
 # {PROJECT} Project
 
-> Recommended trigger: always include.
+> Recommended trigger: manual include. Change to always-include after filling in project details.
 
 > {TODO: One-line project description}
 
