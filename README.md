@@ -51,6 +51,19 @@ cp -r skills/c-project-init/scripts/ <your-project>/scripts/
 cp mcps/c-debugger.json <your-project-mcp-config>
 ```
 
+### Sync Rules
+
+Stolon is the **source of truth** for all shared steering content. Changes flow in one direction:
+
+```
+stolon  →  projects (Xylem, etc.)
+```
+
+- **Modify stolon first**, then sync to projects
+- **Never modify stolon to match a project** — if a project has a better version, port the improvement to stolon first, then re-sync
+- When syncing to a project, only adapt: front-matter (IDE-specific), `{project}` → actual name, remove inapplicable sections (e.g. Executable options for a library project)
+- Project-specific additions (e.g. `Custom helpers: cmake/xylem-utils.cmake`) stay in the project only
+
 ### Placeholders
 
 Replace before use: `{project}`, `{PROJECT}`, `{YEAR}`, `{AUTHOR}`, `{EMAIL}`
