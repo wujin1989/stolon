@@ -21,7 +21,6 @@ Cross-platform C project debugging skill. Supports Windows (MSVC), Linux (GDB), 
 |----------|----------|-----|--------|
 | Windows | CDB/WinDbg | svnscha/mcp-windbg | Available (`pip install mcp-windbg`) |
 | Linux | GDB | signal-slot/mcp-gdb | Available (`uvx mcp-gdb`) |
-| Cross-platform | WinDbg+LLDB | tonyredondo/debugger-mcp-server | Requires .NET 10 SDK |
 
 ## Dependencies
 
