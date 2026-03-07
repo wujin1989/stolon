@@ -37,11 +37,14 @@ Every `.c` and `.h` file must start with the project license block:
 |----------|---------|---------------------------|
 | Public functions | `{project}_<module>_<action>` | `mylib_list_insert` |
 | Types | `{project}_<module>_t` | `mylib_list_t` |
+| Node types | `{project}_<module>_node_t` | `mylib_heap_node_t` |
+| Function pointer typedefs | `{project}_<module>_<purpose>_fn_t` | `mylib_rbtree_cmp_fn_t` |
 | Internal/static helpers | `_<name>` prefix | `_helper_function` |
 | Internal types (file-scope) | `_<name>_t` prefix | `_node_t` |
 | Static variables (file-scope) | `_<name>` prefix | `_echo_loop` |
 | Global variables (non-static) | no prefix | `stop_io` |
 | Source files | `{project}-<module>.c` | `mylib-list.c` |
+| Test files | `test-<module>.c` | `test-list.c` |
 
 Action (verb) goes last: `{project}_list_insert`, `{project}_heap_remove`.
 Compound actions stay together: `{project}_timer_set_time` (not `{project}_timer_time_set`).
@@ -178,8 +181,12 @@ tests/test-<module>.c                   # Unit tests
 
 ## Formatting
 
-- 4-space indent, pointer left (`int* p`)
-- Always use braces for control statements
+clang-format with LLVM base style:
+- 4-space indent, no tabs
+- Pointer left-aligned (`int* p`)
+- No bin-packing of arguments/parameters
+- Aligned consecutive declarations
+- No single-line functions
 
 ## Comments
 
@@ -191,8 +198,13 @@ All `extern` function declarations must have a Doxygen `/** ... */` block:
 /**
  * @brief One-line summary.
  *
+ * Optional details about behavior or algorithm.
+ *
  * @param name   Description of the parameter.
+ * @param name2  Aligned with other @param entries.
+ *
  * @return Return value and error conditions.
+ *
  * @note Caller responsibilities, buffer sizing, etc.
  */
 ```
@@ -201,14 +213,21 @@ Rules:
 - Use `@brief`, `@param`, `@return`, `@note` tags
 - Align `@param` descriptions
 - Pure ASCII only — use `->` not `→`, `>=` not `≥`
+- Blank comment lines between sections
 - Concise, no filler
 
 ### Internal / Static Functions
 
-No Doxygen required. A short `/* ... */` one-liner if the name isn't self-explanatory.
+No Doxygen required. A short `/* ... */` one-liner if the name isn't self-explanatory:
+
+```c
+/* Swap two heap nodes and update their positions. */
+static inline void _heap_node_swap(...) { ... }
+```
 
 ### Inline Comments
 
 - `/* ... */` style (C11 compatible)
 - Only where code is non-obvious
 - No decorative dividers
+- Keep short
