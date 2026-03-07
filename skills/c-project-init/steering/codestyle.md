@@ -53,8 +53,9 @@ Compound actions stay together: `{project}_timer_set_time` (not `{project}_timer
 
 ## Types
 
-- Use fixed-width types (`int32_t`, `uint8_t`) over plain `int`/`unsigned`
-- Exception: `int` for return codes, `size_t` for sizes, `bool` for flags
+- Prefer fixed-width integer types (`int8_t`, `uint8_t`, etc.) over plain `int`/`unsigned`
+- Exception: function return values and parameters may use `int` where semantically appropriate (e.g., error codes, comparator results)
+- Use `size_t` for sizes and counts, `bool` for flags
 - For printf: use `<inttypes.h>` macros (`PRIu64`, `PRId32`, `PRIx32`) instead of `%lu`, `%llu`
   - Example: `printf("value: %" PRIu64 "\n", my_uint64);`
   - Reason: `long` size varies across platforms (Windows 64-bit: 4 bytes, Linux 64-bit: 8 bytes)
@@ -94,7 +95,7 @@ Non-intrusive types that users interact with only through pointers (handles) mus
 - Implementation (.c): full struct definition with fields
 - Users allocate via `create()` / module-specific constructors, never `sizeof()`
 
-Intrusive data structures where users embed nodes into their own structs are exempt — their struct bodies must remain in headers.
+Intrusive data structures (list, queue, stack, heap, rbtree, etc.) where users embed nodes into their own structs are exempt — their struct bodies must remain in headers.
 
 ## File Organization
 
