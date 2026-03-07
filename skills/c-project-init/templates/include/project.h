@@ -20,8 +20,4 @@
  */
 _Pragma("once")
 
-#include <stdint.h>
-#include <stddef.h>
-#include <stdbool.h>
-
 /* Include module headers below */

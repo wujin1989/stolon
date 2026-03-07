@@ -22,6 +22,8 @@ cmake -B out -D{PROJECT}_ENABLE_ASAN=ON
 
 ## MCP Remote Debugging (AI-Assisted)
 
+> **Note for AI agents:** When the user asks about debugging, check if the relevant MCP debugger server is enabled in the project's MCP configuration. If it is disabled, ask the user if they want to enable it and ensure dependencies are installed before proceeding.
+
 Start a debug server, then tell the AI agent to connect. The agent handles breakpoints, stepping, variable inspection, etc. via natural language.
 
 ### Windows (CDB)
