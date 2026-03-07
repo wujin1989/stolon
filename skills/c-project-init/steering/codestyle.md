@@ -53,6 +53,15 @@ Compound actions stay together: `{project}_timer_set_time` (not `{project}_timer
   - Example: `printf("value: %" PRIu64 "\n", my_uint64);`
   - Reason: `long` size varies across platforms (Windows 64-bit: 4 bytes, Linux 64-bit: 8 bytes)
 
+## Opaque Structs
+
+Non-intrusive types that users interact with only through pointers (handles) must use the opaque pattern:
+- Header: forward declaration + typedef only (`typedef struct {project}_foo_s {project}_foo_t;`)
+- Implementation (.c): full struct definition with fields
+- Users allocate via `create()` / module-specific constructors, never `sizeof()`
+
+Intrusive data structures where users embed nodes into their own structs are exempt — their struct bodies must remain in headers.
+
 ## File Organization
 
 Order: License → includes → macros → structs → static functions → public functions
@@ -108,7 +117,32 @@ tests/test-<module>.c                   # Unit tests
 
 ## Comments
 
-- Public API: Doxygen `/** @brief ... @param ... @return ... */`
-- Static functions: `/* one-liner */` if needed
-- Multi-line: `/** \n * line1 \n * line2 \n */`
+### Public API (Header Files)
+
+All `extern` function declarations must have a Doxygen `/** ... */` block:
+
+```c
+/**
+ * @brief One-line summary.
+ *
+ * @param name   Description of the parameter.
+ * @return Return value and error conditions.
+ * @note Caller responsibilities, buffer sizing, etc.
+ */
+```
+
+Rules:
+- Use `@brief`, `@param`, `@return`, `@note` tags
+- Align `@param` descriptions
+- Pure ASCII only — use `->` not `→`, `>=` not `≥`
+- Concise, no filler
+
+### Internal / Static Functions
+
+No Doxygen required. A short `/* ... */` one-liner if the name isn't self-explanatory.
+
+### Inline Comments
+
+- `/* ... */` style (C11 compatible)
+- Only where code is non-obvious
 - No decorative dividers
