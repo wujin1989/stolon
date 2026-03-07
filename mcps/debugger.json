@@ -1,12 +1,22 @@
 {
   "mcpServers": {
+    "windbg": {
+      "command": "python",
+      "args": ["-m", "mcp_windbg"],
+      "env": {
+        "_NT_SYMBOL_PATH": "SRV*C:\\Symbols*https://msdl.microsoft.com/download/symbols"
+      },
+      "disabled": false,
+      "autoApprove": [],
+      "_comment": "Windows: CDB/WinDbg crash dump analysis & remote debugging (svnscha/mcp-windbg, pip install mcp-windbg)"
+    },
     "debugger": {
       "command": "dotnet",
       "args": ["run"],
       "env": {},
-      "disabled": false,
+      "disabled": true,
       "autoApprove": [],
-      "_comment": "Cross-platform: WinDbg (Windows) + LLDB (Linux/macOS) — tonyredondo/debugger-mcp-server"
+      "_comment": "Cross-platform: WinDbg + LLDB (tonyredondo/debugger-mcp-server, requires .NET 10 SDK)"
     },
     "gdb": {
       "command": "uvx",
@@ -14,7 +24,7 @@
       "env": {},
       "disabled": false,
       "autoApprove": [],
-      "_comment": "Linux: GDB debugger MCP (signal-slot/mcp-gdb) — alternative to LLDB"
+      "_comment": "Linux: GDB debugger MCP (signal-slot/mcp-gdb)"
     }
   }
 }
