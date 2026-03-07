@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "debugger": {
+      "command": "dotnet",
+      "args": ["run"],
+      "env": {},
+      "disabled": false,
+      "autoApprove": [],
+      "_comment": "Cross-platform: WinDbg (Windows) + LLDB (Linux/macOS) — tonyredondo/debugger-mcp-server"
+    },
+    "gdb": {
+      "command": "uvx",
+      "args": ["mcp-gdb"],
+      "env": {},
+      "disabled": false,
+      "autoApprove": [],
+      "_comment": "Linux: GDB debugger MCP (signal-slot/mcp-gdb) — alternative to LLDB"
+    }
+  }
+}

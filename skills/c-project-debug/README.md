@@ -1,0 +1,30 @@
+# C Project Debug
+
+Cross-platform C project debugging skill. Supports Windows (MSVC), Linux (GDB), and macOS (LLDB).
+
+## Contents
+
+- `steering/` — Debugging best practices and platform-specific tips
+- `scripts/` — Debugger installation scripts
+
+> MCP configurations for debuggers are in the top-level [`mcps/debugger.json`](../../mcps/debugger.json).
+
+## Steering Files
+
+| File | Inclusion | Description |
+|------|-----------|-------------|
+| debug.md | manual | Debugging guide, platform differences, common pitfalls |
+
+## MCP Servers
+
+| Platform | Debugger | MCP | Status |
+|----------|----------|-----|--------|
+| Linux | GDB | signal-slot/mcp-gdb | Available |
+| macOS | LLDB | stass/lldb-mcp | Available |
+| Windows | MSVC | — | Not yet available |
+
+## Dependencies
+
+- Linux: `scripts/install-deps.sh`
+- macOS: `scripts/install-deps.sh`
+- Windows: `scripts/install-deps.ps1`
