@@ -1,7 +1,5 @@
 # Steering Principles
 
-> Recommended trigger: auto-include when editing any steering `*.md` file.
-
 Every rule in a steering file must satisfy these principles.
 
 ## Mandatory Self-Check
