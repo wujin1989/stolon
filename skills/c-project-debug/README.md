@@ -7,7 +7,7 @@ Cross-platform C project debugging skill. Supports Windows (MSVC), Linux (GDB), 
 - `steering/` — Debugging best practices and platform-specific tips
 - `scripts/` — Debugger installation scripts
 
-> MCP configurations for debuggers are in the top-level [`mcps/debugger.json`](../../mcps/debugger.json).
+> MCP configurations for debuggers are in the top-level [`mcps/c-debugger.json`](../../mcps/c-debugger.json).
 
 ## Steering Files
 
@@ -19,7 +19,7 @@ Cross-platform C project debugging skill. Supports Windows (MSVC), Linux (GDB), 
 
 | Platform | Debugger | MCP | Status |
 |----------|----------|-----|--------|
-| Windows | CDB/WinDbg | svnscha/mcp-windbg | Available (`pip install mcp-windbg`) |
+| Windows | CDB/WinDbg | svnscha/mcp-windbg | Available (`pip install mcp-windbg`, requires Python >= 3.10) |
 | macOS/Linux | LLDB | stass/lldb-mcp | Available (`git clone`) |
 | Linux | GDB | signal-slot/mcp-gdb | Available (`uvx mcp-gdb`) |
 

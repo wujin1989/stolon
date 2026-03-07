@@ -8,7 +8,7 @@
       },
       "disabled": false,
       "autoApprove": [],
-      "_comment": "Windows: CDB/WinDbg (pip install mcp-windbg) — https://github.com/svnscha/mcp-windbg"
+      "_comment": "Windows: CDB/WinDbg (pip install mcp-windbg, requires Python >= 3.10) — https://github.com/svnscha/mcp-windbg"
     },
     "lldb": {
       "command": "python3",
