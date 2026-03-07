@@ -6,7 +6,7 @@ Supports Windows (MSVC), Linux (GCC/Clang), and macOS (Clang).
 ## Contents
 
 - `steering/` — AI steering files (codestyle, build system, product template)
-- `templates/` — CMake project templates (root CMakeLists.txt, utils, tests)
+- `templates/` — Project templates (common + lib/app variants)
 - `scripts/` — Dependency installation scripts (sh + ps1)
 
 ## Steering Files
@@ -19,23 +19,44 @@ Supports Windows (MSVC), Linux (GCC/Clang), and macOS (Clang).
 
 ## Templates
 
+Templates are split into `common/` (shared by all project types), `lib/` (library projects), and `app/` (executable projects).
+
+### common/ (shared)
+
 | File | Description |
 |------|-------------|
-| CMakeLists.txt | Root CMake with sanitizers, coverage, testing |
+| .clang-format | LLVM-based clang-format config |
+| .gitignore | Standard C project gitignore |
+| AUTHORS | Authors file template |
+| LICENSE | MIT license template |
+| README.md | Project README template |
 | cmake/utils.cmake | Helper functions (apply_sanitizer, add_test) |
-| tests/CMakeLists.txt | Test CMake with coverage targets (OpenCppCoverage + lcov) |
-| tests/assert.h | Test assertion macro (ASSERT) |
-| examples/CMakeLists.txt | Examples CMake (empty scaffold) |
-| include/project.h | Umbrella header template (rename to `{project}.h`) |
+| docs/build.md | Build instructions (multi/single-config, coverage, sanitizers) |
 | src/platform/platform.h | Platform abstraction umbrella header |
 | src/platform/win/ | Windows platform code directory |
 | src/platform/unix/ | Linux/macOS platform code directory |
-| README.md | Project README template |
-| LICENSE | MIT license template |
-| AUTHORS | Authors file template |
-| .gitignore | Standard C project gitignore |
-| .clang-format | LLVM-based clang-format config |
-| docs/build.md | Build instructions template |
+| tests/CMakeLists.txt | Test CMake with coverage targets |
+| tests/assert.h | Test assertion macro (ASSERT) |
+
+### lib/ (library projects)
+
+| File | Description |
+|------|-------------|
+| CMakeLists.txt | Root CMake with add_library, sanitizers, coverage, install headers |
+| include/project.h | Umbrella header template (rename to `{project}.h`) |
+| examples/CMakeLists.txt | Examples CMake (empty scaffold) |
+
+### app/ (executable projects)
+
+| File | Description |
+|------|-------------|
+| CMakeLists.txt | Root CMake with add_executable, sanitizers, coverage, install to bin |
+
+## Usage
+
+1. Copy all files from `common/` into your project root
+2. Copy files from either `lib/` or `app/` depending on your project type
+3. Replace placeholders and rename files (see below)
 
 ## Placeholders
 
@@ -46,7 +67,7 @@ Replace before use:
 
 Also rename:
 - `cmake/utils.cmake` → `cmake/{project}-utils.cmake`
-- `include/project.h` → `include/{project}.h`
+- (lib only) `include/project.h` → `include/{project}.h`
 
 ## Dependencies
 

@@ -56,7 +56,7 @@ Order: License → includes → macros → structs → static functions → publ
 
 Static functions ordered by dependency (no forward declarations).
 
-## Project Structure
+## Project Structure (Library)
 
 ```
 include/{project}/{project}-<module>.h  # Public API
@@ -64,9 +64,21 @@ src/{project}-<module>.c                # Implementation
 src/platform/win/                       # Windows platform code
 src/platform/unix/                      # Linux/macOS platform code
 tests/test-<module>.c                   # Unit tests
+examples/                               # Example programs
 ```
 
-### Adding a Module
+## Project Structure (Executable)
+
+```
+src/{project}-<module>.c                # Implementation
+src/{project}-<module>.h                # Internal headers (alongside .c)
+src/main.c                              # Entry point
+src/platform/win/                       # Windows platform code
+src/platform/unix/                      # Linux/macOS platform code
+tests/test-<module>.c                   # Unit tests
+```
+
+### Adding a Module (Library)
 1. Create `include/{project}/{project}-<module>.h` with public API
 2. Create `src/{project}-<module>.c` with implementation
 3. Add to `SRCS` in root `CMakeLists.txt`
@@ -74,6 +86,13 @@ tests/test-<module>.c                   # Unit tests
 5. Create `tests/test-<module>.c`
 6. Add `{project}_add_test(<module>)` to `tests/CMakeLists.txt`
 7. When adding files to `src/platform/win/` or `src/platform/unix/`, delete `.gitkeep` in that directory if it exists
+
+### Adding a Module (Executable)
+1. Create `src/{project}-<module>.c` and `src/{project}-<module>.h`
+2. Add to `SRCS` in root `CMakeLists.txt`
+3. Create `tests/test-<module>.c`
+4. Add `{project}_add_test(<module>)` to `tests/CMakeLists.txt`
+5. When adding files to `src/platform/win/` or `src/platform/unix/`, delete `.gitkeep` in that directory if it exists
 
 ## Headers
 

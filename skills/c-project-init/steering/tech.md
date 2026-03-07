@@ -6,10 +6,15 @@
 - C11, CMake >= 3.16
 - Output: `out/`
 
-## Options
+## Options (Library)
 - `{PROJECT}_ENABLE_TESTING` (ON) - Unit tests
 - `{PROJECT}_ENABLE_ASAN/TSAN/UBSAN` (OFF) - Sanitizers
 - `{PROJECT}_ENABLE_DYNAMIC_LIBRARY` (OFF) - Shared lib
+- `{PROJECT}_ENABLE_COVERAGE` (OFF) - Coverage
+
+## Options (Executable)
+- `{PROJECT}_ENABLE_TESTING` (ON) - Unit tests
+- `{PROJECT}_ENABLE_ASAN/TSAN/UBSAN` (OFF) - Sanitizers
 - `{PROJECT}_ENABLE_COVERAGE` (OFF) - Coverage
 
 ## Commands
