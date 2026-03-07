@@ -38,12 +38,13 @@ Every `.c` and `.h` file must start with the project license block:
 | Public functions | `{project}_<module>_<action>` | `mylib_list_insert` |
 | Types | `{project}_<module>_t` | `mylib_list_t` |
 | Internal/static helpers | `_<name>` prefix | `_helper_function` |
+| Internal types (file-scope) | `_<name>_t` prefix | `_node_t` |
 | Source files | `{project}-<module>.c` | `mylib-list.c` |
 
 Action (verb) goes last: `{project}_list_insert`, `{project}_heap_remove`.
 Compound actions stay together: `{project}_timer_set_time` (not `{project}_timer_time_set`).
 
-> The `_` prefix for static functions is technically reserved by C11 but commonly used (symbols never exported).
+> The `_` prefix for file-scope static functions and internal types is technically reserved by C11 (§7.1.3), but is used intentionally here. These symbols are never exported and do not enter the linker symbol table, so conflicts with the implementation are not a practical concern.
 
 ## Types
 
@@ -168,7 +169,7 @@ tests/test-<module>.c                   # Unit tests
 ## Formatting
 
 - 4-space indent, pointer left (`int* p`)
-- Always use braces for control statements (exception: `if (!ptr) return -1;`)
+- Always use braces for control statements
 
 ## Comments
 
