@@ -55,6 +55,19 @@ cp mcps/c-debugger.json <your-project-mcp-config>
 
 Replace before use: `{project}`, `{PROJECT}`, `{YEAR}`, `{AUTHOR}`, `{EMAIL}`
 
+### Token Optimization
+
+Steering files include a "Recommended trigger" comment indicating when they should be loaded. When syncing to your IDE, convert these to the IDE's native conditional inclusion mechanism to avoid loading all steering files into every conversation.
+
+| Recommended trigger | Meaning |
+|---------------------|---------|
+| `auto-include when editing *.c / *.h` | Only load when C source files are in context |
+| `auto-include when editing CMakeLists.txt / *.cmake` | Only load when build files are in context |
+| `always include` | Load in every conversation |
+| `manual include` | Only load when explicitly requested |
+
+For example, an IDE that supports file-match based inclusion should configure `codestyle.md` to trigger only on `*.c` / `*.h` files, and `tech.md` only on `CMakeLists.txt` / `*.cmake` files. This keeps token usage minimal while ensuring the right context is available at the right time.
+
 ## License
 
 [MIT](LICENSE)
