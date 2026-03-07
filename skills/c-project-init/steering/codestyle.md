@@ -36,18 +36,28 @@ Every `.c` and `.h` file must start with the project license block:
 | Category | Pattern | Example (project: `mylib`) |
 |----------|---------|---------------------------|
 | Public functions | `{project}_<module>_<action>` | `mylib_list_insert` |
+
+Public function names have exactly three logical segments: `{project}`, `<module>`, and `<action>`. The `<module>` is always a single word. The `<action>` may be compound (verb + object with `_`), placing the verb first and the object last:
+- `mylib_list_insert` — module=`list`, action=`insert`
+- `mylib_loop_init_timer` — module=`loop`, action=`init_timer`
+- `mylib_loop_start_timer` — module=`loop`, action=`start_timer`
+- `mylib_loop_start_io` — module=`loop`, action=`start_io`
+- `mylib_timer_set_time` — module=`timer`, action=`set_time`
+
 | Types | `{project}_<module>_t` | `mylib_list_t` |
 | Node types | `{project}_<module>_node_t` | `mylib_heap_node_t` |
 | Function pointer typedefs | `{project}_<module>_<purpose>_fn_t` | `mylib_rbtree_cmp_fn_t` |
-| Internal/static helpers | `_<name>` prefix | `_helper_function` |
+| Internal/static helpers | `_<module>_<action>` | `_tcp_flush_writes` |
+
+Static function names have two logical segments: `<module>` and `<action>`, prefixed with `_`. Same rules as public functions: module is a single word, action may be compound:
+- `_heap_node_swap` — module=`heap`, action=`node_swap`
+- `_tcp_flush_writes` — module=`tcp`, action=`flush_writes`
+- `_tcp_conn_setup` — module=`tcp`, action=`conn_setup`
 | Internal types (file-scope) | `_<name>_t` prefix | `_node_t` |
 | Static variables (file-scope) | `_<name>` prefix | `_echo_loop` |
 | Global variables (non-static) | no prefix | `stop_io` |
 | Source files | `{project}-<module>.c` | `mylib-list.c` |
 | Test files | `test-<module>.c` | `test-list.c` |
-
-Action (verb) goes last: `{project}_list_insert`, `{project}_heap_remove`.
-Compound actions stay together: `{project}_timer_set_time` (not `{project}_timer_time_set`).
 
 > The `_` prefix for file-scope static functions and internal types is technically reserved by C11 (§7.1.3), but is used intentionally here. These symbols are never exported and do not enter the linker symbol table, so conflicts with the implementation are not a practical concern.
 
