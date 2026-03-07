@@ -20,6 +20,7 @@ Cross-platform C project debugging skill. Supports Windows (MSVC), Linux (GDB), 
 | Platform | Debugger | MCP | Status |
 |----------|----------|-----|--------|
 | Windows | CDB/WinDbg | svnscha/mcp-windbg | Available (`pip install mcp-windbg`) |
+| macOS/Linux | LLDB | stass/lldb-mcp | Available (`git clone`) |
 | Linux | GDB | signal-slot/mcp-gdb | Available (`uvx mcp-gdb`) |
 
 ## Dependencies
