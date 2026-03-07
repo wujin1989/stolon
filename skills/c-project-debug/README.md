@@ -13,7 +13,7 @@ Cross-platform C project debugging skill. Supports Windows (MSVC), Linux (GDB), 
 
 | File | Inclusion | Description |
 |------|-----------|-------------|
-| debug.md | manual | Debugging guide, platform differences, common pitfalls |
+| debug.md | manual | MCP remote debugging guide, cross-platform pitfalls |
 
 ## MCP Servers
 

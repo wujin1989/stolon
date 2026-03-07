@@ -26,10 +26,13 @@ Supports Windows (MSVC), Linux (GCC/Clang), and macOS (Clang).
 | cmake/utils.cmake | Helper functions (apply_sanitizer, add_test) |
 | tests/CMakeLists.txt | Test CMake with coverage targets (OpenCppCoverage + lcov) |
 | tests/assert.h | Test assertion macro (ASSERT) |
+| examples/CMakeLists.txt | Examples CMake (empty scaffold) |
+| include/project.h | Umbrella header template (rename to `{project}.h`) |
 | README.md | Project README template |
 | LICENSE | MIT license template |
 | AUTHORS | Authors file template |
 | .gitignore | Standard C project gitignore |
+| .clang-format | LLVM-based clang-format config |
 | docs/build.md | Build instructions template |
 
 ## Placeholders
@@ -41,6 +44,7 @@ Replace before use:
 
 Also rename:
 - `cmake/utils.cmake` → `cmake/{project}-utils.cmake`
+- `include/project.h` → `include/{project}.h`
 
 ## Dependencies
 
