@@ -25,6 +25,12 @@ Supports Windows (MSVC), Linux (GCC/Clang), and macOS (Clang).
 | CMakeLists.txt | Root CMake with sanitizers, coverage, testing |
 | cmake/utils.cmake | Helper functions (apply_sanitizer, add_test) |
 | tests/CMakeLists.txt | Test CMake with coverage targets (OpenCppCoverage + lcov) |
+| tests/assert.h | Test assertion macro (ASSERT) |
+| README.md | Project README template |
+| LICENSE | MIT license template |
+| AUTHORS | Authors file template |
+| .gitignore | Standard C project gitignore |
+| docs/build.md | Build instructions template |
 
 ## Placeholders
 
@@ -32,6 +38,9 @@ Replace before use:
 - `{project}` — project name in lowercase (e.g. `mylib`)
 - `{PROJECT}` — project name in UPPERCASE (e.g. `MYLIB`)
 - `{YEAR}`, `{AUTHOR}`, `{EMAIL}` — license info
+
+Also rename:
+- `cmake/utils.cmake` → `cmake/{project}-utils.cmake`
 
 ## Dependencies
 
