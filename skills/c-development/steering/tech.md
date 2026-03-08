@@ -108,10 +108,10 @@ ASAN and TSAN cannot be enabled simultaneously.
 
 ### Coverage (Linux/macOS only)
 
-Requires: `lcov`, `genhtml`
+Requires: `lcov`, `genhtml`. Testing must be enabled (`{PROJECT}_ENABLE_TESTING=ON`, which is the default).
 
 ```bash
-cmake -B out -D{PROJECT}_ENABLE_COVERAGE=ON
+cmake -B out -D{PROJECT}_ENABLE_COVERAGE=ON -D{PROJECT}_ENABLE_TESTING=ON
 cmake --build out
 ctest --test-dir out --output-on-failure
 ```
