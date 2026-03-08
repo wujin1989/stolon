@@ -277,3 +277,23 @@ static inline void _heap_swap_node(...) { ... }
 - `/** ... */` when spanning multiple lines (block format: `/**` and `*/` on own lines)
 - Only to explain why, not what — if the comment restates the code, remove it
 - No decorative dividers
+
+## Test Convention
+
+Custom `ASSERT(expr)` macro in `tests/assert.h` — prints `file:line` and aborts on failure. Do not use standard `<assert.h>`.
+
+Tests are plain C executables: `main()` calls `static void test_*()` functions. One test file per module: `tests/test-<module>.c`.
+
+```c
+#include "assert.h"
+
+static void test_insert(void) {
+    /* ... */
+    ASSERT(result == 0);
+}
+
+int main(void) {
+    test_insert();
+    return 0;
+}
+```

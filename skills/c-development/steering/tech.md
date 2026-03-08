@@ -133,9 +133,3 @@ cmake --build out --config Debug
 cmake --build out --target coverage
 # Report: out/coverage/index.html
 ```
-
-## Test Framework
-
-Custom `ASSERT(expr)` macro in `tests/assert.h` — prints `file:line` and aborts on failure.
-
-Tests are plain C executables: `main()` calls `static void test_*()` functions. One test file per module: `tests/test-<module>.c`.
