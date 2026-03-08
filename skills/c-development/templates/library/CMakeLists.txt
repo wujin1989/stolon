@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project({PROJECT} LANGUAGES C)
+project({PROJECT} VERSION 0.0.1 LANGUAGES C)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include({project}-utils)

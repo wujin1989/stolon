@@ -7,7 +7,7 @@ Supports Windows (MSVC), Linux (GCC/Clang), and macOS (Clang).
 
 - `steering/` — AI steering files
 - `templates/` — Project templates
-  - `common/` — Shared files (`.clang-format`, `.gitignore`, `cmake/`, `tests/`, `src/platform/`)
+  - `common/` — Shared files (`.clang-format`, `.gitignore`, `AUTHORS`, `LICENSE`, `README.md`, `cmake/`, `docs/`, `tests/`, `src/platform/`)
   - `library/` — Library-specific files (`CMakeLists.txt`, `include/`, `examples/`)
   - `application/` — Application-specific files (`CMakeLists.txt`)
 
@@ -21,6 +21,7 @@ Supports Windows (MSVC), Linux (GCC/Clang), and macOS (Clang).
 | setup.md | manual | Project setup checklist: user-input placeholders and verification |
 | debug.md | manual | Debugging rules: diagnosis order, sanitizers, debuggers, common pitfalls |
 | deploy.md | manual | Release checklist, versioning, packaging, CI integration |
+| deps.md | manual | Dependency diagnosis and resolution for missing tools and libraries |
 
 > `fileMatch` files are loaded automatically by the IDE when a matching file is open. `manual` files are loaded on demand by the agent when the task requires them (e.g. setup.md during project creation).
 
