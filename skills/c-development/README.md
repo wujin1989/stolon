@@ -22,7 +22,7 @@ When syncing to an IDE that uses front-matter (e.g. Kiro), convert the Inclusion
 
 ## Templates
 
-Templates are split into `common/` (shared by all project types), `lib/` (library projects), and `app/` (executable projects).
+Templates are split into `common/` (shared by all project types), `library/` (library projects), and `application/` (executable projects).
 
 ### common/ (shared)
 
@@ -41,7 +41,7 @@ Templates are split into `common/` (shared by all project types), `lib/` (librar
 | tests/CMakeLists.txt | Test CMake with coverage targets |
 | tests/assert.h | Test assertion macro (ASSERT) |
 
-### lib/ (library projects)
+### library/ (library projects)
 
 | File | Description |
 |------|-------------|
@@ -49,7 +49,7 @@ Templates are split into `common/` (shared by all project types), `lib/` (librar
 | include/project.h | Umbrella header template (rename to `{project}.h`) |
 | examples/CMakeLists.txt | Examples CMake (empty scaffold) |
 
-### app/ (executable projects)
+### application/ (executable projects)
 
 | File | Description |
 |------|-------------|
@@ -58,7 +58,7 @@ Templates are split into `common/` (shared by all project types), `lib/` (librar
 ## Usage
 
 1. Copy all files from `common/` into your project root
-2. Copy files from either `lib/` or `app/` depending on your project type
+2. Copy files from either `library/` or `application/` depending on your project type
 3. Replace placeholders and rename files (see below)
 
 ## Placeholders
