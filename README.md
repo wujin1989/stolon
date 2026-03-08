@@ -71,8 +71,6 @@ stolon  →  projects (Xylem, etc.)
 
 Replace before use:
 - `{project}`, `{PROJECT}`, `{YEAR}`, `{AUTHOR}`, `{EMAIL}` — see [c-project-init Placeholders](skills/c-project-init/README.md#placeholders)
-- `{DESCRIPTION}` — one-line project description (ask user)
-- `{DESIGN_PRINCIPLES}` — project design principles (ask user)
 
 ### Token Optimization
 

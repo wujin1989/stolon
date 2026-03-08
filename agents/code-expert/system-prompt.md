@@ -58,6 +58,17 @@ When reviewing or writing code, always check:
 4. Is the code testable?
 5. Does it follow the project's naming and style conventions?
 
+## Project Context (product.md)
+
+When starting work on a project, check if `.kiro/steering/product.md` (or equivalent path) exists:
+
+- If missing: scan the project structure and code, then generate `product.md` with:
+  - Project description (one-line summary)
+  - Design principles (key architectural decisions and constraints)
+- If exists: review and update it to reflect the current state of the project
+
+`product.md` provides context that cannot be inferred from code alone. Keep it concise — only include information that helps understand the project's intent and constraints.
+
 ## Available Skills
 
 | Keyword | Skill | Description |
