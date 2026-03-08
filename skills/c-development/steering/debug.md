@@ -29,3 +29,39 @@ Sanitizer build commands are in `build.md`. Additional constraints for debugging
 | Data race | Missing lock or atomic | Run TSAN |
 | Segfault with no ASAN output | Stack overflow (default 1MB on Windows, 8MB on Linux) | Reduce recursion or increase stack size |
 | Core dump not generated (Linux) | `ulimit -c` is 0 | `ulimit -c unlimited` before running |
+
+## Analysis Procedures
+
+### Crash (segfault, access violation)
+
+1. Reproduce in Debug build (`-C Debug`)
+2. Run with ASAN — if it reports, follow the ASAN output (file, line, allocation trace)
+3. If ASAN is clean, check for stack overflow (reduce recursion, print stack depth)
+4. Attach debugger, get backtrace (`bt` in GDB/LLDB, `k` in CDB)
+5. Inspect the faulting address — NULL (missing init), 0xDEAD (use-after-free), valid but wrong (logic error)
+
+### Memory Leak
+
+1. Run with ASAN (`detect_leaks=1` is default on Linux)
+2. ASAN reports allocation site — trace the code path that skips `free`/`destroy`/`deinit`
+3. Check early returns and error paths — common to miss cleanup on error branches
+
+### Data Race / Deadlock
+
+1. Run with TSAN — it reports the two conflicting accesses with stack traces
+2. Identify the shared resource and which lock (if any) protects it
+3. For deadlock: check lock ordering — all code paths must acquire locks in the same order
+
+### Wrong Output (no crash)
+
+1. Write a minimal test case that asserts the expected value
+2. Add `printf` / logging at key decision points to trace the logic flow
+3. Check integer overflow, signedness, and type promotion (especially `int` vs `uint32_t` in comparisons)
+4. Check platform-specific behavior (`long` size, endianness, path separators)
+
+### Build Failure
+
+1. Read the full error message — don't guess from the first line
+2. Missing symbol: check `SRCS` list in CMakeLists.txt, verify the `.c` file is included
+3. Missing header: check `include_directories` and `target_include_directories`
+4. Linker error on Windows: check `CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS` or explicit `__declspec(dllexport)`
