@@ -30,7 +30,7 @@ cmake --build out && ctest --test-dir out --output-on-failure
 Constraints:
 - ASAN and TSAN cannot be enabled simultaneously
 - Always build in Debug mode for full symbol info (`-C Debug` on Windows)
-- Sanitizers are not available with MSVC — use GCC/Clang on Linux/macOS
+- ASAN is available on all platforms (MSVC, GCC, Clang). TSAN and UBSAN are GCC/Clang only.
 
 ## Debugger Commands
 
