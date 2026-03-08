@@ -32,24 +32,6 @@ Constraints:
 - Always build in Debug mode for full symbol info (`-C Debug` on Windows)
 - ASAN is available on all platforms (MSVC, GCC, Clang). TSAN and UBSAN are GCC/Clang only.
 
-## Debugger Commands
-
-| Platform | Debugger | Launch |
-|----------|----------|--------|
-| Windows | CDB | `cdb -server tcp:port=5005 -o out\Debug\<program>.exe` |
-| Linux | GDB | `gdb ./out/<program>` |
-| macOS | LLDB | `lldb ./out/<program>` |
-
-## MCP Remote Debugging
-
-If an MCP debugger server is configured, connect via natural language. Check the project's MCP configuration for available servers before attempting to connect.
-
-| Platform | MCP Server |
-|----------|------------|
-| Windows | mcp-windbg — connect with `tcp:Port=5005,Server=localhost` |
-| Linux | mcp-gdb — `uvx mcp-gdb` |
-| macOS | lldb-mcp — `git clone https://github.com/stass/lldb-mcp` |
-
 ## Common Pitfalls
 
 | Issue | Cause | Fix |
