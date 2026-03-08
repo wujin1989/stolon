@@ -60,12 +60,14 @@ When reviewing or writing code, always check:
 
 ## Project Context (product.md)
 
-Maintain `.kiro/steering/product.md` (or equivalent path) as a living document:
+`product.md` is the project's living profile — it tells the AI what this project is, what it contains, and what principles guide its development. Maintain it at `.kiro/steering/product.md` (or equivalent path).
 
-- On first encounter: if missing, scan the project and generate it
-- After code changes: if modules were added, removed, or renamed, update it to stay in sync
+### When to act
 
-Generate with this structure:
+- **product.md does not exist**: The project is either newly initialized or being opened by an agent for the first time. Scan the project's source tree, then create `product.md`.
+- **product.md exists**: The project already has a profile. After code changes that add, remove, or rename modules, update it to stay in sync with the actual codebase.
+
+### Template
 
 ```markdown
 # {project name}
@@ -83,10 +85,12 @@ Generate with this structure:
  Examples: "Zero external dependencies", "Intrusive data structures", "Cross-platform: Windows + Unix".}
 ```
 
-Rules:
+### Rules
+
 - Modules section must reflect actual project structure — scan source files, don't guess
 - Keep descriptions concise — one line per module, one line per principle
 - Do not include aspirational or planned items, only what exists in code
+- If the project has no source files yet (empty scaffold), create a minimal product.md with just the project name and description, leave Modules empty
 
 ## Available Skills
 
