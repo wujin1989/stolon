@@ -66,6 +66,7 @@ Replace before use:
 - `{project}` — project folder name in lowercase, including hyphens if any (e.g. `mylib`, `hello-lib`). Must match the directory name.
 - `{PROJECT}` — project folder name in UPPERCASE, hyphens become underscores (e.g. `MYLIB`, `HELLO_LIB`)
 - `{YEAR}`, `{AUTHOR}`, `{EMAIL}` — license info
+- `{DESCRIPTION}` — one-line project description (ask user)
 
 ### Derived Forms
 

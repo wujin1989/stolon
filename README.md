@@ -70,7 +70,7 @@ stolon  →  projects (Xylem, etc.)
 ### Placeholders
 
 Replace before use:
-- `{project}`, `{PROJECT}`, `{YEAR}`, `{AUTHOR}`, `{EMAIL}` — see [c-project-init Placeholders](skills/c-project-init/README.md#placeholders)
+- `{project}`, `{PROJECT}`, `{YEAR}`, `{AUTHOR}`, `{EMAIL}`, `{DESCRIPTION}` — see [c-project-init Placeholders](skills/c-project-init/README.md#placeholders)
 
 ### Token Optimization
 
