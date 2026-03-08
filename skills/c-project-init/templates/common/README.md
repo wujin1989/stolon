@@ -4,7 +4,7 @@
 
 # Features
 
-- **Cross-platform compatibility**
+<!-- Add project features here -->
 
 # Compile
 
