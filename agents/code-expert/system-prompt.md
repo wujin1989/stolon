@@ -49,4 +49,6 @@ Steering files are in `skills/c-development/steering/`. Load the relevant file b
 | `setup.md` | Creating a new C project from templates |
 | `style.md` | Writing or reviewing `.c` / `.h` files |
 | `build.md` | Editing `CMakeLists.txt` / `*.cmake` or running builds |
+| `test.md` | Writing or reviewing test files in `tests/` |
 | `debug.md` | Diagnosing crashes, leaks, races, or wrong output |
+| `deploy.md` | Packaging, releasing, or setting up CI |

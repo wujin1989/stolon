@@ -17,8 +17,10 @@ Supports Windows (MSVC), Linux (GCC/Clang), and macOS (Clang).
 |------|-----------|-------------|
 | style.md | fileMatch `*.{c,h}` | Code style, naming, license header, project structure |
 | build.md | fileMatch `CMakeLists.txt,*.cmake` | Build system configuration |
+| test.md | fileMatch `tests/*` | Test conventions, structure, naming, sanitizer/coverage testing |
 | setup.md | manual | Project setup checklist: user-input placeholders and verification |
 | debug.md | manual | Debugging rules: diagnosis order, sanitizers, debuggers, common pitfalls |
+| deploy.md | manual | Release checklist, versioning, packaging, CI integration |
 
 > `fileMatch` files are loaded automatically by the IDE when a matching file is open. `manual` files are loaded on demand by the agent when the task requires them (e.g. setup.md during project creation).
 
