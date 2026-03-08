@@ -1,11 +1,11 @@
-# C Project Init
+# C Development
 
-Initialize a cross-platform C project with CMake, testing, sanitizers, and coverage.
+Cross-platform C project skill covering initialization, code style, build system, and debugging.
 Supports Windows (MSVC), Linux (GCC/Clang), and macOS (Clang).
 
 ## Contents
 
-- `steering/` — AI steering files (init checklist)
+- `steering/` — AI steering files
 - `templates/` — Project templates (common + lib/app variants)
 - `scripts/` — Dependency installation scripts (sh + ps1)
 
@@ -13,9 +13,12 @@ Supports Windows (MSVC), Linux (GCC/Clang), and macOS (Clang).
 
 | File | Inclusion | Description |
 |------|-----------|-------------|
+| codestyle.md | fileMatch `*.{c,h}` | Code style, naming, license header, project structure |
+| tech.md | fileMatch `CMakeLists.txt,*.cmake` | Build system configuration |
 | init.md | manual | Post-init checklist: user-input placeholders and verification |
+| debug.md | manual | MCP remote debugging guide, cross-platform pitfalls |
 
-When syncing to an IDE that uses front-matter (e.g. Kiro), `manual` inclusion files require a `description` field. Use the Description column value above.
+When syncing to an IDE that uses front-matter (e.g. Kiro), convert the Inclusion column to the IDE's native mechanism.
 
 ## Templates
 
@@ -86,6 +89,14 @@ The placeholder value is used as-is in file names and CMake identifiers. In C id
 Also rename:
 - `cmake/utils.cmake` → `cmake/{project}-utils.cmake`
 - (lib only) `include/project.h` → `include/{project}.h`, `include/` directory → `include/{project}/`
+
+## MCP Servers
+
+| Platform | Debugger | MCP | Status |
+|----------|----------|-----|--------|
+| Windows | CDB/WinDbg | svnscha/mcp-windbg | Available (`pip install mcp-windbg`, requires Python >= 3.10) |
+| macOS/Linux | LLDB | stass/lldb-mcp | Available (`git clone`) |
+| Linux | GDB | signal-slot/mcp-gdb | Available (`uvx mcp-gdb`) |
 
 ## Dependencies
 

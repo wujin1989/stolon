@@ -96,6 +96,4 @@ When reviewing or writing code, always check:
 
 | Keyword | Skill | Description |
 |---------|-------|-------------|
-| C project init | c-project-init | Initialize cross-platform C project (Windows/Linux/macOS) |
-| C code style, build | c-project-dev | Code style and build system steering for daily development |
-| C debug | c-project-debug | Cross-platform C debugging (GDB/LLDB/MSVC) |
+| C project | c-development | Cross-platform C project: init, code style, build system, debugging |

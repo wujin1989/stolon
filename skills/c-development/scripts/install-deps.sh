@@ -5,11 +5,12 @@ OS="$(uname -s)"
 
 case "$OS" in
     Linux*)
-        echo "Installing debugging tools for Linux..."
-        sudo apt install -y gdb
+        echo "Installing build and debug dependencies for Linux..."
+        sudo apt install -y build-essential cmake lcov clang-format gdb
         ;;
     Darwin*)
-        echo "Installing debugging tools for macOS..."
+        echo "Installing build and debug dependencies for macOS..."
+        brew install cmake gcc lcov clang-format
         echo "LLDB is included with Xcode Command Line Tools."
         xcode-select --install 2>/dev/null || echo "Xcode CLT already installed."
         ;;
