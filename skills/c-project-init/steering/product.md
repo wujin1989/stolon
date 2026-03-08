@@ -2,12 +2,13 @@
 
 > Recommended trigger: manual include. Change to always-include after filling in project details.
 
-Lines marked `{TODO: ...}` require user input. Ask the user for each value, then update this file and `README.md` accordingly.
+This file describes the project for AI context. Keep it up to date:
+- Replace `{DESCRIPTION}` and `{DESIGN_PRINCIPLES}` with actual values during project initialization. Ask the user for each value.
+- When adding or removing a module, update the Modules section below.
 
-> {TODO: One-line project description}
+> {DESCRIPTION}
 
 ## Modules
-- {TODO: Add modules as development progresses}
 
-## Philosophy
-- {TODO: Design principles}
+## Design Principles
+- {DESIGN_PRINCIPLES}
