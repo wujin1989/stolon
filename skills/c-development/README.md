@@ -13,7 +13,7 @@ Supports Windows (MSVC), Linux (GCC/Clang), and macOS (Clang).
 | File | Inclusion | Description |
 |------|-----------|-------------|
 | codestyle.md | fileMatch `*.{c,h}` | Code style, naming, license header, project structure |
-| tech.md | fileMatch `CMakeLists.txt,*.cmake` | Build system configuration |
+| build.md | fileMatch `CMakeLists.txt,*.cmake` | Build system configuration |
 | init.md | manual | Post-init checklist: user-input placeholders and verification |
 
 When syncing to an IDE that uses front-matter (e.g. Kiro), convert the Inclusion column to the IDE's native mechanism.
