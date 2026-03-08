@@ -60,12 +60,12 @@ When reviewing or writing code, always check:
 
 ## Project Context (product.md)
 
-When starting work on a project, check if `.kiro/steering/product.md` (or equivalent path) exists:
+Maintain `.kiro/steering/product.md` (or equivalent path) as a living document:
 
-- If missing: scan the project structure and code, then generate it
-- If exists: review and update it to reflect the current state of the project
+- On first encounter: if missing, scan the project and generate it
+- After code changes: if modules were added, removed, or renamed, update it to stay in sync
 
-This file provides project context that cannot be inferred from code alone. Generate it with the following structure:
+Generate with this structure:
 
 ```markdown
 # {project name}
