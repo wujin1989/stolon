@@ -60,7 +60,7 @@ When reviewing or writing code, always check:
 
 ## Project Context (product.md)
 
-`product.md` is the project's living profile — it tells the AI what this project is, what it contains, and what principles guide its development. Maintain it at `.kiro/steering/product.md` (or equivalent path).
+`product.md` is the project's living profile — it tells the AI what this project is, what it contains, and what principles guide its development. Maintain it in the project's steering directory (e.g. `.kiro/steering/product.md`, `.cursor/rules/product.md`, or equivalent path depending on the IDE).
 
 ### When to act
 
