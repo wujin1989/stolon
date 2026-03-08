@@ -17,14 +17,20 @@ Ask the user before starting:
 
 ### 1. Copy Templates
 
-Copy `templates/common/` into the project root, then copy the matching type (`templates/library/` or `templates/application/`) on top.
+If the project root is empty or not yet initialized:
+
+1. Locate the `common/` and type-specific (`library/` or `application/`) template directories. They may be in this skill's directory or already copied into the project.
+2. Copy `common/` into the project root.
+3. Copy the matching type directory on top.
+
+If template files are already present in the project, skip to step 2.
 
 ### 2. Replace Placeholders
 
 | Placeholder | Value | Derivation |
 |-------------|-------|------------|
-| `{project}` | project name, lowercase with hyphens | As-is from user input (e.g. `hello-lib`) |
-| `{PROJECT}` | uppercase, hyphens → underscores | e.g. `HELLO_LIB` |
+| `{project}` | project name, lowercase with hyphens | As-is from user input (e.g. `my-app`) |
+| `{PROJECT}` | uppercase, hyphens → underscores | e.g. `MY_APP` |
 | `{YEAR}` | current year | e.g. `2026` |
 | `{AUTHOR}` | author name | From user input |
 | `{EMAIL}` | email address | From user input |
