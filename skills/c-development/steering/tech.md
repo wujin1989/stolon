@@ -125,12 +125,13 @@ cmake --build out --target coverage
 
 ### Coverage (Windows)
 
-Requires: OpenCppCoverage
+Requires: OpenCppCoverage. Testing must be enabled.
 
 ```bash
-cmake -B out
+cmake -B out -D{PROJECT}_ENABLE_COVERAGE=ON -D{PROJECT}_ENABLE_TESTING=ON
 cmake --build out --config Debug
-OpenCppCoverage --sources src -- out\Debug\test-<module>.exe
+cmake --build out --target coverage
+# Report: out/coverage/index.html
 ```
 
 ## Test Framework
