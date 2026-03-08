@@ -2,11 +2,11 @@
 
 ## Inputs
 
-Ask the user before starting:
+Ask the user before starting. Skip if the project already has a `CMakeLists.txt` with no `{...}` placeholders.
 
 | Input | Example |
 |-------|---------|
-| Project name | `myproject` |
+| Project name | `acme-utils` |
 | Project type | `library` or `application` |
 | Description | One-line project summary |
 | Author | Name for LICENSE |
@@ -29,8 +29,8 @@ If template files are already present in the project, skip to step 2.
 
 | Placeholder | Value | Derivation |
 |-------------|-------|------------|
-| `{project}` | project name, lowercase with hyphens | As-is from user input (e.g. `my-app`) |
-| `{PROJECT}` | uppercase, hyphens → underscores | e.g. `MY_APP` |
+| `{project}` | project name, lowercase with hyphens | As-is from user input (e.g. `acme-utils`) |
+| `{PROJECT}` | uppercase, hyphens → underscores | e.g. `ACME_UTILS` |
 | `{YEAR}` | current year | e.g. `2026` |
 | `{AUTHOR}` | author name | From user input |
 | `{EMAIL}` | email address | From user input |
