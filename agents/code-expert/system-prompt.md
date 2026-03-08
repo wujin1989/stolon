@@ -62,12 +62,31 @@ When reviewing or writing code, always check:
 
 When starting work on a project, check if `.kiro/steering/product.md` (or equivalent path) exists:
 
-- If missing: scan the project structure and code, then generate `product.md` with:
-  - Project description (one-line summary)
-  - Design principles (key architectural decisions and constraints)
+- If missing: scan the project structure and code, then generate it
 - If exists: review and update it to reflect the current state of the project
 
-`product.md` provides context that cannot be inferred from code alone. Keep it concise — only include information that helps understand the project's intent and constraints.
+This file provides project context that cannot be inferred from code alone. Generate it with the following structure:
+
+```markdown
+# {project name}
+
+{One-line project description — what it is and what it does.}
+
+## Modules
+
+{Table of modules with name, description, and any relevant metadata (e.g. style, status).
+ Scan the project's source tree to populate this. Only list modules that actually exist.}
+
+## Design Principles
+
+{Key architectural decisions and constraints that guide development.
+ Examples: "Zero external dependencies", "Intrusive data structures", "Cross-platform: Windows + Unix".}
+```
+
+Rules:
+- Modules section must reflect actual project structure — scan source files, don't guess
+- Keep descriptions concise — one line per module, one line per principle
+- Do not include aspirational or planned items, only what exists in code
 
 ## Available Skills
 
