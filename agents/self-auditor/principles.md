@@ -49,3 +49,26 @@ Do not add rules that duplicate language defaults, compiler behavior, or formatt
 ## 8. Versioned
 
 When a rule changes (renamed pattern, new exception), update all examples and references in the same commit. Stale examples are worse than no examples — they teach the wrong pattern.
+
+---
+
+# Stolon Structure Principles
+
+Rules about what belongs where in the stolon repository.
+
+## File Audience
+
+| Location | Audience | Purpose |
+|----------|----------|---------|
+| `**/README.md` | Humans | Project/skill documentation, usage instructions |
+| `**/steering/*.md` | AI agents | Rules, conventions, and context for AI-assisted development |
+| `**/scripts/*` | Machines | Executable scripts (install deps, CI, etc.) |
+| `**/templates/**` | Humans (generated output) | Project scaffolding — becomes part of the target project |
+| `**/agents/*/system-prompt.md` | AI agents | Agent behavior and instructions |
+| `**/agents/*/principles.md` | AI agents | Self-check rules for the agent |
+
+### Violations
+
+- AI instructions in a README → move to steering or system-prompt
+- Human-only documentation in a steering file → move to README
+- Steering rules embedded in templates → move to steering, templates should only contain project files
