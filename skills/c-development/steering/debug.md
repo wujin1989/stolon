@@ -11,23 +11,10 @@ Follow this order before reaching for a debugger:
 3. Run with sanitizers (ASAN → TSAN → UBSAN) to catch memory/thread/UB issues
 4. Use a debugger only if sanitizers don't reveal the cause
 
-## Sanitizer Usage
+## Sanitizer Constraints
 
-```bash
-# AddressSanitizer — memory errors (use-after-free, buffer overflow, leaks)
-cmake -B out -D{PROJECT}_ENABLE_ASAN=ON
-cmake --build out && ctest --test-dir out --output-on-failure
+Sanitizer build commands are in `build.md`. Additional constraints for debugging:
 
-# ThreadSanitizer — data races
-cmake -B out -D{PROJECT}_ENABLE_TSAN=ON
-cmake --build out && ctest --test-dir out --output-on-failure
-
-# UndefinedBehaviorSanitizer — signed overflow, null deref, alignment
-cmake -B out -D{PROJECT}_ENABLE_UBSAN=ON
-cmake --build out && ctest --test-dir out --output-on-failure
-```
-
-Constraints:
 - ASAN and TSAN cannot be enabled simultaneously
 - Always build in Debug mode for full symbol info (`-C Debug` on Windows)
 - ASAN is available on all platforms (MSVC, GCC, Clang). TSAN and UBSAN are GCC/Clang only.
