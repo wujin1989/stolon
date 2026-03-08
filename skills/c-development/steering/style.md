@@ -29,7 +29,7 @@ Every `.c` and `.h` file must start with the project license block:
 
 ## Naming Convention
 
-**Prefix Rule:** Use your project name in lowercase as the namespace prefix. In C identifiers (functions, types, macros), replace hyphens with underscores. In file names, keep hyphens as-is.
+**Prefix Rule:** Use the `{project}` value (lowercase with hyphens, as entered during setup) as the namespace prefix. In C identifiers (functions, types, macros), replace hyphens with underscores. In file names, keep hyphens as-is.
 
 | Context | Project `mylib` | Project `hello-lib` |
 |---------|----------------|---------------------|
@@ -46,7 +46,7 @@ Every `.c` and `.h` file must start with the project license block:
 | Function pointer typedefs | `{project}_<module>_<purpose>_fn_t` | `mylib_rbtree_cmp_fn_t` |
 | Internal types (file-scope) | `_<name>_t` | `_node_t` |
 | Static variables (file-scope) | `_<name>` | `_echo_loop` |
-| Global variables (non-static) | no prefix | `stop_io` |
+| Global variables (non-static, in `.c` files) | no prefix, `snake_case` | `stop_io` ✓ / `StopIO` ✗ |
 | Source files | `{project}-<module>.c` | `mylib-list.c` |
 | Test files | `test-<module>.c` | `test-list.c` |
 
@@ -63,7 +63,7 @@ The `{project}` placeholder is used as-is in file names and CMake identifiers. I
 | C function prefix | `hello_lib_list_insert()` | — |
 | C type prefix | `hello_lib_list_t` | — |
 | Include directory | `include/hello-lib/` | — |
-| Umbrella header | `hello-lib.h` | — |
+| Umbrella header | `include/hello-lib.h` (root of `include/`) | — |
 
 > When the project name has no hyphens (e.g. `xylem`), all forms are identical — no conversion needed.
 
@@ -160,7 +160,17 @@ Static functions ordered by dependency (no forward declarations).
 
 ## Platform Layer
 
-Use C11 standard library interfaces (`thrd_sleep`, `timespec_get`, `<threads.h>`, etc.) instead of platform-specific APIs. Only use the platform layer when C11 has no equivalent (e.g. monotonic clock).
+Use C11 standard library interfaces instead of platform-specific APIs. Use the platform layer only for the cases listed below where C11 has no equivalent.
+
+| Case | C11 Gap | Platform Function |
+|------|---------|-------------------|
+| Monotonic clock | `timespec_get` only provides wall-clock time | `platform_time_monotonic_nsec` |
+| Socket I/O | No networking in C11 | `platform_net_*` |
+| Filesystem notifications | No inotify/kqueue/IOCP in C11 | `platform_fs_watch_*` |
+| Shared library loading | No `dlopen`/`LoadLibrary` in C11 | `platform_dl_*` |
+| Thread naming | `<threads.h>` has no thread-name API | `platform_thread_set_name` |
+
+If a case is not in this table, use C11. To add a new platform case, add it to this table first.
 
 Platform-specific code lives under `src/platform/win/` and `src/platform/unix/`.
 
@@ -177,8 +187,11 @@ Public API functions belong in `src/{project}-<module>.c` and call `platform_*` 
 
 ## Project Structure (Library)
 
+The umbrella header lives at `include/{project}.h` (root of `include/`). The `include/{project}/` subdirectory is created when the first module is added.
+
 ```
-include/{project}/{project}-<module>.h  # Public API
+include/{project}.h                     # Umbrella header (includes all module headers)
+include/{project}/{project}-<module>.h  # Public API (created with first module)
 src/{project}-<module>.c                # Implementation
 src/platform/win/                       # Windows platform code
 src/platform/unix/                      # Linux/macOS platform code
@@ -198,13 +211,14 @@ tests/test-<module>.c                   # Unit tests
 ```
 
 ### Adding a Module (Library)
-1. Create `include/{project}/{project}-<module>.h` with public API
-2. Create `src/{project}-<module>.c` with implementation
-3. Add to `SRCS` in root `CMakeLists.txt`
-4. Include in `include/{project}.h`
-5. Create `tests/test-<module>.c`
-6. Add `{project}_add_test(<module>)` to `tests/CMakeLists.txt`
-7. When adding files to `src/platform/win/` or `src/platform/unix/`, delete `.gitkeep` in that directory if it exists
+1. If `include/{project}/` does not exist, create it
+2. Create `include/{project}/{project}-<module>.h` with public API
+3. Create `src/{project}-<module>.c` with implementation
+4. Add to `SRCS` in root `CMakeLists.txt`
+5. Include in `include/{project}.h`
+6. Create `tests/test-<module>.c`
+7. Add `{project}_add_test(<module>)` to `tests/CMakeLists.txt`
+8. When adding files to `src/platform/win/` or `src/platform/unix/`, delete `.gitkeep` in that directory if it exists
 
 ### Adding a Module (Executable)
 1. Create `src/{project}-<module>.c` and `src/{project}-<module>.h`
@@ -224,16 +238,6 @@ Applies to all `.c` and `.h` files in the project (including tests).
 | `gets` | `fgets` | Removed in C11 — unconditional buffer overflow |
 | `atoi`, `atof`, `atol` | `strtol`, `strtod` | No error detection — overflow is undefined behavior |
 | `memcpy` with overlapping regions | `memmove` | Overlapping src/dst is undefined behavior |
-
-## Cross-Platform Pitfalls (Reference)
-
-> This section is informational reference, not enforceable rules.
-
-- `long`: 4 bytes on Windows x64, 8 bytes on Linux/macOS x64
-- Stack size: Windows 1MB, Linux 8MB
-- Uninitialized memory may be zeroed in debug but not release — use ASAN
-- Signals: Windows uses SEH, Unix uses POSIX signals
-- Paths: `\` on Windows, `/` on Unix
 
 ## Headers
 
@@ -288,10 +292,22 @@ static inline void _heap_swap_node(...) { ... }
 
 ### Inline Comments
 
+Applies to comments inside function bodies in `.c` files.
+
 - `/* ... */` style (C11 compatible)
 - `/** ... */` when spanning multiple lines (block format: `/**` and `*/` on own lines)
-- Only to explain why, not what — if the comment restates the code, remove it
-- No decorative dividers
+- A comment must explain *why* the code does something, not *what* it does. If the comment restates the code, remove it.
+- No decorative dividers (lines of `===`, `---`, `***`, etc.)
+
+```c
+/* Correct — explains why */
+/* Reserve extra byte for null terminator required by snprintf. */
+uint8_t buf[len + 1];
+
+/* Incorrect — restates the code */
+/* Add 1 to len. */
+uint8_t buf[len + 1];
+```
 
 ## Test Convention
 

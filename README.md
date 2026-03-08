@@ -8,7 +8,8 @@ Reusable AI skills and agents that extend from one domain to another — like st
 stolon/
 ├── skills/          # Reusable skill packages
 ├── agents/          # Specialized AI agent configurations
-└── mcps/            # Shared MCP servers
+├── mcps/            # Shared MCP servers
+└── LICENSE          # MIT License
 ```
 
 ## Skills

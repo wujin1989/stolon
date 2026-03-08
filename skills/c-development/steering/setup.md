@@ -43,7 +43,9 @@ Replace in all files. No `{...}` placeholder should remain after this step.
 | From | To |
 |------|----|
 | `cmake/utils.cmake` | `cmake/{project}-utils.cmake` |
-| `include/project.h` (library only) | `include/{project}.h` |
+| `include/project.h` (library only) | `include/{project}.h` (stays at root of `include/`, not inside `include/{project}/`) |
+
+> The `include/{project}/` subdirectory does not exist at project creation. It is created when the first module is added (see style.md "Adding a Module").
 
 ### 4. Verify
 

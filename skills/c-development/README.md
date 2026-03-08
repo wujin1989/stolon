@@ -6,7 +6,10 @@ Supports Windows (MSVC), Linux (GCC/Clang), and macOS (Clang).
 ## Contents
 
 - `steering/` — AI steering files
-- `templates/` — Project templates (common + library/application variants)
+- `templates/` — Project templates
+  - `common/` — Shared files (`.clang-format`, `.gitignore`, `cmake/`, `tests/`, `src/platform/`)
+  - `library/` — Library-specific files (`CMakeLists.txt`, `include/`, `examples/`)
+  - `application/` — Application-specific files (`CMakeLists.txt`)
 
 ## Steering Files
 
@@ -16,6 +19,8 @@ Supports Windows (MSVC), Linux (GCC/Clang), and macOS (Clang).
 | build.md | fileMatch `CMakeLists.txt,*.cmake` | Build system configuration |
 | setup.md | manual | Project setup checklist: user-input placeholders and verification |
 | debug.md | manual | Debugging rules: diagnosis order, sanitizers, debuggers, common pitfalls |
+
+> `fileMatch` files are loaded automatically by the IDE when a matching file is open. `manual` files are loaded on demand by the agent when the task requires them (e.g. setup.md during project creation).
 
 ## MCP Servers
 
@@ -40,6 +45,16 @@ gdb -ex "target remote :5005" ./out/<program>
 # macOS (LLDB)
 lldb ./out/<program>
 ```
+
+## Cross-Platform Pitfalls
+
+| Pitfall | Detail |
+|---------|--------|
+| `long` size | 4 bytes on Windows x64, 8 bytes on Linux/macOS x64 — use `int32_t`/`int64_t` |
+| Stack size | Windows 1MB default, Linux 8MB default |
+| Uninitialized memory | May be zeroed in debug but not release — use ASAN to catch |
+| Signals | Windows uses SEH, Unix uses POSIX signals |
+| Paths | `\` on Windows, `/` on Unix |
 
 ## Dependencies
 

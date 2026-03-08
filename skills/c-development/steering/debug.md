@@ -1,5 +1,7 @@
 # Debugging
 
+> This file defines diagnostic procedures for AI agents to follow when investigating bugs. The steps below are sequential workflows, not code-triggerable rules.
+
 ## Diagnosis Order
 
 1. Read the error message — compiler warnings, sanitizer output, assertion failures
