@@ -5,7 +5,7 @@ Supports Windows (MSVC), Linux (GCC/Clang), and macOS (Clang).
 
 ## Contents
 
-- `steering/` — AI steering files (codestyle, build system)
+- `steering/` — AI steering files (init checklist)
 - `templates/` — Project templates (common + lib/app variants)
 - `scripts/` — Dependency installation scripts (sh + ps1)
 
@@ -13,10 +13,7 @@ Supports Windows (MSVC), Linux (GCC/Clang), and macOS (Clang).
 
 | File | Inclusion | Description |
 |------|-----------|-------------|
-| codestyle.md | fileMatch `*.{c,h}` | Code style, naming, license header, project structure |
-| tech.md | fileMatch `CMakeLists.txt,*.cmake` | Build system configuration |
 | init.md | manual | Post-init checklist: user-input placeholders and verification |
-| debug.md | manual | Debugging guide with platform debuggers and MCP servers |
 
 When syncing to an IDE that uses front-matter (e.g. Kiro), `manual` inclusion files require a `description` field. Use the Description column value above.
 

@@ -16,6 +16,7 @@ stolon/
 | Name | Description |
 |------|-------------|
 | [c-project-init](skills/c-project-init/) | Initialize cross-platform C project with CMake, testing, sanitizers, and coverage |
+| [c-project-dev](skills/c-project-dev/) | Code style and build system steering for daily C development |
 | [c-project-debug](skills/c-project-debug/) | Cross-platform C project debugging (GDB/LLDB/MSVC) |
 
 ## Agents
@@ -35,6 +36,7 @@ Copy skills directly into your IDE's skills directory:
 
 ```bash
 cp -r skills/c-project-init/ <your-project-skills-dir>/
+cp -r skills/c-project-dev/ <your-project-skills-dir>/
 cp -r skills/c-project-debug/ <your-project-skills-dir>/
 ```
 
@@ -44,6 +46,7 @@ Copy steering files into your IDE's supported location (e.g. a steering or rules
 
 ```bash
 cp skills/c-project-init/steering/* <your-project-steering-dir>/
+cp skills/c-project-dev/steering/* <your-project-steering-dir>/
 cp skills/c-project-debug/steering/* <your-project-steering-dir>/
 cp -r skills/c-project-init/scripts/ <your-project>/scripts/
 ```
