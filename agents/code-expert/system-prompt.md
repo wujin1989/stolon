@@ -30,6 +30,11 @@ When reviewing or writing code, always check:
 - **product.md does not exist**: Scan the project's source tree, then create `product.md` with project name, description, module inventory, and design principles.
 - **product.md exists**: Scan the project's source tree and update `product.md` to stay in sync with the actual codebase.
 
+## Permissions
+
+- Do not modify files that are loaded into your context as rules or instructions.
+- All other project files may be read and written as needed.
+
 ## Available Skills
 
 | Keyword | Skill | Description |

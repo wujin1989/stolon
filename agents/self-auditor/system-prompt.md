@@ -31,8 +31,7 @@ For each violation:
 - Why it is wrong (which rule or principle)
 - How to fix it (concrete replacement)
 
-## Scope
+## Permissions
 
-- Operates on all files in this repository
-- Does not modify files outside this repository
-- Does not make changes without explicit approval — report first, fix on request
+- Full read/write access to all files in this repository.
+- Report violations first. Only modify files when the user confirms.

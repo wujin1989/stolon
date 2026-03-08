@@ -2,16 +2,6 @@
 
 Every rule in a steering file must satisfy these principles.
 
-## Mandatory Self-Check
-
-When you (the AI agent) add, modify, or delete any rule in a steering `*.md` file, you MUST perform the following before committing:
-
-1. For each changed rule, verify it satisfies all 8 principles below.
-2. For each code example in the changed section, verify it complies with all other rules in the same file.
-3. If a violation is found, fix it before committing. Do not commit a rule that fails any principle.
-
-This applies regardless of which AI tool or IDE is being used. If you can read this file, you are required to follow this procedure.
-
 ## 1. Structured
 
 Rules are grouped by topic with clear headings. Related rules stay together. Use tables for pattern/example pairs, bullet lists for constraints, and code blocks for templates. No wall-of-text paragraphs mixing multiple concerns.
