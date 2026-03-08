@@ -1,7 +1,5 @@
 # Code Style
 
-> Recommended trigger: auto-include when editing `*.c` / `*.h` files.
-
 ## License Header
 
 Every `.c` and `.h` file must start with the project license block:

@@ -1,7 +1,5 @@
 # Build System
 
-> Recommended trigger: auto-include when editing `CMakeLists.txt` / `*.cmake` files.
-
 ## Stack
 
 - C11, CMake >= 3.16

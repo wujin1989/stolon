@@ -1,10 +1,6 @@
 # Debugging
 
-> Recommended trigger: manual include. Use when debugging issues.
-
 ## Diagnosis Order
-
-Follow this order before reaching for a debugger:
 
 1. Read the error message — compiler warnings, sanitizer output, assertion failures
 2. Reproduce with a minimal test case (`tests/test-<module>.c`)
@@ -13,11 +9,12 @@ Follow this order before reaching for a debugger:
 
 ## Sanitizer Constraints
 
-Sanitizer build commands are in `build.md`. Additional constraints for debugging:
+Build commands are in `build.md`. Additional constraints:
 
 - ASAN and TSAN cannot be enabled simultaneously
 - Always build in Debug mode for full symbol info (`-C Debug` on Windows)
 - ASAN is available on all platforms (MSVC, GCC, Clang). TSAN and UBSAN are GCC/Clang only.
+- ASAN leak detection (`detect_leaks`) only works on Linux. On Windows use Debug CRT instead.
 
 ## Common Pitfalls
 
@@ -25,10 +22,9 @@ Sanitizer build commands are in `build.md`. Additional constraints for debugging
 |-------|-------|-----|
 | Crash only in Release | Uninitialized variable (zeroed in Debug, garbage in Release) | Run ASAN in Debug, inspect the variable |
 | Works on Linux, crashes on Windows | `long` is 4 bytes on Windows x64, 8 on Linux | Use `int32_t`/`int64_t` instead of `long` |
-| Heap corruption | Buffer overflow or use-after-free | Run ASAN |
-| Data race | Missing lock or atomic | Run TSAN |
 | Segfault with no ASAN output | Stack overflow (default 1MB on Windows, 8MB on Linux) | Reduce recursion or increase stack size |
 | Core dump not generated (Linux) | `ulimit -c` is 0 | `ulimit -c unlimited` before running |
+| False positive in TSAN | Custom lock/synchronization not recognized | Use TSAN annotations (`__tsan_acquire`/`__tsan_release`) |
 
 ## Analysis Procedures
 
@@ -38,7 +34,6 @@ Sanitizer build commands are in `build.md`. Additional constraints for debugging
 2. Run with ASAN — if it reports, follow the ASAN output (file, line, allocation trace)
 3. If ASAN is clean, check for stack overflow (reduce recursion, print stack depth)
 4. Attach debugger, get backtrace (`bt` in GDB/LLDB, `k` in CDB)
-5. Inspect the faulting address — NULL (missing init), 0xDEAD (use-after-free), valid but wrong (logic error)
 
 ### Memory Leak
 
@@ -56,5 +51,8 @@ Sanitizer build commands are in `build.md`. Additional constraints for debugging
 
 1. Write a minimal test case that asserts the expected value
 2. Add `printf` / logging at key decision points to trace the logic flow
-3. Check integer overflow, signedness, and type promotion (especially `int` vs `uint32_t` in comparisons)
+3. Check integer overflow, signedness, and type promotion:
+   - `unsigned - unsigned` wraps to large positive on underflow
+   - Signed/unsigned comparison: signed value is implicitly converted to unsigned
+   - `int32_t * int32_t` may overflow — cast one operand to `int64_t` first
 4. Check platform-specific behavior (`long` size, endianness, path separators)
