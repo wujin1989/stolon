@@ -48,6 +48,6 @@ Steering files are in `skills/c-development/steering/`. Load the relevant file b
 | File | Load when |
 |------|-----------|
 | `setup.md` | Creating a new C project from templates |
-| `codestyle.md` | Writing or reviewing `.c` / `.h` files |
+| `style.md` | Writing or reviewing `.c` / `.h` files |
 | `build.md` | Editing `CMakeLists.txt` / `*.cmake` or running builds |
 | `debug.md` | Diagnosing crashes, leaks, races, or wrong output |

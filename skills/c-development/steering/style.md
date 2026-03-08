@@ -50,6 +50,23 @@ Every `.c` and `.h` file must start with the project license block:
 | Source files | `{project}-<module>.c` | `mylib-list.c` |
 | Test files | `test-<module>.c` | `test-list.c` |
 
+### Derived Forms
+
+The `{project}` placeholder is used as-is in file names and CMake identifiers. In C identifiers, hyphens are replaced with underscores:
+
+| Context | `{project}` = `hello-lib` | `{PROJECT}` = `HELLO_LIB` |
+|---------|--------------------------|---------------------------|
+| File names | `hello-lib-list.c` | — |
+| CMake target | `add_library(hello-lib ...)` | — |
+| CMake options | — | `HELLO_LIB_ENABLE_TESTING` |
+| CMake functions | `hello-lib_apply_sanitizer(...)` | — |
+| C function prefix | `hello_lib_list_insert()` | — |
+| C type prefix | `hello_lib_list_t` | — |
+| Include directory | `include/hello-lib/` | — |
+| Umbrella header | `hello-lib.h` | — |
+
+> When the project name has no hyphens (e.g. `xylem`), all forms are identical — no conversion needed.
+
 > The `_` prefix for file-scope static functions and internal types is technically reserved by C11 (§7.1.3), but is used intentionally here. These symbols are never exported and do not enter the linker symbol table, so conflicts with the implementation are not a practical concern.
 
 ### Public Functions

@@ -13,7 +13,7 @@ All project-level options use `{PROJECT}_ENABLE_<FEATURE>`:
 
 | Option | Default | Purpose |
 |--------|---------|---------|
-| `{PROJECT}_ENABLE_TESTING` | ON | Unit tests |
+| `{PROJECT}_ENABLE_TESTING` | OFF | Unit tests |
 | `{PROJECT}_ENABLE_ASAN` | OFF | AddressSanitizer |
 | `{PROJECT}_ENABLE_TSAN` | OFF | ThreadSanitizer |
 | `{PROJECT}_ENABLE_UBSAN` | OFF | UndefinedBehaviorSanitizer |

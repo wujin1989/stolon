@@ -9,6 +9,6 @@ Switch to this agent when making any changes to the repository. The agent will v
 ## Covers
 
 - Steering files: self-check against principles in `principles.md`
-- Templates: verify placeholders are correct, code examples comply with `codestyle.md`
+- Templates: verify placeholders are correct, code examples comply with `style.md`
 - README files: verify documentation matches actual file structure and placeholders
 - Cross-file consistency: changes in one file are reflected in all related files

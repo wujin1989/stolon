@@ -4,13 +4,14 @@
 
 Ask the user before starting:
 
-| Input | Example | Used in |
-|-------|---------|---------|
-| Project name | `hello-lib` | Directory name, file names, CMake targets |
-| Project type | `library` or `application` | Template selection |
-| Description | One-line summary | README.md |
-| Author | Name | LICENSE, AUTHORS |
-| Email | Address | LICENSE, AUTHORS |
+| Input | Example |
+|-------|---------|
+| Project name | `myproject` |
+| Project type | `library` or `application` |
+| Description | One-line project summary |
+| Author | Name for LICENSE |
+| Email | Email for LICENSE |
+| Year | Year or range for LICENSE (e.g. `2026-2036`) |
 
 ## Steps
 
@@ -40,7 +41,4 @@ Replace in all files. No `{...}` placeholder should remain after this step.
 
 ### 4. Verify
 
-- No `{...}` remains in any file
-- `cmake --preset default` or `cmake -B out` succeeds
-- README.md has a real description
-- LICENSE and AUTHORS have correct year, name, and email
+Search all files for the case-insensitive regex `\{(project|year|author|email|description)\}` to confirm no unreplaced placeholders remain.
