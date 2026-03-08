@@ -62,7 +62,6 @@ Rules about what belongs where in the stolon repository.
 |----------|----------|---------|
 | `**/README.md` | Humans | Project/skill documentation, usage instructions |
 | `**/steering/*.md` | AI agents | Rules, conventions, and context for AI-assisted development |
-| `**/scripts/*` | Machines | Executable scripts (install deps, CI, etc.) |
 | `**/templates/**` | Humans (generated output) | Project scaffolding — becomes part of the target project |
 | `**/agents/*/system-prompt.md` | AI agents | Agent behavior and instructions |
 | `**/agents/*/principles.md` | AI agents | Self-check rules for the agent |

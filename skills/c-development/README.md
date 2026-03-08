@@ -6,8 +6,7 @@ Supports Windows (MSVC), Linux (GCC/Clang), and macOS (Clang).
 ## Contents
 
 - `steering/` — AI steering files
-- `templates/` — Project templates (common + lib/app variants)
-- `scripts/` — Dependency installation scripts (sh + ps1)
+- `templates/` — Project templates (common + library/application variants)
 
 ## Steering Files
 
@@ -115,6 +114,15 @@ lldb ./out/<program>
 
 ## Dependencies
 
-- Linux/macOS: `scripts/install-deps.sh`
-- Windows: `scripts/install-deps.ps1` (requires admin)
-- Visual Studio 2022 with C++ workload must be installed separately
+Install these before using this skill:
+
+| Tool | Purpose | Install |
+|------|---------|---------|
+| CMake >= 3.16 | Build system | [cmake.org](https://cmake.org/download/) |
+| C compiler | MSVC / GCC / Clang | VS2022 (Windows), `apt install build-essential` (Linux), Xcode CLT (macOS) |
+| clang-format | Code formatting | Included with LLVM: [llvm.org](https://releases.llvm.org/) |
+| lcov + genhtml | Coverage (Linux/macOS) | `apt install lcov` / `brew install lcov` |
+| OpenCppCoverage | Coverage (Windows) | [opencppcoverage.com](https://github.com/OpenCppCoverage/OpenCppCoverage) |
+| GDB | Debugger (Linux) | `apt install gdb` |
+| LLDB | Debugger (macOS) | Included with Xcode CLT |
+| WinDbg | Debugger (Windows) | Microsoft Store or `winget install Microsoft.WinDbg` |
