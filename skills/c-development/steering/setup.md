@@ -2,7 +2,7 @@
 
 ## Inputs
 
-Ask the user before starting. Skip if the project already has a `CMakeLists.txt` with no `{...}` placeholders.
+Ask the user before starting. If the project already has a `CMakeLists.txt` with no `{...}` placeholders, skip this entire setup — do not ask for inputs and do not run any of the steps below.
 
 | Input | Example |
 |-------|---------|
