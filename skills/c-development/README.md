@@ -16,7 +16,6 @@ Supports Windows (MSVC), Linux (GCC/Clang), and macOS (Clang).
 | codestyle.md | fileMatch `*.{c,h}` | Code style, naming, license header, project structure |
 | tech.md | fileMatch `CMakeLists.txt,*.cmake` | Build system configuration |
 | init.md | manual | Post-init checklist: user-input placeholders and verification |
-| debug.md | manual | MCP remote debugging guide, cross-platform pitfalls |
 
 When syncing to an IDE that uses front-matter (e.g. Kiro), convert the Inclusion column to the IDE's native mechanism.
 
@@ -97,6 +96,22 @@ Also rename:
 | Windows | CDB/WinDbg | svnscha/mcp-windbg | Available (`pip install mcp-windbg`, requires Python >= 3.10) |
 | macOS/Linux | LLDB | stass/lldb-mcp | Available (`git clone`) |
 | Linux | GDB | signal-slot/mcp-gdb | Available (`uvx mcp-gdb`) |
+
+### MCP Remote Debugging
+
+Start a debug server, then tell the AI agent to connect. The agent handles breakpoints, stepping, and variable inspection via natural language.
+
+```bash
+# Windows (CDB) — pick any free port
+cdb -server tcp:port=5005 -o out\Debug\<program>.exe
+# Then tell the agent: tcp:Port=5005,Server=localhost
+
+# Linux (GDB)
+gdb -ex "target remote :5005" ./out/<program>
+
+# macOS (LLDB)
+lldb ./out/<program>
+```
 
 ## Dependencies
 
