@@ -1,5 +1,7 @@
 # Testing
 
+> Rules for writing, organizing, and running tests in C projects built with this skill.
+
 ## File Scope
 
 Applies to `tests/test-<module>.c` files and `tests/CMakeLists.txt`.
