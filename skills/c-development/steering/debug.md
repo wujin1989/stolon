@@ -58,10 +58,3 @@ Sanitizer build commands are in `build.md`. Additional constraints for debugging
 2. Add `printf` / logging at key decision points to trace the logic flow
 3. Check integer overflow, signedness, and type promotion (especially `int` vs `uint32_t` in comparisons)
 4. Check platform-specific behavior (`long` size, endianness, path separators)
-
-### Build Failure
-
-1. Read the full error message — don't guess from the first line
-2. Missing symbol: check `SRCS` list in CMakeLists.txt, verify the `.c` file is included
-3. Missing header: check `include_directories` and `target_include_directories`
-4. Linker error on Windows: check `CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS` or explicit `__declspec(dllexport)`

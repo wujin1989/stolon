@@ -133,3 +133,12 @@ cmake --build out --config Debug
 cmake --build out --target coverage
 # Report: out/coverage/index.html
 ```
+
+## Troubleshooting
+
+### Build Failure
+
+1. Read the full error message — don't guess from the first line
+2. Missing symbol: check `SRCS` list in CMakeLists.txt, verify the `.c` file is included
+3. Missing header: check `include_directories` and `target_include_directories`
+4. Linker error on Windows: check `CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS` or explicit `__declspec(dllexport)`
