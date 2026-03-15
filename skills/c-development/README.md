@@ -5,25 +5,24 @@ Supports Windows (MSVC), Linux (GCC/Clang), and macOS (Clang).
 
 ## Contents
 
-- `steering/` — AI steering files
-- `templates/` — Project templates
-  - `common/` — Shared files (`.clang-format`, `.gitignore`, `AUTHORS`, `LICENSE`, `README.md`, `cmake/`, `docs/`, `tests/`, `src/platform/`)
-  - `library/` — Library-specific files (`CMakeLists.txt`, `include/`, `examples/`)
-  - `application/` — Application-specific files (`CMakeLists.txt`)
-
-## Steering Files
-
-| File | Inclusion | Description |
-|------|-----------|-------------|
-| style.md | fileMatch `*.{c,h}` | Code style, naming, license header, project structure |
-| build.md | fileMatch `CMakeLists.txt,*.cmake` | Build system configuration |
-| test.md | fileMatch `tests/*` | Test conventions, structure, naming, sanitizer/coverage testing |
-| setup.md | manual | Project setup checklist: user-input placeholders and verification |
-| debug.md | manual | Debugging rules: diagnosis order, sanitizers, debuggers, common pitfalls |
-| deploy.md | manual | Release checklist, versioning, packaging, CI integration |
-| deps.md | manual | Dependency diagnosis and resolution for missing tools and libraries |
-
-> `fileMatch` files are loaded automatically by the IDE when a matching file is open. `manual` files are loaded on demand by the agent when the task requires them (e.g. setup.md during project creation).
+```
+c-development/
+├── SKILL.md              # Skill definition (metadata + routing table)
+├── README.md             # This file (for humans)
+├── references/           # Docs loaded into context as needed
+│   ├── setup.md          # Project setup checklist
+│   ├── style.md          # Code style, naming, license header, project structure
+│   ├── build.md          # Build system configuration
+│   ├── test.md           # Test conventions, sanitizer/coverage testing
+│   ├── debug.md          # Debugging rules, diagnosis order, common pitfalls
+│   ├── deploy.md         # Release checklist, versioning, packaging, CI
+│   └── deps.md           # Dependency diagnosis and resolution
+└── assets/
+    └── templates/        # Project scaffolding
+        ├── common/       # Shared files (.clang-format, .gitignore, cmake/, tests/, etc.)
+        ├── library/      # Library-specific (CMakeLists.txt, include/, examples/)
+        └── application/  # Application-specific (CMakeLists.txt)
+```
 
 ## MCP Servers
 
@@ -48,6 +47,8 @@ gdb -ex "target remote :5005" ./out/<program>
 # macOS (LLDB)
 lldb ./out/<program>
 ```
+
+To use debugger MCPs, add the corresponding config to `.claude/settings.json`. See the project root `settings.json` for example configurations.
 
 ## Cross-Platform Pitfalls
 

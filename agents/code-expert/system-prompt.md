@@ -40,15 +40,4 @@ When reviewing or writing code, always check:
 |---------|-------|-------------|
 | C project | c-development | Cross-platform C project: init, code style, build system, debugging |
 
-### c-development
-
-Steering files are in `skills/c-development/steering/`. Load the relevant file before acting:
-
-| File | Load when |
-|------|-----------|
-| `setup.md` | Creating a new C project from templates |
-| `style.md` | Writing or reviewing `.c` / `.h` files |
-| `build.md` | Editing `CMakeLists.txt` / `*.cmake` or running builds |
-| `test.md` | Writing or reviewing test files in `tests/` |
-| `debug.md` | Diagnosing crashes, leaks, races, or wrong output |
-| `deploy.md` | Packaging, releasing, or setting up CI |
+When a task matches a skill keyword, load the skill's `SKILL.md` for the workflow routing table, then load only the reference document(s) needed. Reference files are in `skills/c-development/references/`.

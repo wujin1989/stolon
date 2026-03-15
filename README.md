@@ -6,10 +6,24 @@ Reusable AI skills and agents that extend from one domain to another — like st
 
 ```
 stolon/
-├── skills/          # Reusable skill packages
-├── agents/          # Specialized AI agent configurations
-├── mcps/            # Shared MCP servers
-└── LICENSE          # MIT License
+├── skills/
+│   └── c-development/
+│       ├── SKILL.md            # Skill definition (metadata + routing table)
+│       ├── README.md           # Human documentation
+│       ├── references/         # Docs loaded into context as needed
+│       └── assets/
+│           └── templates/      # Project scaffolding
+├── agents/
+│   ├── code-expert/
+│   │   ├── system-prompt.md    # Agent behavior and instructions
+│   │   └── README.md           # Human documentation
+│   └── self-auditor/
+│       ├── system-prompt.md    # Agent behavior and instructions
+│       ├── principles.md       # Self-check rules
+│       └── README.md           # Human documentation
+├── mcps/
+│   └── c-debugger.json         # Debugger MCP server configs
+└── LICENSE
 ```
 
 ## Skills
@@ -22,12 +36,20 @@ stolon/
 
 | Name | Description |
 |------|-------------|
-| [code-expert](agents/code-expert/) | General-purpose coding expert, language-agnostic |
-| [self-auditor](agents/self-auditor/) | Audits stolon files for consistency and rule compliance |
+| [code-expert](agents/code-expert/) | Subagent: coding expert |
+| [self-auditor](agents/self-auditor/) | Subagent: rule compliance auditor |
 
 ## Usage
 
-Copy the relevant skills, agents, or MCP configs into your IDE's project structure. Adapt file paths to match your IDE's conventions.
+### Claude Code
+
+Copy `skills/` and `agents/` into your project's `.claude/` directory. Skills are auto-discovered via `SKILL.md`, agents available via subagent spawn.
+
+For debugger MCP servers, merge `mcps/c-debugger.json` into your `.claude/settings.json`.
+
+### Kiro
+
+Copy `skills/` into `.kiro/skills/`, `agents/` into `.kiro/agents/`, and `mcps/` into `.kiro/settings/`.
 
 ### Sync Rules
 

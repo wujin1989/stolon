@@ -19,7 +19,7 @@ Ask the user before starting. If the project already has a `CMakeLists.txt` with
 
 If the project root is empty or not yet initialized:
 
-1. Locate the `common/` and type-specific (`library/` or `application/`) template directories. They may be in this skill's directory or already copied into the project.
+1. Locate the `common/` and type-specific (`library/` or `application/`) directories in this skill's `assets/templates/` directory.
 2. Copy `common/` into the project root.
 3. Copy the matching type directory on top.
 
