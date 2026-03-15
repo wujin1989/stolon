@@ -1,0 +1,14 @@
+Here's a Python script to read a CSV and plot a chart:
+
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("data.csv")
+df.plot(kind="bar", x="category", y="value")
+plt.title("Chart")
+plt.savefig("chart.png")
+plt.show()
+```
+
+Install dependencies with: pip install pandas matplotlib
