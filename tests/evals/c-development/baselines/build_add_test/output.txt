@@ -1,0 +1,38 @@
+Create tests/test-list.c with the following structure:
+
+```c
+#include "assert.h"
+#include "my-utils/list.h"
+
+static void test_insert(void) {
+    my_utils_list_t list;
+    my_utils_list_init(&list);
+    ASSERT(0 == my_utils_list_insert(&list, (void*)(intptr_t)42));
+    ASSERT(my_utils_list_size(&list) == 1);
+    my_utils_list_deinit(&list);
+}
+
+static void test_insert_multiple(void) {
+    my_utils_list_t list;
+    my_utils_list_init(&list);
+    my_utils_list_insert(&list, (void*)(intptr_t)1);
+    my_utils_list_insert(&list, (void*)(intptr_t)2);
+    ASSERT(my_utils_list_size(&list) == 2);
+    my_utils_list_deinit(&list);
+}
+
+int main(void) {
+    test_insert();
+    test_insert_multiple();
+    return 0;
+}
+```
+
+Then register it in tests/CMakeLists.txt:
+
+```cmake
+my_utils_add_test(list)
+```
+
+This creates executable test-list from tests/test-list.c, linked against
+my-utils, with sanitizers and coverage applied automatically.

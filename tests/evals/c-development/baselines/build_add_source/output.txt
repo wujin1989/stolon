@@ -1,0 +1,23 @@
+Add the new source file to the SRCS list in your root CMakeLists.txt:
+
+```cmake
+set(SRCS
+    src/my-utils-list.c
+)
+```
+
+If you also have platform-specific implementations, put them in the conditional
+blocks:
+
+```cmake
+if(WIN32)
+    list(APPEND SRCS src/platform/win/platform-list.c)
+endif()
+if(UNIX)
+    list(APPEND SRCS src/platform/unix/platform-list.c)
+endif()
+```
+
+That's it. The sanitizer and coverage flags are already applied to the my-utils
+target via the helper functions, so the new source file picks them up
+automatically. No other build changes needed.

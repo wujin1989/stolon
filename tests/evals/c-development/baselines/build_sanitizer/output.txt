@@ -1,0 +1,21 @@
+To run your tests with AddressSanitizer, configure with the project's ASAN
+option and then build and test:
+
+```bash
+cmake -B out -DMY_UTILS_ENABLE_ASAN=ON
+cmake --build out
+ctest --test-dir out --output-on-failure
+```
+
+The project's cmake helper (my_utils_apply_sanitizer) handles the correct
+compiler and linker flags for MSVC, GCC, and Clang automatically. Don't add
+-fsanitize=address manually.
+
+Important: ASAN and TSAN cannot be enabled at the same time. If you also want
+to check for data races, run TSAN in a separate build:
+
+```bash
+cmake -B out-tsan -DMY_UTILS_ENABLE_TSAN=ON
+cmake --build out-tsan
+ctest --test-dir out-tsan --output-on-failure
+```

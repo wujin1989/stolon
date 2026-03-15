@@ -1,0 +1,46 @@
+Here are the tests for the hash-map module. Each test function sets up its own
+state from scratch and tears it down at the end — no shared mutable file-scope
+variables, no order dependencies.
+
+```c
+#include "assert.h"
+#include "my-utils/hash-map.h"
+
+static void test_insert(void) {
+    my_utils_hash_map_t map;
+    my_utils_hash_map_init(&map);
+    ASSERT(0 == my_utils_hash_map_insert(&map, "key1", (void*)(intptr_t)100));
+    ASSERT(my_utils_hash_map_size(&map) == 1);
+    my_utils_hash_map_deinit(&map);
+}
+
+static void test_lookup(void) {
+    my_utils_hash_map_t map;
+    my_utils_hash_map_init(&map);
+    my_utils_hash_map_insert(&map, "key1", (void*)(intptr_t)100);
+    ASSERT((intptr_t)my_utils_hash_map_get(&map, "key1") == 100);
+    my_utils_hash_map_deinit(&map);
+}
+
+static void test_delete(void) {
+    my_utils_hash_map_t map;
+    my_utils_hash_map_init(&map);
+    my_utils_hash_map_insert(&map, "key1", (void*)(intptr_t)100);
+    ASSERT(0 == my_utils_hash_map_delete(&map, "key1"));
+    ASSERT(my_utils_hash_map_size(&map) == 0);
+    my_utils_hash_map_deinit(&map);
+}
+
+int main(void) {
+    test_insert();
+    test_lookup();
+    test_delete();
+    return 0;
+}
+```
+
+Register in tests/CMakeLists.txt:
+
+```cmake
+my_utils_add_test(hash-map)
+```

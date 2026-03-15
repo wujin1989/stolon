@@ -1,9 +1,0 @@
-Release checklist for version 1.0.0:
-
-1. All tests pass: ctest --test-dir out --output-on-failure
-2. ASAN clean: build with ENABLE_ASAN=ON, run tests, no errors
-3. UBSAN clean: build with ENABLE_UBSAN=ON, run tests, no errors
-4. No compiler warnings (build with -Werror)
-5. No unreplaced {project}/{PROJECT} placeholders in source files
-6. Update version in CMakeLists.txt: project(MY_UTILS VERSION 1.0.0 LANGUAGES C)
-7. Follow Semantic Versioning (semver): major.minor.patch

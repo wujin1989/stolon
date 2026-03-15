@@ -1,9 +1,0 @@
-Cross-platform segfault debugging — follow this order:
-
-1. First, read the error message carefully.
-2. Run with AddressSanitizer (ASAN) to check for memory errors:
-   cmake -B out -DMYUTILS_ENABLE_ASAN=ON
-   cmake --build out
-3. If ASAN is clean, check for stack overflow (Windows default is 1 MB, Linux is 8 MB).
-4. Check `long` type size — it's 4 bytes on Windows x64 but 8 bytes on Linux. Use int32_t/int64_t instead.
-5. Attach a debugger only if sanitizers don't reveal the cause.

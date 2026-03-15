@@ -1,57 +1,84 @@
 # Skill Evals
 
-Lightweight eval harness for testing agent skill instructions. Each skill has its own eval suite.
+Lightweight Python eval harness for testing agent skill instructions. Each skill has its own eval suite.
+
+## How it works
+
+1. `prompts.json` defines prompts that simulate user requests
+2. `baselines/` contains AI-generated responses (baseline)
+3. `checks.py` has deterministic functions that verify responses follow skill rules
+4. `run_eval.py` feeds outputs into checks and reports pass/fail
 
 ## Structure
 
 ```
 tests/
-├── run-eval.sh              # Universal runner
+├── run_eval.py              # Universal runner
 ├── README.md
 └── evals/
     ├── c-development/       # One directory per skill
     │   ├── prompts.json     # Prompt definitions + expected checks
-    │   ├── checks.sh        # Deterministic check functions
-    │   └── sample-outputs/  # Collected agent outputs
-    │       ├── build_sanitizer/output.txt
-    │       └── ...
+    │   ├── checks.py        # Deterministic check functions
+    │   └── baselines/        # AI-generated baseline outputs
     └── <next-skill>/
         ├── prompts.json
-        ├── checks.sh
-        └── sample-outputs/
+        ├── checks.py
+        └── baselines/
 ```
 
 ## Usage
 
 ```bash
 # Run all skills
-bash tests/run-eval.sh
+python tests/run_eval.py
 
 # Run one skill
-bash tests/run-eval.sh c-development
+python tests/run_eval.py c-development
 
 # Run one skill with custom output directory
-bash tests/run-eval.sh c-development path/to/outputs
+python tests/run_eval.py c-development path/to/outputs
 ```
+
+## Workflow after changing skill instructions
+
+1. Modify skill references (e.g. `skills/c-development/references/style.md`)
+2. Ask the AI to re-read the updated skill instructions and regenerate sample-outputs
+3. Run `python tests/run_eval.py` to verify checks still pass
+4. If checks fail, either fix the skill instructions or update checks.py
+5. Commit the updated baselines as the new baseline
 
 ## Adding a new skill eval
 
 1. Create `tests/evals/<skill-name>/`
 2. Add `prompts.json` — array of prompts with `id`, `skill_ref`, `expected_checks`
-3. Add `checks.sh` — bash functions named `check_<name>`, return 0 for pass
-4. Collect agent outputs into `sample-outputs/<prompt-id>/output.txt`
-5. Run: `bash tests/run-eval.sh <skill-name>`
+3. Add `checks.py` — functions named `check_<name>` decorated with `@directory_check` or `@text_check`
+4. Ask the AI to read the skill instructions and generate responses for each prompt
+5. Save AI responses into `baselines/<prompt-id>/output.txt` (text) or `baselines/<prompt-id>/project/` (directory)
+6. Run: `python tests/run_eval.py <skill-name>`
+7. Commit baselines
 
-## Collecting outputs
+## Writing checks
 
-Give each prompt to the agent with the skill loaded. Save results:
+```python
+from pathlib import Path
 
-- Text responses → `<prompt-id>/output.txt`
-- Generated projects → `<prompt-id>/project/` (directory with files)
+def directory_check(fn):
+    fn.input_type = "directory"
+    return fn
 
-## Check types
+def text_check(fn):
+    fn.input_type = "text"
+    return fn
 
-| Input | When to use | Example |
-|-------|-------------|---------|
-| `$project_dir` | Prompt generates files | `check_has_cmakelists` |
-| `$output_text` | Prompt gets text advice | `check_mentions_asan_clean` |
+@directory_check
+def check_has_cmakelists(d: Path) -> bool:
+    return (d / "CMakeLists.txt").exists()
+
+@text_check
+def check_mentions_asan(text: str) -> bool:
+    return "ASAN" in text.upper()
+```
+
+- `@directory_check`: receives a `Path` to the generated project directory
+- `@text_check`: receives the agent's text response as a string
+- Return `True` for pass, `False` for fail
