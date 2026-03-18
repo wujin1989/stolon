@@ -54,8 +54,8 @@ Rules about what belongs where in the stolon repository.
 | `**/SKILL.md` | AI agents | Skill definition, metadata, and workflow routing table |
 | `**/references/*.md` | AI agents | Rules, conventions, and context for AI-assisted development |
 | `**/templates/**` | Humans (generated output) | Project scaffolding — becomes part of the target project |
-| `**/agents/*/system-prompt.md` | AI agents | Agent behavior and instructions |
-| `**/agents/*/principles.md` | AI agents | Self-check rules for the agent |
+| `**/sub-agents/*/system-prompt.md` | AI agents | Agent behavior and instructions |
+| `**/sub-agents/*/principles.md` | AI agents | Self-check rules for the agent |
 
 ### Violations
 

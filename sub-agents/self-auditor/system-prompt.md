@@ -15,7 +15,8 @@ When reviewing changes in this repository:
 | Changed File Type | Checks to Perform |
 |-------------------|-------------------|
 | `references/*.md` | Read `principles.md` in this agent's directory. Verify each changed rule against all principles. Verify code examples comply with all other rules in the same file. |
-| `templates/**` | Read `templates/common/docs/style.md`. Verify template code follows naming conventions, license header format, file organization rules. Verify all placeholders (`{project}`, `{PROJECT}`, `{YEAR}`, `{AUTHOR}`, `{EMAIL}`, `{DESCRIPTION}`) are used correctly per the skill README. |
+| `templates/**` | Read the skill's `templates/common/docs/style.md`. Verify template code follows naming conventions, license header format, file organization rules. Verify all placeholders (`{project}`, `{PROJECT}`, `{YEAR}`, `{AUTHOR}`, `{EMAIL}`, `{DESCRIPTION}`) are used correctly per the skill README. |
+| `templates/common/docs/*.md` | Read `principles.md`. Verify each rule satisfies all principles (deterministic, triggerable, scoped, etc.). Verify code examples comply with all other rules in the same file and in sibling docs files. |
 | `**/README.md` (any README in the repository) | Verify documentation matches actual directory structure. Verify file lists match what actually exists in the directory. |
 | `sub-agents/*/system-prompt.md` | Verify the prompt is self-consistent and does not contradict any steering rules. |
 

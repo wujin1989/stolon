@@ -6,10 +6,6 @@ Audits all changes in the stolon repository against its own steering rules, temp
 
 Switch to this agent when making any changes to the repository. The agent will validate changes against the relevant rules.
 
-## Sync Note
-
-`.kiro/agents/self-auditor.md` is a merged, standalone copy of this agent's `system-prompt.md` and `principles.md`, formatted for IDE consumption. When updating files in this directory, also update `.kiro/agents/self-auditor.md` to keep them in sync.
-
 ## Covers
 
 - Steering files: self-check against principles in `principles.md`

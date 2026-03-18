@@ -71,14 +71,34 @@ ctest --test-dir out -C Debug --output-on-failure
 ctest --test-dir out --output-on-failure
 ```
 
+### Running a Single Test
+
+```bash
+ctest --test-dir out -R <module> --output-on-failure
+```
+
+Example: `ctest --test-dir out -R list --output-on-failure` runs only `test-list`.
+
 ## Sanitizers
+
+Run the full test suite with each sanitizer to catch different classes of bugs.
 
 ```bash
 cmake -B out -D<PROJECT>_ENABLE_ASAN=ON
 cmake --build out
 ```
 
+| Sanitizer | What it catches | Option |
+|-----------|----------------|--------|
+| ASAN | Buffer overflow, use-after-free, memory leaks | `-D<PROJECT>_ENABLE_ASAN=ON` |
+| TSAN | Data races, deadlocks | `-D<PROJECT>_ENABLE_TSAN=ON` |
+| UBSAN | Undefined behavior (signed overflow, null deref, etc.) | `-D<PROJECT>_ENABLE_UBSAN=ON` |
+
+ASAN and TSAN cannot be enabled simultaneously. Run them in separate builds.
+
 ## Code Coverage
+
+Coverage requires `<PROJECT>_ENABLE_TESTING=ON` and `<PROJECT>_ENABLE_COVERAGE=ON`.
 
 ### Linux/macOS
 

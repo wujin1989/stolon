@@ -21,6 +21,11 @@ stolon/
 │       ├── system-prompt.md    # Agent behavior and instructions
 │       ├── principles.md       # Self-check rules
 │       └── README.md           # Human documentation
+├── tests/
+│   ├── run_eval.py             # Universal eval runner
+│   ├── README.md               # Eval harness documentation
+│   └── evals/                  # One directory per skill
+├── .gitignore
 └── LICENSE
 ```
 
