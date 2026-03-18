@@ -16,7 +16,7 @@ tests/
 ├── run_eval.py              # Universal runner
 ├── README.md
 └── evals/
-    ├── c-development/       # One directory per skill
+    ├── c-scaffold/       # One directory per skill
     │   ├── prompts.json     # Prompt definitions + expected checks
     │   ├── checks.py        # Deterministic check functions
     │   └── baselines/        # AI-generated baseline outputs
@@ -33,15 +33,15 @@ tests/
 python tests/run_eval.py
 
 # Run one skill
-python tests/run_eval.py c-development
+python tests/run_eval.py c-scaffold
 
 # Run one skill with custom output directory
-python tests/run_eval.py c-development path/to/outputs
+python tests/run_eval.py c-scaffold path/to/outputs
 ```
 
 ## Workflow after changing skill instructions
 
-1. Modify skill references (e.g. `skills/c-development/references/style.md`)
+1. Modify skill references (e.g. `skills/c-scaffold/references/setup.md`)
 2. Ask the AI to re-read the updated skill instructions and regenerate sample-outputs
 3. Run `python tests/run_eval.py` to verify checks still pass
 4. If checks fail, either fix the skill instructions or update checks.py

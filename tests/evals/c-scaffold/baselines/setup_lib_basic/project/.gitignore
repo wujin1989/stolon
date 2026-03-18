@@ -1,0 +1,15 @@
+
+out/
+build/
+*.obj
+*.o
+*.lib
+*.a
+*.exe
+*.dll
+*.so
+*.dylib
+*.dmp
+.vs/
+.vscode/
+compile_commands.json

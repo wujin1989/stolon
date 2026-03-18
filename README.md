@@ -7,13 +7,13 @@ Reusable AI skills and agents that extend from one domain to another — like st
 ```
 stolon/
 ├── skills/
-│   └── c-development/
+│   └── c-scaffold/
 │       ├── SKILL.md            # Skill definition (metadata + routing table)
 │       ├── README.md           # Human documentation
 │       ├── references/         # Docs loaded into context as needed
 │       └── assets/
 │           └── templates/      # Project scaffolding
-├── agents/
+├── sub-agents/
 │   ├── code-expert/
 │   │   ├── system-prompt.md    # Agent behavior and instructions
 │   │   └── README.md           # Human documentation
@@ -21,8 +21,6 @@ stolon/
 │       ├── system-prompt.md    # Agent behavior and instructions
 │       ├── principles.md       # Self-check rules
 │       └── README.md           # Human documentation
-├── mcps/
-│   └── c-debugger.json         # Debugger MCP server configs
 └── LICENSE
 ```
 
@@ -30,26 +28,24 @@ stolon/
 
 | Name | Description |
 |------|-------------|
-| [c-development](skills/c-development/) | Cross-platform C project: init, code style, build system, debugging |
+| [c-scaffold](skills/c-scaffold/) | Scaffold cross-platform C projects from templates |
 
 ## Agents
 
 | Name | Description |
 |------|-------------|
-| [code-expert](agents/code-expert/) | Subagent: coding expert |
-| [self-auditor](agents/self-auditor/) | Subagent: rule compliance auditor |
+| [code-expert](sub-agents/code-expert/) | Subagent: coding expert |
+| [self-auditor](sub-agents/self-auditor/) | Subagent: rule compliance auditor |
 
 ## Usage
 
 ### Claude Code
 
-Copy `skills/` and `agents/` into your project's `.claude/` directory. Skills are auto-discovered via `SKILL.md`, agents available via subagent spawn.
-
-For debugger MCP servers, merge `mcps/c-debugger.json` into your `.claude/settings.json`.
+Copy `skills/` and `sub-agents/` into your project's `.claude/` directory. Skills are auto-discovered via `SKILL.md`, agents available via subagent spawn.
 
 ### Kiro
 
-Copy `skills/` into `.kiro/skills/`, `agents/` into `.kiro/agents/`, and `mcps/` into `.kiro/settings/`.
+Copy `skills/` into `.kiro/skills/`, `sub-agents/` into `.kiro/agents/`.
 
 ### Sync Rules
 
