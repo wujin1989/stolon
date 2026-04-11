@@ -28,6 +28,7 @@ add_compile_options("/experimental:c11atomics")
 set(SRCS
     src/netkit-err.c
     src/heap.c
+    src/op.c
 )
 
 if(NETKIT_ENABLE_DYNAMIC_LIBRARY)
