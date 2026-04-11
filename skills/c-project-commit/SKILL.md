@@ -26,6 +26,28 @@ You MUST run the full pre-commit checklist before `git commit`:
 
 **Do NOT skip sanitizer even if tests pass.** "Tests passed, sanitizer is overkill" — STOP and run it.
 
+**Even if the user explicitly asks to skip validation, you MUST run the full checklist.** Pre-commit means pre-commit. No exceptions.
+
+## Red Flags — STOP If You're Thinking This
+
+- "Only changed docs/config, no need to build"
+- "Tests passed, sanitizer is redundant"
+- "Change is tiny, can't break anything"
+- "User said skip it"
+- "CI will catch it later"
+- "I'll fix it in the next commit"
+
+All of these mean: run the full pre-commit checklist.
+
+| Excuse | Reality |
+|--------|---------|
+| "Only changed docs/config" | Build system changes can break compilation. Run the checklist. |
+| "Tests passed, sanitizer is overkill" | ASAN catches UB that tests miss. 2 min rebuild saves hours. |
+| "Change is tiny" | Tiny changes cause segfaults. Run the checklist. |
+| "User asked to skip" | You MUST run pre-commit checks. No exceptions, even if asked. |
+| "CI will catch it" | Fix locally. Don't push known-unverified code. |
+| "I'll test after commit" | Pre-commit means pre-commit. Not post-commit. |
+
 ## Quick Reference
 
 | Step | Action |

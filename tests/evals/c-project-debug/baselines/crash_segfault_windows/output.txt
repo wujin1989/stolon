@@ -1,0 +1,63 @@
+A segfault in test-list on Windows — let's track it down.
+
+Step 0: Reproduce and identify the failing test.
+
+Run the test through ctest to see which test function crashes:
+
+ctest --test-dir out -R list --output-on-failure
+
+Note which test was running and whether you see "Test failed at {file}:{line}" (assertion) or an access violation (segfault).
+
+Step 1: Sanitizer rebuild (always try this first).
+
+MSVC supports ASAN (/fsanitize=address). UBSAN and TSAN are NOT available on MSVC. Delete out/ and reconfigure with ASAN:
+
+rmdir /s /q out
+cmake -B out -G Ninja -DCMAKE_BUILD_TYPE=Debug -D{NAME}_ENABLE_TESTING=ON -D{NAME}_ENABLE_ASAN=ON
+cmake --build out -j %NUMBER_OF_PROCESSORS%
+ctest --test-dir out -R list --output-on-failure
+
+ASAN will give you a symbolized stack trace with source locations. Look for "ERROR: AddressSanitizer:" lines. If the output clearly identifies the bug, go fix it. If you need more context (variable values, etc.), move to Step 2.
+
+Step 2: Batch-mode CDB.
+
+CDB is the command-line WinDbg debugger. Check if it's installed:
+
+where cdb
+
+If it's not installed: download the Windows SDK from https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/ and select only "Debugging Tools for Windows" during installation. After install, cdb.exe is at C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\cdb.exe. Add it to PATH or use the full path.
+
+Basic backtrace:
+
+cdb -g -G -c "kb;q" out\test-list.exe
+
+With local variables:
+
+cdb -g -G -c "kP;q" out\test-list.exe
+
+Automatic crash analysis (best single command for crash diagnosis):
+
+cdb -g -G -c "!analyze -v;q" out\test-list.exe
+
+To inspect variables at a breakpoint (replace {function_name} with the actual name from the backtrace):
+
+cdb -g -G -c "bp list!{function_name};g;dv;kb;q" out\test-list.exe
+
+In the backtrace, find the topmost frame in your source code (skip CRT/system frames). Check local variable values for NULL pointers, garbage values, or suspiciously large numbers. For intrusive data structures, check prev/next pointers for NULL or self-referential loops.
+
+Step 2F: Log-based fallback.
+
+If you can't install CDB, narrow down the crash with fprintf. Add a log at the midpoint of the failing test function:
+
+fprintf(stderr, "DEBUG: reached checkpoint A\n");
+
+Rebuild and run:
+
+cmake --build out -j %NUMBER_OF_PROCESSORS%
+ctest --test-dir out -R list --output-on-failure
+
+If "checkpoint A" prints, the crash is after — move the log forward. If it doesn't, the crash is before — move it backward. Binary search until you've narrowed to 2-3 lines. Always use stderr (unbuffered, flushes even on crash). Remove all debug logs after fixing.
+
+Step 3: Fix and verify.
+
+Once you've found the bug, fix it, rebuild, and run the test again. Then do a final ASAN run to confirm no latent issues.

@@ -1,0 +1,65 @@
+ASAN told you what happened (use-after-free) and where (stack trace with file:line). To figure out which pointer is bad, use GDB in batch mode to inspect variable state at the crash point.
+
+First, make sure GDB is installed:
+
+which gdb
+
+If not: `sudo apt install gdb` (Debian/Ubuntu), `sudo dnf install gdb` (Fedora/RHEL), or `sudo pacman -S gdb` (Arch).
+
+Get a full backtrace with locals at the crash:
+
+gdb -batch -ex run -ex "bt full" out/test-tcp
+
+This shows every local variable in every frame. Find the topmost frame in your source code (skip libc/ASAN frames) and look for NULL pointers, garbage values, or already-freed addresses.
+
+Set a breakpoint at the function ASAN flagged and inspect the suspect pointer:
+
+gdb -batch \
+  -ex "break _tcp_conn_readable_cb" \
+  -ex run \
+  -ex "print conn" \
+  -ex "print *conn" \
+  -ex "print conn->read_buf" \
+  -ex "print conn->state" \
+  -ex continue \
+  -ex "bt full" \
+  out/test-tcp
+
+If ASAN gave you a specific line number, break there instead:
+
+gdb -batch \
+  -ex "break xylem-tcp.c:142" \
+  -ex run \
+  -ex "info locals" \
+  -ex "print *conn" \
+  -ex "print conn->fd" \
+  -ex continue \
+  -ex "bt full" \
+  out/test-tcp
+
+To catch the exact moment a pointer gets freed or overwritten, use a watchpoint:
+
+gdb -batch \
+  -ex "break _tcp_conn_readable_cb" \
+  -ex run \
+  -ex "watch conn->read_buf" \
+  -ex continue \
+  -ex "bt full" \
+  out/test-tcp
+
+This stops execution the instant `conn->read_buf` changes, giving you the exact code path that freed or overwrote it.
+
+For intrusive data structures (linked lists, queues), also check the pointer chain:
+
+gdb -batch \
+  -ex "break _tcp_conn_readable_cb" \
+  -ex run \
+  -ex "print conn->server_node" \
+  -ex "print conn->write_queue" \
+  -ex continue \
+  -ex "bt full" \
+  out/test-tcp
+
+Keep breakpoints minimal in batch mode — each `continue` resumes until the next breakpoint or crash. You can't adjust mid-run, so plan your inspect sequence based on what ASAN already told you.
+
+Once you identify the bad pointer, trace the data flow backwards: how did it get there? Common use-after-free patterns in this codebase are a pointer to a stack variable that went out of scope, a double-free in a cleanup path, or accessing a connection after `_tcp_destroy_conn` already ran. Fix it, rebuild, and run with ASAN again to confirm.

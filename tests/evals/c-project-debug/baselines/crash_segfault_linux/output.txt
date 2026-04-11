@@ -1,0 +1,70 @@
+A segfault in test-tcp — let's track it down systematically.
+
+Step 0: Reproduce and identify the failing test.
+
+Run the test through ctest to see exactly which test function crashes and what signal you get:
+
+ctest --test-dir out -R tcp --output-on-failure
+
+The project's ASSERT macro prints "Test failed at {file}:{line}" before aborting, so if it's an assertion you'll see the exact location. If it's a raw SIGSEGV, ctest will show the signal. Note which test function was running (the last printf output or abort message).
+
+Step 1: Sanitizer rebuild (always try this first).
+
+Sanitizers give you the best diagnostics — they catch things like use-after-free, buffer overflow, and null dereferences with exact source locations. Delete out/ and reconfigure with ASAN + UBSAN:
+
+rm -rf out
+cmake -B out -G Ninja \
+  -DCMAKE_BUILD_TYPE=Debug \
+  -D{NAME}_ENABLE_TESTING=ON \
+  -D{NAME}_ENABLE_ASAN=ON \
+  -D{NAME}_ENABLE_UBSAN=ON
+cmake --build out -j $(nproc)
+ctest --test-dir out -R tcp --output-on-failure
+
+Look for lines like "ERROR: AddressSanitizer: heap-buffer-overflow" or "SUMMARY: UndefinedBehaviorSanitizer" in the output. ASAN will give you a symbolized stack trace with file and line numbers. If the sanitizer output clearly identifies the bug, go fix it. If you need more context (variable values at crash time, etc.), move to Step 2.
+
+Step 2: Batch-mode GDB.
+
+If sanitizer output isn't enough, use GDB in batch mode to get a backtrace with local variables. First check it's installed:
+
+which gdb
+
+If it's not installed: sudo apt install gdb (Debian/Ubuntu), sudo dnf install gdb (Fedora/RHEL), or sudo pacman -S gdb (Arch).
+
+Basic backtrace with locals:
+
+gdb -batch -ex run -ex "bt full" out/test-tcp
+
+If you want registers and the faulting instruction too:
+
+gdb -batch -ex run -ex "info registers" -ex "x/i \$pc" -ex "bt full" out/test-tcp
+
+To inspect a specific variable at a breakpoint (replace {function_name} and {variable} with the actual names from the backtrace):
+
+gdb -batch \
+  -ex "break {function_name}" \
+  -ex run \
+  -ex "print *{pointer}" \
+  -ex "print {variable}" \
+  -ex continue \
+  -ex "bt full" \
+  out/test-tcp
+
+In the backtrace, find the topmost frame in your source code (skip libc/system frames). Check local variable values for NULL pointers, garbage values, or suspiciously large numbers. For intrusive data structures, check prev/next pointers for NULL or self-referential loops.
+
+Step 2F: Log-based fallback.
+
+If you can't install GDB, narrow down the crash with fprintf. Add a log at the midpoint of the failing test function:
+
+fprintf(stderr, "DEBUG: reached checkpoint A\n");
+
+Rebuild and run:
+
+cmake --build out -j $(nproc)
+ctest --test-dir out -R tcp --output-on-failure
+
+If "checkpoint A" prints, the crash is after that point — move the log forward. If it doesn't print, the crash is before — move it backward. Binary search until you've narrowed to 2-3 lines. Always use stderr (it's unbuffered, so it flushes even if the program crashes right after). Remove all debug logs after fixing.
+
+Step 3: Fix and verify.
+
+Once you've found the bug, fix it, rebuild, and run the test again. Then do a final ASAN run to make sure there are no latent issues hiding behind the one you just fixed.

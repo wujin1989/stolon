@@ -1,0 +1,68 @@
+A hang in test-loop — the event loop is probably stuck waiting for something that never fires. Let's figure out where it's stuck.
+
+Step 0: Confirm the hang.
+
+First, reproduce it through ctest to make sure it's actually hanging and not just slow:
+
+ctest --test-dir out -R loop --output-on-failure
+
+If ctest times out, the test is stuck in the event loop. Common causes in event-loop code: safety timer not set (test runs forever waiting for a callback that never fires), xylem_loop_stop never called (missing callback, wrong condition), deadlock in thread pool or waitgroup, or a socket not closed (event loop keeps running).
+
+Step 1: Sanitizer rebuild.
+
+Even for hangs, try sanitizers first — the hang might be caused by memory corruption that puts the loop in a bad state:
+
+rm -rf out
+cmake -B out -G Ninja \
+  -DCMAKE_BUILD_TYPE=Debug \
+  -DXYLEM_ENABLE_TESTING=ON \
+  -DXYLEM_ENABLE_ASAN=ON \
+  -DXYLEM_ENABLE_UBSAN=ON
+cmake --build out -j $(nproc)
+ctest --test-dir out -R loop --output-on-failure
+
+If ASAN reports something, that's likely your root cause. If it still just hangs, move to Step 2.
+
+Step 2: Attach GDB to the hanging process.
+
+For hangs, you can't just run under GDB — the program never crashes, so "run + bt" won't help. Instead, start the test in the background, let it hang, then attach and grab a backtrace of all threads:
+
+out/test-loop &
+PID=$!
+sleep 5
+gdb -batch -ex "thread apply all bt full" -p $PID
+kill $PID
+
+This shows you exactly where every thread is blocked. Look for the main thread — it's probably stuck in epoll_wait/poll/kevent inside the event loop. The backtrace of the calling frames above that will tell you which test function is running and what state the loop is in.
+
+If you need to inspect variables at the hang point:
+
+gdb -batch \
+  -ex "thread apply all bt full" \
+  -ex "print *loop" \
+  -p $PID
+
+Alternative: use timeout to get a core dump:
+
+ulimit -c unlimited
+timeout 10 out/test-loop
+gdb -batch -ex "bt full" out/test-loop core
+
+Step 2F: Log-based fallback.
+
+If GDB isn't installed and you can't install it (sudo apt install gdb on Debian/Ubuntu, sudo dnf install gdb on Fedora/RHEL, sudo pacman -S gdb on Arch), use fprintf to narrow down where the loop gets stuck.
+
+Add logs around the test's callback registrations and the loop_run call:
+
+fprintf(stderr, "DEBUG: about to call xylem_loop_run\n");
+
+Rebuild and run:
+
+cmake --build out -j $(nproc)
+timeout 10 out/test-loop
+
+If "about to call xylem_loop_run" prints but the test hangs after, the loop is running but never stopping. Check that the test registers a safety timer and that xylem_loop_stop is called in the right callback. Add more logs inside the callbacks to see which ones fire and which don't. Always use stderr (unbuffered). Remove all debug logs after fixing.
+
+Step 3: What to look for.
+
+Once you have the backtrace or logs, check: is the safety timer registered? Is xylem_loop_stop being called? Are all handles (timers, IO watchers, sockets) being closed? The event loop won't exit while active handles remain. Trace the callback chain to find the one that should call xylem_loop_stop but doesn't.

@@ -1,0 +1,108 @@
+[
+  {
+    "id": "crash_segfault_linux",
+    "prompt": "test-tcp is crashing with a segfault on Linux. How do I debug it?",
+    "skill_ref": "debug.md",
+    "expected_checks": [
+      "has_ctest_identify_step",
+      "has_output_on_failure",
+      "has_sanitizer_rebuild",
+      "enables_asan",
+      "cleans_out_before_configure",
+      "sanitizer_before_debugger",
+      "has_gdb_batch",
+      "no_interactive_gdb",
+      "uses_debug_build_type"
+    ]
+  },
+  {
+    "id": "crash_segfault_windows",
+    "prompt": "test-list is segfaulting on Windows with MSVC. Help me debug it.",
+    "skill_ref": "debug.md",
+    "expected_checks": [
+      "has_ctest_identify_step",
+      "has_output_on_failure",
+      "has_sanitizer_rebuild",
+      "enables_asan",
+      "cleans_out_before_configure",
+      "sanitizer_before_debugger",
+      "no_gdb_on_windows",
+      "has_cdb_or_windbg",
+      "has_cdb_install_guide",
+      "uses_debug_build_type"
+    ]
+  },
+  {
+    "id": "crash_segfault_macos",
+    "prompt": "test-udp crashes on macOS. Can you help debug?",
+    "skill_ref": "debug.md",
+    "expected_checks": [
+      "has_ctest_identify_step",
+      "has_sanitizer_rebuild",
+      "enables_asan",
+      "sanitizer_before_debugger",
+      "has_lldb_batch",
+      "no_gdb_on_macos",
+      "uses_debug_build_type"
+    ]
+  },
+  {
+    "id": "test_hang",
+    "prompt": "test-loop seems to hang forever on Linux, ctest times out.",
+    "skill_ref": "debug.md",
+    "expected_checks": [
+      "has_attach_to_process",
+      "has_bt_all_threads",
+      "mentions_common_hang_causes"
+    ]
+  },
+  {
+    "id": "asan_not_enough",
+    "prompt": "I ran test-tcp with ASAN on Linux and it shows a use-after-free but I can't figure out which pointer is bad. What else can I do?",
+    "skill_ref": "debug.md",
+    "expected_checks": [
+      "has_gdb_batch",
+      "has_breakpoint_inspect",
+      "no_interactive_gdb"
+    ]
+  },
+  {
+    "id": "no_debugger_installed",
+    "prompt": "test-rbtree crashes on Linux but I don't have gdb installed and can't install it. How do I debug?",
+    "skill_ref": "debug.md",
+    "expected_checks": [
+      "has_sanitizer_rebuild",
+      "has_log_based_fallback",
+      "uses_fprintf_stderr",
+      "mentions_rebuild_after_log"
+    ]
+  },
+  {
+    "id": "assertion_failure",
+    "prompt": "test-heap fails with 'Test failed at test-heap.c:42' on Linux. What should I do?",
+    "skill_ref": "debug.md",
+    "expected_checks": [
+      "mentions_abort_assert",
+      "has_read_source_step"
+    ]
+  },
+  {
+    "id": "data_race",
+    "prompt": "test-thrdpool sometimes passes and sometimes crashes. I suspect a data race. How do I debug on Linux?",
+    "skill_ref": "debug.md",
+    "expected_checks": [
+      "enables_tsan",
+      "no_asan_tsan_together",
+      "cleans_out_before_configure"
+    ]
+  },
+  {
+    "id": "negative_unrelated",
+    "prompt": "How do I deploy a Node.js app to AWS Lambda?",
+    "skill_ref": null,
+    "should_trigger": false,
+    "expected_checks": [
+      "no_debug_content"
+    ]
+  }
+]

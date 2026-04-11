@@ -25,8 +25,12 @@ Code style reference for C projects. All rules use `<project>` (lowercase from r
 |-------|---------------------|
 | Naming conventions | 7. Symbol Naming |
 | File/directory layout | 6. File Naming |
+| Lifecycle (init/deinit vs create/destroy) | 10. Lifecycle Naming |
 | Memory management | 16. Allocation, NULL-safe destroy, deferred free |
 | Error handling | 17. Return conventions, logging |
+| Restricted functions | 18. Banned functions and replacements |
+| Comments and Doxygen | 14. ASCII-only, format rules |
+| Formatting | 13. clang-format settings |
 | Test code rules | 21. Framework, structure, naming |
 | Adding modules | 22. Single-file, multi-file, executable |
 | Platform layer | 12. platform/ directory rules |

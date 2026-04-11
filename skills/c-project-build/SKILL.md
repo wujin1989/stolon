@@ -32,7 +32,18 @@ You MUST ask the user before running any cmake command:
 4. **Delete `out/` before configure** — always start fresh to prevent stale cache (e.g. TLS objects lingering after disabling TLS)
 5. Only then proceed
 
-**An existing `out/` does NOT exempt you.** If you catch yourself thinking "out/ exists, I'll just build" or "it was Debug last time" — STOP and ask.
+**An existing `out/` does NOT exempt you.**
+
+**Rebuild only (source file changes only)?** If the user explicitly says they only changed `.c`/`.h` files and the current config is confirmed correct, you may skip the full confirmation and run `cmake --build out` directly. If ANY doubt exists about the current config, ask.
+
+## Red Flags — STOP If You Catch Yourself Thinking...
+
+| Excuse | Reality |
+|--------|---------|
+| "out/ exists, I'll just build" | Cached config may be stale. Ask first. |
+| "It was Debug last time, probably still Debug" | Confirm. Don't assume. |
+| "I'll enable TLS because it was on before" | Only enable what user explicitly requests. |
+| "User said compile, they just want a quick build" | Quick ≠ skip confirmation. Always confirm. |
 
 ## Quick Reference
 

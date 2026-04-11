@@ -2,7 +2,7 @@
 name: c-project-init
 description: >
   Use when creating a new C project from scratch, or when asked to scaffold,
-  init, or bootstrap a C library or application project.
+  init, or bootstrap a C library or application project with CMake.
 ---
 
 # C Project Init
@@ -26,6 +26,15 @@ You MUST ask the user for all required inputs first:
 3. Description, author, email
 
 **Do NOT assume defaults or start generating files before asking.** See [setup.md](references/setup.md) for the full inputs table.
+
+## Red Flags — STOP If You're About to Skip Asking
+
+- User gave project name but not type → STILL ASK
+- User said "just do it" or "hurry" → STILL ASK
+- You think you can infer the type from context → STILL ASK
+- User gave most inputs but not all required ones → ASK for missing ones
+
+**Do NOT assume defaults for required fields (name, type, description, author, email).**
 
 ## Quick Reference
 

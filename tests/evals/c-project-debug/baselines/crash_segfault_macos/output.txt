@@ -1,0 +1,58 @@
+## Debugging test-udp crash on macOS
+
+### Step 0: Identify the failing test
+
+```bash
+ctest --test-dir out -R udp --output-on-failure
+```
+
+Check the output for "Test failed at {file}:{line}" (ASSERT abort) or a signal like SIGSEGV.
+
+### Step 1: Rebuild with ASAN (try this first)
+
+ASAN gives the best crash diagnostics — always try before reaching for a debugger.
+
+```bash
+rm -rf out
+cmake -B out -G Ninja \
+  -DCMAKE_BUILD_TYPE=Debug \
+  -D{NAME}_ENABLE_TESTING=ON \
+  -D{NAME}_ENABLE_ASAN=ON \
+  -D{NAME}_ENABLE_UBSAN=ON
+cmake --build out -j $(sysctl -n hw.ncpu)
+ctest --test-dir out -R udp --output-on-failure
+```
+
+ASAN output will include a symbolized stack trace showing the exact memory error (use-after-free, buffer overflow, etc.) with source file and line number.
+
+### Step 2: If ASAN isn't enough, use LLDB batch mode
+
+macOS uses lldb (not gdb). It comes with Xcode Command Line Tools (`xcode-select --install`).
+
+Basic backtrace:
+
+```bash
+lldb -b -o run -o "bt all" out/test-udp
+```
+
+With local variables:
+
+```bash
+lldb -b -o run -o "bt all" -o "frame variable" out/test-udp
+```
+
+To inspect a specific variable at a breakpoint:
+
+```bash
+lldb -b \
+  -o "breakpoint set -n {function_name}" \
+  -o run \
+  -o "frame variable" \
+  -o continue \
+  -o "bt all" \
+  out/test-udp
+```
+
+### Step 3: Analyze and fix
+
+Read the source at the crash location, trace the data flow backwards to find the root cause, fix, rebuild, and verify with ASAN again.

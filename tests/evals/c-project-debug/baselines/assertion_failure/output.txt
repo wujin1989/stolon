@@ -1,0 +1,20 @@
+The message "Test failed at test-heap.c:42" means the ASSERT macro on line 42 of test-heap.c fired and called abort() (SIGABRT). Open test-heap.c at line 42 to see which condition was expected but evaluated to false — that tells you exactly what went wrong.
+
+Before diving into a debugger, rebuild with sanitizers. They catch the underlying bug (buffer overflow, use-after-free, etc.) that caused the assertion to fail:
+
+rm -rf out
+cmake -B out -G Ninja \
+  -DCMAKE_BUILD_TYPE=Debug \
+  -D{NAME}_ENABLE_TESTING=ON \
+  -D{NAME}_ENABLE_ASAN=ON \
+  -D{NAME}_ENABLE_UBSAN=ON
+cmake --build out -j $(nproc)
+ctest --test-dir out -R heap --output-on-failure
+
+If the sanitizer output clearly identifies the bug, fix it and re-run. If you need more context (e.g. variable values at the point of failure), run the test under GDB:
+
+gdb -batch -ex run -ex "bt full" out/test-heap
+
+That gives you a full backtrace with local variable values at the abort site. Look at the topmost frame in your source code (skip libc frames) and check for NULL pointers, garbage values, or unexpected sizes.
+
+If GDB is not installed: sudo apt install gdb (Debian/Ubuntu), sudo dnf install gdb (Fedora), or sudo pacman -S gdb (Arch).

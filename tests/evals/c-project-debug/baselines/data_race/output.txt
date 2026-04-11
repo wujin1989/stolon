@@ -1,0 +1,25 @@
+Intermittent crashes in a thread pool test are a classic data race symptom. ASAN won't help here — it catches memory errors (buffer overflow, use-after-free) but not data races. You need ThreadSanitizer (TSAN).
+
+Important: ASAN and TSAN cannot coexist in the same build. You must pick one per build. Since you suspect a race, go with TSAN.
+
+Delete out/ and rebuild with TSAN enabled:
+
+rm -rf out
+cmake -B out -G Ninja \
+  -DCMAKE_BUILD_TYPE=Debug \
+  -D{NAME}_ENABLE_TESTING=ON \
+  -D{NAME}_ENABLE_TSAN=ON
+cmake --build out -j $(nproc)
+ctest --test-dir out -R thrdpool --output-on-failure
+
+TSAN will instrument all memory accesses and synchronization operations at compile time. If there's a data race, you'll get a report like:
+
+WARNING: ThreadSanitizer: data race
+  Write of size N at 0x... by thread T1:
+    #0 function_name file.c:line
+  Previous read of size N at 0x... by main thread:
+    #0 function_name file.c:line
+
+The report shows exactly which two threads accessed the same memory without proper synchronization, with full stack traces for both accesses. That's usually enough to pinpoint the missing lock or atomic.
+
+Run the test a few times under TSAN — races are timing-dependent, but TSAN is much better at catching them than bare execution because the instrumentation perturbs scheduling.

@@ -1,0 +1,75 @@
+No GDB, no problem. Sanitizers are actually the better first step anyway — they catch more than a backtrace alone. And if you need to dig deeper, log-based debugging works fine as a fallback.
+
+Step 0: Reproduce and identify the failing test.
+
+First, see exactly which test function crashes and what signal you get:
+
+ctest --test-dir out -R rbtree --output-on-failure
+
+The project's ASSERT macro prints "Test failed at {file}:{line}" before aborting, so if it's an assertion failure you'll see the exact location. If it's a raw SIGSEGV, ctest will show the signal. Note which test function was running (the last printf output or abort message).
+
+Step 1: Sanitizer rebuild (always try this first).
+
+Sanitizers instrument the binary at compile time and produce detailed diagnostics — they catch use-after-free, buffer overflow, null dereferences, and undefined behavior with exact source locations. This is the most effective approach and doesn't need a debugger. Delete out/ and reconfigure with ASAN + UBSAN:
+
+rm -rf out
+cmake -B out -G Ninja \
+  -DCMAKE_BUILD_TYPE=Debug \
+  -DXYLEM_ENABLE_TESTING=ON \
+  -DXYLEM_ENABLE_ASAN=ON \
+  -DXYLEM_ENABLE_UBSAN=ON
+cmake --build out -j $(nproc)
+ctest --test-dir out -R rbtree --output-on-failure
+
+Look for lines like "ERROR: AddressSanitizer: heap-buffer-overflow", "ERROR: AddressSanitizer: heap-use-after-free", or "SUMMARY: UndefinedBehaviorSanitizer" in the output. ASAN gives you a symbolized stack trace with file and line numbers — often clearer than a debugger backtrace. If the sanitizer output identifies the bug, go fix it and skip to Step 3.
+
+Step 2: Log-based debugging (fallback when no debugger is available).
+
+If sanitizer output isn't enough — say you know WHERE the crash is but need to understand the variable state — use fprintf to narrow things down. This is a binary search strategy.
+
+1. Identify the failing test function from Step 0.
+2. Add a log at the midpoint of that function:
+
+fprintf(stderr, "DEBUG: reached checkpoint A\n");
+
+3. Rebuild and run:
+
+cmake --build out -j $(nproc)
+ctest --test-dir out -R rbtree --output-on-failure
+
+4. If "checkpoint A" prints, the crash is AFTER that point — move the log forward.
+5. If "checkpoint A" doesn't print, the crash is BEFORE that point — move it backward.
+6. Repeat until you've narrowed to 2-3 lines.
+
+Once you've found the area, print variable values to understand the state:
+
+fprintf(stderr, "DEBUG: node=%p, node->left=%p, node->right=%p, node->parent=%p\n",
+        (void*)node, (void*)node->left, (void*)node->right, (void*)node->parent);
+
+For pointer chains in the red-black tree, check for NULL or self-referential loops:
+
+fprintf(stderr, "DEBUG: key=%d, color=%d, parent=%p\n",
+        node->key, node->color, (void*)node->parent);
+
+Important rules for log debugging:
+- Always use stderr, not stdout — stderr is unbuffered, so logs appear even if the program crashes immediately after the print.
+- Always rebuild after adding or removing logs — C requires recompilation.
+- Remove all DEBUG logs after fixing the bug — don't commit them.
+
+Step 3: Fix and verify.
+
+After fixing the bug, rebuild and run the test:
+
+cmake --build out -j $(nproc)
+ctest --test-dir out -R rbtree --output-on-failure
+
+Then do a final ASAN run to confirm no latent issues are hiding behind the one you just fixed:
+
+rm -rf out
+cmake -B out -G Ninja \
+  -DCMAKE_BUILD_TYPE=Debug \
+  -DXYLEM_ENABLE_TESTING=ON \
+  -DXYLEM_ENABLE_ASAN=ON \
+  -DXYLEM_ENABLE_UBSAN=ON
+cmake --build out -j $(nproc)
+ctest --test-dir out -R rbtree --output-on-failure

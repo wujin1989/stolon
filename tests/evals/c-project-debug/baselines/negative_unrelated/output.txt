@@ -1,0 +1,98 @@
+Here's how to deploy a Node.js app to AWS Lambda:
+
+1. **Prepare your project**
+
+   Structure your app with a handler function that Lambda can invoke:
+
+   ```js
+   // index.mjs
+   export const handler = async (event, context) => {
+     const body = JSON.stringify({ message: "Hello from Lambda!", input: event });
+     return {
+       statusCode: 200,
+       headers: { "Content-Type": "application/json" },
+       body,
+     };
+   };
+   ```
+
+   Lambda expects an exported handler that receives an `event` (the trigger payload) and a `context` object with runtime info.
+
+2. **Package your code**
+
+   Zip your source files along with `node_modules`:
+
+   ```bash
+   npm install --production
+   zip -r function.zip index.mjs node_modules/
+   ```
+
+   Keep the zip under 50 MB (250 MB unzipped). If your dependencies are large, consider using Lambda Layers for shared libraries.
+
+3. **Deploy via AWS CLI**
+
+   Create the function:
+
+   ```bash
+   aws lambda create-function \
+     --function-name my-node-app \
+     --runtime nodejs20.x \
+     --role arn:aws:iam::YOUR_ACCOUNT_ID:role/lambda-execution-role \
+     --handler index.handler \
+     --zip-file fileb://function.zip
+   ```
+
+   To update an existing function:
+
+   ```bash
+   aws lambda update-function-code \
+     --function-name my-node-app \
+     --zip-file fileb://function.zip
+   ```
+
+4. **Set up an IAM execution role**
+
+   Your Lambda needs a role with at least the `AWSLambdaBasicExecutionRole` managed policy for CloudWatch logging. Create one in the IAM console or via CLI before deploying.
+
+5. **Add a trigger**
+
+   Common triggers include:
+   - API Gateway (for HTTP endpoints)
+   - S3 events (file uploads)
+   - SQS/SNS (message queues)
+   - EventBridge (scheduled/cron jobs)
+
+   For an HTTP API, attach API Gateway in the Lambda console or use:
+
+   ```bash
+   aws apigatewayv2 create-api \
+     --name my-api \
+     --protocol-type HTTP \
+     --target arn:aws:lambda:us-east-1:YOUR_ACCOUNT_ID:function:my-node-app
+   ```
+
+**Alternative: Use a framework**
+
+For larger projects, tools like the Serverless Framework or AWS SAM simplify deployment:
+
+```bash
+# With Serverless Framework
+npm install -g serverless
+serverless create --template aws-nodejs --path my-service
+cd my-service
+serverless deploy
+```
+
+```bash
+# With AWS SAM
+sam init --runtime nodejs20.x
+sam build
+sam deploy --guided
+```
+
+**Tips:**
+- Use environment variables (`process.env`) for config — set them in the Lambda console or your deployment template.
+- Keep cold starts low by minimizing dependencies and using ES modules.
+- Set memory (128 MB–10 GB) and timeout (up to 15 min) based on your workload.
+- Use Lambda Layers for large or shared dependencies like native bindings.
+- For local testing, `sam local invoke` or the `serverless-offline` plugin work well.
