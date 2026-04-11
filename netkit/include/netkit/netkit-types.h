@@ -21,9 +21,54 @@
 
 _Pragma("once")
 
-#include "netkit/netkit-types.h"
-#include "netkit/netkit-err.h"
-#include "netkit/netkit-loop.h"
-#include "netkit/netkit-tcp.h"
-#include "netkit/netkit-udp.h"
-#include "netkit/netkit-timer.h"
+#include <stdint.h>
+
+/* Opaque type forward declarations */
+typedef struct netkit_loop_s  netkit_loop_t;
+typedef struct netkit_tcp_s   netkit_tcp_t;
+typedef struct netkit_udp_s   netkit_udp_t;
+typedef struct netkit_timer_s netkit_timer_t;
+
+/* Callback typedefs */
+typedef void (*netkit_tcp_accept_fn_t)(
+    netkit_tcp_t* server,
+    netkit_tcp_t* client,
+    int status,
+    void* data);
+
+typedef void (*netkit_tcp_connect_fn_t)(
+    netkit_tcp_t* tcp,
+    int status,
+    void* data);
+
+typedef void (*netkit_tcp_read_fn_t)(
+    netkit_tcp_t* tcp,
+    const void* buf,
+    int32_t nread,
+    void* data);
+
+typedef void (*netkit_tcp_write_fn_t)(
+    netkit_tcp_t* tcp,
+    int status,
+    void* data);
+
+typedef void (*netkit_udp_recv_fn_t)(
+    netkit_udp_t* udp,
+    const void* buf,
+    int32_t nread,
+    const char* addr,
+    int32_t port,
+    void* data);
+
+typedef void (*netkit_udp_send_fn_t)(
+    netkit_udp_t* udp,
+    int status,
+    void* data);
+
+typedef void (*netkit_timer_timeout_fn_t)(
+    netkit_timer_t* timer,
+    void* data);
+
+typedef void (*netkit_close_fn_t)(
+    void* handle,
+    void* data);
