@@ -26,9 +26,9 @@ Derive two forms from the project name:
 
 | Mode | Meaning |
 |------|---------|
-| `cross-platform` | Full Windows + Unix support. Platform layer has `unix/` and `win/` subdirectories. Both `build.sh` and `build.bat` generated. CMakeLists.txt has `if(WIN32)` / `if(UNIX)` branches. |
-| `windows` | Windows only. No `src/platform/` directory. Only `build.bat` generated. No `if(UNIX)` branches. |
-| `unix` | Linux and macOS. No `src/platform/` directory. Only `build.sh` generated. No `if(WIN32)` branches. |
+| `cross-platform` | Full Windows + Unix support. Platform layer has `unix/` and `win/` subdirectories. CMakeLists.txt has `if(WIN32)` / `if(UNIX)` branches. |
+| `windows` | Windows only. No `src/platform/` directory. No `if(UNIX)` branches. |
+| `unix` | Linux and macOS. No `src/platform/` directory. No `if(WIN32)` branches. |
 
 ## File Tree
 
@@ -36,8 +36,6 @@ All file trees below show the `cross-platform` layout. For single-platform modes
 
 | Adjustment | `windows` | `unix` |
 |------------|-----------|--------|
-| `build.sh` | Omit | Keep |
-| `build.bat` | Keep | Omit |
 | `src/platform/` | Omit entirely | Omit entirely |
 
 ### Library
@@ -50,8 +48,6 @@ All file trees below show the `cross-platform` layout. For single-platform modes
   LICENSE
   README.md
   CMakeLists.txt
-  build.sh                          (executable)
-  build.bat
   cmake/{name}-utils.cmake
   docs/build.md
   include/{name}.h                  (umbrella header)
@@ -75,8 +71,6 @@ No `include/` directory. No `examples/` directory. Has `src/main.c`.
   LICENSE
   README.md
   CMakeLists.txt
-  build.sh                          (executable)
-  build.bat
   cmake/{name}-utils.cmake
   docs/build.md
   src/main.c
@@ -235,88 +229,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE.
 \```
-```
-
-
-### build.sh
-
-```bash
-#!/usr/bin/env bash
-set -e
-
-rm -rf out
-
-cmake -B out \
-  -D{NAME}_ENABLE_TESTING=ON \
-  -D{NAME}_ENABLE_COVERAGE=OFF \
-  -DCMAKE_BUILD_TYPE=Debug
-
-cmake --build out -j "$(nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || echo 4)"
-
-cp -f out/compile_commands.json compile_commands.json 2>/dev/null || true
-
-set +e
-ctest --test-dir out --output-on-failure
-TEST_EXIT=$?
-
-cmake --build out --target coverage
-COV_EXIT=$?
-set -e
-
-if [ -f out/coverage/html/index.html ]; then
-  if command -v xdg-open >/dev/null 2>&1; then
-    xdg-open out/coverage/html/index.html
-  elif command -v open >/dev/null 2>&1; then
-    open out/coverage/html/index.html
-  fi
-fi
-
-[ $TEST_EXIT -ne 0 ] && echo "[WARN] some tests failed"
-[ $COV_EXIT -ne 0 ] && echo "[WARN] coverage generation failed"
-
-exit $TEST_EXIT
-```
-
-Mark executable: `chmod +x build.sh`
-
-### build.bat
-
-```bat
-@echo off
-call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" x64
-
-if exist out rmdir /s /q out
-
-cmake -B out -G Ninja -D{NAME}_ENABLE_TESTING=ON -D{NAME}_ENABLE_COVERAGE=OFF -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-if %ERRORLEVEL% neq 0 (
-    echo [ERROR] cmake configure failed
-    exit /b 1
-)
-
-cmake --build out -j 8
-if %ERRORLEVEL% neq 0 (
-    echo [ERROR] build failed
-    exit /b 1
-)
-
-copy /Y out\compile_commands.json compile_commands.json 2>nul
-
-ctest --test-dir out --output-on-failure
-set TEST_EXIT=%ERRORLEVEL%
-
-cmake --build out --target coverage
-set COV_EXIT=%ERRORLEVEL%
-
-if exist out\coverage\index.html start out\coverage\index.html
-
-if %TEST_EXIT% neq 0 (
-    echo [WARN] some tests failed
-)
-if %COV_EXIT% neq 0 (
-    echo [WARN] coverage generation failed
-)
-
-exit /b %TEST_EXIT%
 ```
 
 
