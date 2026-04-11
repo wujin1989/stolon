@@ -8,19 +8,27 @@ Placeholders:
 - `{name}` -- lowercase project name from `CMakeLists.txt`
 - `{NAME}` -- uppercase form
 
-## Inputs
+## Inputs — MANDATORY Pre-Flight
 
-Before running any command, determine:
+**STOP. Do NOT run any cmake command until you have collected ALL required inputs.**
 
 | Input | How to obtain | Default |
 |-------|---------------|---------|
 | Project name | Read `project(...)` from root `CMakeLists.txt` | (required) |
-| Build type | Ask user: Debug or Release | (required, must ask) |
-| Feature flags | Ask user which optional features to enable | None |
-| Sanitizer | Ask user if needed | None |
-| Coverage | Ask user if needed | OFF |
+| Build type | **Ask user**: Debug or Release | **(required, must ask)** |
+| Feature flags | **Ask user** which optional features to enable | None |
+| Sanitizer | **Ask user** if needed | None |
+| Coverage | **Ask user** if needed | OFF |
 
-Feature flags are project-specific `option()` entries in `CMakeLists.txt` (e.g. `{NAME}_ENABLE_TLS`). Scan the root `CMakeLists.txt` for all `option(...)` lines to discover available flags. Only enable flags the user explicitly requests.
+Feature flags are project-specific `option()` entries in `CMakeLists.txt` (e.g. `{NAME}_ENABLE_TLS`). Scan the root `CMakeLists.txt` for all `option(...)` lines and present them to the user. Only enable flags the user explicitly requests.
+
+**An existing `out/` directory is NOT a reason to skip asking.** The cached config may be stale or wrong. Always confirm with the user before configuring or building.
+
+**Red flags — if you catch yourself doing any of these, STOP:**
+- "out/ exists, I'll just build" → STOP. Ask the user first.
+- "It was Debug last time, probably still Debug" → STOP. Confirm.
+- "I'll enable TLS because it was on before" → STOP. Ask.
+- "User said compile, they just want a quick build" → STOP. Quick ≠ skip confirmation.
 
 ## Build Type
 

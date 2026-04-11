@@ -1,8 +1,8 @@
 ---
 name: c-project-build
 description: >
-  Use when building, compiling, testing, or running coverage for a C project.
-  Use when build fails, sanitizer reports errors, or coverage needs generating.
+  Use when building, compiling, testing, or running coverage for a C project,
+  or when build fails, sanitizer reports errors, or coverage needs generating.
 ---
 
 # C Project Build
@@ -14,28 +14,31 @@ Build, test, and generate coverage for C/C++ CMake projects. Uses Ninja generato
 ## When to Use
 
 - Configuring or building a CMake project
-- Running tests with ctest
-- Enabling sanitizers (ASAN, TSAN, UBSAN)
-- Generating code coverage reports
-- Build fails or compile errors appear
-- Need to switch between Debug and Release
+- Running tests, sanitizers (ASAN, TSAN, UBSAN), or coverage
 
-## When NOT to Use
+**When NOT to Use:** code style review, scaffolding new projects, committing code
 
-- Writing or reviewing C code style
-- Creating a new project from scratch
-- Committing or pushing code
+## STOP — Required Before ANY Build Command
+
+You MUST ask the user before running any cmake command:
+
+1. Read `project(...)` from root `CMakeLists.txt` to get the project name
+2. **Ask the user**: Debug or Release?
+3. Scan `CMakeLists.txt` for `option(...)` lines and **ask the user** which features to enable
+4. Only then proceed
+
+**An existing `out/` does NOT exempt you.** If you catch yourself thinking "out/ exists, I'll just build" or "it was Debug last time" — STOP and ask.
 
 ## Quick Reference
 
 | Task | Command |
 |------|---------|
-| Configure Debug | `cmake -B out -G Ninja -DCMAKE_BUILD_TYPE=Debug` |
-| Build | `cmake --build out -j $(nproc)` |
+| Configure | `cmake -B out -G Ninja -DCMAKE_BUILD_TYPE={type}` |
+| Build | `cmake --build out -j {ncpu}` |
 | Test | `ctest --test-dir out --output-on-failure` |
-| Single test | `ctest --test-dir out -R <module> --output-on-failure` |
-| ASAN | `-D{NAME}_ENABLE_ASAN=ON` (clean rebuild required) |
-| Coverage | `-D{NAME}_ENABLE_COVERAGE=ON` then `cmake --build out --target coverage` |
+| Coverage | `cmake --build out --target coverage` |
+
+See [build.md](references/build.md) for platform-specific flags, sanitizers, and full details.
 
 ## Common Mistakes
 
@@ -43,11 +46,11 @@ Build, test, and generate coverage for C/C++ CMake projects. Uses Ninja generato
 - Enabling ASAN and TSAN simultaneously (they conflict)
 - Not copying `compile_commands.json` to project root after configure
 - Using `Release` instead of `MinSizeRel` for production builds
-- Missing MSVC environment (vcvarsall.bat) on Windows with Ninja
-- Assuming Windows lacks coverage because root CMakeLists.txt only has Unix coverage flags (check tests/CMakeLists.txt)
+- Missing MSVC environment on Windows with Ninja
+- Assuming Windows lacks coverage — check tests/CMakeLists.txt
 
 ## Workflow Routing
 
 | Intent | Reference |
 |--------|-----------|
-| Build, test, run sanitizers, or generate coverage | [build.md](references/build.md) |
+| Build, test, sanitizers, or coverage | [build.md](references/build.md) |

@@ -2,7 +2,6 @@
 name: c-project-commit
 description: >
   Use when staging, committing, or pushing code changes in a C project.
-  Use when asked to commit, push, submit code, or check in changes.
 ---
 
 # C Project Commit
@@ -13,36 +12,38 @@ Stage, commit, and push code changes with pre-commit validation (build + test + 
 
 ## When to Use
 
-- User asks to commit, push, submit, or check in code
-- Implementation is complete and needs to be committed
-- Need to verify code before pushing
+- User asks to commit, push, or check in code
 
-## When NOT to Use
+**When NOT to Use:** building/testing only, writing code, fixing build errors
 
-- Code still has build errors or test failures (fix first)
-- Only need to build or test, not commit
-- Writing or reviewing code style
+## STOP — Required Before ANY Commit
+
+You MUST run the full pre-commit checklist before `git commit`:
+
+1. Build (Debug) + test
+2. Clean rebuild with ASAN + UBSAN, run tests again
+3. Review diff, stage, commit, push
+
+**Do NOT skip sanitizer even if tests pass.** "Tests passed, sanitizer is overkill" — STOP and run it.
 
 ## Quick Reference
 
 | Step | Action |
 |------|--------|
-| 1. Build | `cmake -B out -G Ninja -DCMAKE_BUILD_TYPE=Debug -D{NAME}_ENABLE_TESTING=ON` + build |
-| 2. Test | `ctest --test-dir out --output-on-failure` |
-| 3. Sanitizer | Clean rebuild with ASAN + UBSAN, run tests |
-| 4. Review | `git diff` + `git status` |
-| 5. Stage | `git add -u` (review untracked files before `git add .`) |
-| 6. Commit | `git commit -m "<type>(<scope>): <summary>"` |
-| 7. Push | `git push origin <branch>` |
+| Build + test | `cmake -B out ... -D{NAME}_ENABLE_TESTING=ON` then `ctest` |
+| Sanitizer | Clean rebuild with ASAN + UBSAN, run tests |
+| Stage | `git add -u` (review untracked before `git add .`) |
+| Commit | `git commit -m "<type>(<scope>): <summary>"` |
+| Push | `git push origin <branch>` |
 
-Commit types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `perf`
+Types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `perf`
 
 ## Common Mistakes
 
 - Skipping sanitizer check before commit
 - Using `git add .` without reviewing untracked files
-- Writing commit messages in past tense ("added" instead of "add")
-- Forgetting scope in commit message (e.g. `feat: add timeout` instead of `feat(tcp): add timeout`)
+- Past tense in commit messages ("added" instead of "add")
+- Missing scope (e.g. `feat: add timeout` → `feat(tcp): add timeout`)
 
 ## Workflow Routing
 

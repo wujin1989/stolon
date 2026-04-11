@@ -1,30 +1,23 @@
 ---
 name: c-project-style
 description: >
-  Use when writing, reviewing, or modifying any .c or .h file in a cross-platform
-  C11 project. Use before creating new modules, refactoring existing code, or
-  reviewing pull requests for style compliance.
+  Use when writing, reviewing, or modifying any .c or .h file in a C project.
+  Use before creating new modules, refactoring existing code, or reviewing pull
+  requests for style compliance.
 ---
 
 # C Project Style
 
 ## Overview
 
-Code style reference for cross-platform C11 projects. All rules use `<project>` (lowercase from root `CMakeLists.txt`) and `<PROJECT>` (uppercase form) as placeholders.
+Code style reference for C projects. All rules use `<project>` (lowercase from root `CMakeLists.txt`) and `<PROJECT>` (uppercase form) as placeholders.
 
 ## When to Use
 
-- Writing new `.c` or `.h` files
-- Reviewing or refactoring existing C code
-- Adding modules (single-file, multi-file, or executable)
-- Naming functions, types, enums, macros
-- Unsure about include ordering, memory management patterns, or platform layer conventions
+- Writing, reviewing, or refactoring `.c` or `.h` files
+- Adding modules, naming symbols, include ordering, memory management
 
-## When NOT to Use
-
-- Build commands, CMake configuration, or sanitizer workflows
-- Scaffolding a new project from scratch
-- Committing or pushing code
+**When NOT to Use:** build/CMake commands, scaffolding new projects, committing code
 
 ## Quick Reference
 
@@ -34,7 +27,7 @@ Code style reference for cross-platform C11 projects. All rules use `<project>` 
 | File/directory layout | 6. File Naming |
 | Memory management | 16. Allocation, NULL-safe destroy, deferred free |
 | Error handling | 17. Return conventions, logging |
-| Test code rules | 21. Framework, structure, naming, prohibited patterns |
+| Test code rules | 21. Framework, structure, naming |
 | Adding modules | 22. Single-file, multi-file, executable |
 | Platform layer | 12. platform/ directory rules |
 
@@ -43,9 +36,9 @@ Code style reference for cross-platform C11 projects. All rules use `<project>` 
 - Using `//` comments instead of `/* */`
 - Missing `extern` on function declarations in headers
 - Using `sprintf`/`strcpy` instead of `snprintf`
-- Putting platform conditionals (`#ifdef _WIN32`) outside `src/platform/`
-- Using `#ifndef` guards instead of `_Pragma("once")`
-- Naming static functions with `<project>_` prefix (should be `_<module>_`)
+- Platform conditionals (`#ifdef _WIN32`) outside `src/platform/`
+- `#ifndef` guards instead of `_Pragma("once")`
+- Static functions with `<project>_` prefix (should be `_<module>_`)
 
 ## Workflow Routing
 
