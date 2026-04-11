@@ -9,7 +9,7 @@ description: >
 
 ## Overview
 
-Build, test, and generate coverage for C/C++ CMake projects. Uses Ninja Multi-Config generator on all platforms for `compile_commands.json` support. Build type is selected at build time via `--config`, not at configure time.
+Build, test, and generate coverage for C/C++ CMake projects. Uses Ninja Multi-Config generator on all platforms.
 
 ## When to Use
 
@@ -20,41 +20,25 @@ Build, test, and generate coverage for C/C++ CMake projects. Uses Ninja Multi-Co
 
 ## STOP — Required Before ANY Build Command
 
-You MUST ask the user before running any cmake command:
+You MUST do these before running any cmake command:
 
 1. Read `project(...)` from root `CMakeLists.txt` to get the project name
-2. **Ask the user** which build type they want. Present all four CMake options:
-   - **Debug** — no optimization, with debug info
-   - **Release** — speed optimization (`/O2` or `-O2`)
-   - **RelWithDebInfo** — speed optimization + debug info
-   - **MinSizeRel** — size optimization (`/O1` or `-Os`)
+2. **Ask the user** which build type: Debug / Release / RelWithDebInfo / MinSizeRel
 3. Scan `CMakeLists.txt` for `option(...)` lines and **ask the user** which features to enable
-4. **Delete `out/` before configure** — always start fresh to prevent stale cache (e.g. TLS objects lingering after disabling TLS)
+4. **Delete `out/` before configure** — always start fresh to prevent stale cache
 5. Only then proceed
 
 **An existing `out/` does NOT exempt you.**
 
-**Rebuild only (source file changes only)?** If the user explicitly says they only changed `.c`/`.h` files and the current config is confirmed correct, you may skip the full confirmation and run `cmake --build out` directly. If ANY doubt exists about the current config, ask.
+**Rebuild only?** If the user explicitly says they only changed `.c`/`.h` files and the current config is confirmed correct, you may skip confirmation and run `cmake --build out` directly.
 
-## Red Flags — STOP If You Catch Yourself Thinking...
+## STOP — You MUST Read build.md Before Running ANY Command
 
-| Excuse | Reality |
-|--------|---------|
-| "out/ exists, I'll just build" | Cached config may be stale. Ask first. |
-| "It was Debug last time, probably still Debug" | Confirm. Don't assume. |
-| "I'll enable TLS because it was on before" | Only enable what user explicitly requests. |
-| "User said compile, they just want a quick build" | Quick ≠ skip confirmation. Always confirm. |
+After collecting inputs, you MUST read [build.md](references/build.md) before executing. Do NOT use the commands below as-is — they are orientation only, not executable recipes.
 
-## Quick Reference
+build.md contains critical details you cannot infer: platform-specific flags, sanitizer cmake options, compile_commands.json handling, Windows MSVC environment setup, coverage workflows, and CPU detection.
 
-| Task | Command |
-|------|---------|
-| Configure | `cmake -B out -G "Ninja Multi-Config"` |
-| Build | `cmake --build out --config {type} -j {ncpu}` |
-| Test | `ctest --test-dir out -C {type} --output-on-failure` |
-| Coverage | `cmake --build out --config Debug --target coverage` |
-
-See [build.md](references/build.md) for platform-specific flags, sanitizers, and full details.
+**Running commands without reading build.md WILL produce broken builds.**
 
 ## Common Mistakes
 

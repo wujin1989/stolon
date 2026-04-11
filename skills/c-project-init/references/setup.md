@@ -12,7 +12,7 @@ Ask the user for all required inputs before generating any files.
 |-------|---------|----------|
 | Project name | `myapp` | Yes |
 | Project type | `library` or `application` | Yes |
-| Platform | `cross-platform`, `windows`, or `unix` | No (default: `cross-platform`) |
+| Platform | `cross-platform`, `windows`, or `unix` | Yes (always ask) |
 | Description | One-line summary | Yes |
 | Author | `John Doe` | Yes |
 | Email | `john@example.com` | Yes |

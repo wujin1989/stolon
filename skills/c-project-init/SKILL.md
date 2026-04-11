@@ -19,37 +19,47 @@ Scaffold a new C project (library or application) with CMake, cross-platform sup
 
 ## STOP — Required Before Generating Any Files
 
-You MUST ask the user for all required inputs first:
+You MUST ask the user for ALL of these inputs first:
 
 1. Project name
 2. Project type (library or application)
-3. Description, author, email
+3. Platform (cross-platform, windows, or unix)
+4. Description
+5. Author
+6. Email
 
-**Do NOT assume defaults or start generating files before asking.** See [setup.md](references/setup.md) for the full inputs table.
+**Do NOT assume defaults or start generating files before asking.**
 
-## Red Flags — STOP If You're About to Skip Asking
+### Red Flags — STOP If You're About to Skip Asking
 
 - User gave project name but not type → STILL ASK
+- User gave most inputs but not platform → STILL ASK
 - User said "just do it" or "hurry" → STILL ASK
 - You think you can infer the type from context → STILL ASK
-- User gave most inputs but not all required ones → ASK for missing ones
 
-**Do NOT assume defaults for required fields (name, type, description, author, email).**
+## STOP — You MUST Read setup.md Before Generating ANY Files
 
-## Quick Reference
+After collecting all inputs, you MUST read [setup.md](references/setup.md) in full before writing a single file. Do NOT generate from memory or general knowledge.
 
-| Project type | What it generates |
-|-------------|-------------------|
-| Library | Static lib, public headers in `include/`, umbrella header |
-| Application | Executable + internal `_lib` static target for test linking |
+setup.md contains project-specific conventions that CANNOT be inferred from general C/CMake knowledge — non-standard license formatting, specific CMake options, exact file contents, and platform-conditional logic. Every file you generate must match setup.md verbatim.
 
-Both include: CMakeLists.txt, platform skeleton, test harness, .clang-format, .gitignore, LICENSE, AUTHORS.
+**Generating without reading setup.md WILL produce wrong output.** Every time.
+
+### Red Flags — STOP If You're About to Skip Reading
+
+- "I know what a C project looks like" → setup.md has project-specific conventions you don't know
+- "I'll just use a standard CMake template" → the template has specific options, versions, and patterns
+- "setup.md is probably just confirming what I know" → it contains 400+ lines of precise specifications
 
 ## Common Mistakes
 
-- Forgetting to ask user for project type (library vs application)
-- Not reading LICENSE file for the license header template
-- Creating test executables manually instead of using `<project>_add_test()`
+- Forgetting to ask for project type or platform
+- Not reading setup.md before generating files
+- Adding files not in the file tree (version.h, version.c, etc.)
+- Using SPDX headers instead of the full MIT license header block
+- Using wrong CMake version (setup.md specifies the exact version)
+- Creating a custom test framework instead of using the specified tests/assert.h
+- Skipping docs/, examples/, or cmake/ directories
 
 ## Workflow Routing
 

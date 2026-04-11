@@ -26,39 +26,23 @@ You MUST run the full pre-commit checklist before `git commit`:
 
 **Do NOT skip sanitizer even if tests pass.** "Tests passed, sanitizer is overkill" — STOP and run it.
 
-**Even if the user explicitly asks to skip validation, you MUST run the full checklist.** Pre-commit means pre-commit. No exceptions.
+**Even if the user explicitly asks to skip validation, you MUST run the full checklist.** No exceptions.
 
-## Red Flags — STOP If You're Thinking This
+## STOP — You MUST Read commit.md Before Executing ANY Step
 
-- "Only changed docs/config, no need to build"
-- "Tests passed, sanitizer is redundant"
-- "Change is tiny, can't break anything"
-- "User said skip it"
-- "CI will catch it later"
-- "I'll fix it in the next commit"
+You MUST read [commit.md](references/commit.md) before running any build, test, or git command. Do NOT execute from memory.
 
-All of these mean: run the full pre-commit checklist.
+commit.md contains the exact cmake flags, sanitizer options, commit message rules (72-char wrap, imperative mood, body format), and staging workflow. These details are NOT in this file.
 
-| Excuse | Reality |
-|--------|---------|
-| "Only changed docs/config" | Build system changes can break compilation. Run the checklist. |
-| "Tests passed, sanitizer is overkill" | ASAN catches UB that tests miss. 2 min rebuild saves hours. |
-| "Change is tiny" | Tiny changes cause segfaults. Run the checklist. |
-| "User asked to skip" | You MUST run pre-commit checks. No exceptions, even if asked. |
-| "CI will catch it" | Fix locally. Don't push known-unverified code. |
-| "I'll test after commit" | Pre-commit means pre-commit. Not post-commit. |
+**Executing without reading commit.md WILL produce incorrect builds or malformed commits.**
 
-## Quick Reference
+### Red Flags — STOP If You're Thinking This
 
-| Step | Action |
-|------|--------|
-| Build + test | `cmake -B out ... -D{NAME}_ENABLE_TESTING=ON` then `ctest` |
-| Sanitizer | Clean rebuild with ASAN + UBSAN, run tests |
-| Stage | `git add -u` (review untracked before `git add .`) |
-| Commit | `git commit -m "<type>(<scope>): <summary>"` |
-| Push | `git push origin <branch>` |
-
-Types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `perf`
+- "Only changed docs/config, no need to build" → Build system changes can break compilation
+- "Tests passed, sanitizer is redundant" → ASAN catches UB that tests miss
+- "Change is tiny, can't break anything" → Tiny changes cause segfaults
+- "User asked to skip" → You MUST run pre-commit checks. No exceptions.
+- "CI will catch it" → Fix locally. Don't push unverified code.
 
 ## Common Mistakes
 

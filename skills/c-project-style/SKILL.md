@@ -19,21 +19,13 @@ Code style reference for C projects. All rules use `<project>` (lowercase from r
 
 **When NOT to Use:** build/CMake commands, scaffolding new projects, committing code
 
-## Quick Reference
+## STOP — You MUST Read style.md Before Writing or Reviewing ANY Code
 
-| Topic | Section in style.md |
-|-------|---------------------|
-| Naming conventions | 7. Symbol Naming |
-| File/directory layout | 6. File Naming |
-| Lifecycle (init/deinit vs create/destroy) | 10. Lifecycle Naming |
-| Memory management | 16. Allocation, NULL-safe destroy, deferred free |
-| Error handling | 17. Return conventions, logging |
-| Restricted functions | 18. Banned functions and replacements |
-| Comments and Doxygen | 14. ASCII-only, format rules |
-| Formatting | 13. clang-format settings |
-| Test code rules | 21. Framework, structure, naming |
-| Adding modules | 22. Single-file, multi-file, executable |
-| Platform layer | 12. platform/ directory rules |
+You MUST read [style.md](references/style.md) before generating or modifying any `.c` or `.h` file. Do NOT write code from memory or general C conventions.
+
+style.md contains 23 sections of project-specific rules: file naming, symbol naming, lifecycle patterns, memory management, platform layer rules, test framework, module addition checklists, and more. These conventions CANNOT be inferred from general C knowledge.
+
+**Writing code without reading style.md WILL produce non-compliant output.** The Common Mistakes below cover ~5% of the style surface area.
 
 ## Common Mistakes
 
