@@ -23,7 +23,11 @@ Build, test, and generate coverage for C/C++ CMake projects. Uses Ninja generato
 You MUST ask the user before running any cmake command:
 
 1. Read `project(...)` from root `CMakeLists.txt` to get the project name
-2. **Ask the user**: Debug or Release?
+2. **Ask the user** which build type they want. Present all four CMake options:
+   - **Debug** — no optimization, with debug info
+   - **Release** — speed optimization (`/O2` or `-O2`)
+   - **RelWithDebInfo** — speed optimization + debug info
+   - **MinSizeRel** — size optimization (`/O1` or `-Os`)
 3. Scan `CMakeLists.txt` for `option(...)` lines and **ask the user** which features to enable
 4. Only then proceed
 
