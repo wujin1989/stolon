@@ -39,6 +39,30 @@ debug.md contains the complete step-by-step workflow, platform-specific debugger
 
 **Debugging without reading debug.md WILL waste time and miss the root cause.**
 
+### If debug.md Cannot Be Read — STOP COMPLETELY
+
+If the file read fails (file not found, access denied, any error):
+
+1. **Do NOT run any debugger or sanitizer command.**
+2. Tell the user: "I cannot proceed — debug.md is required but could not be read. Please check the file exists at the expected path."
+3. **Do NOT fall back to general debugging knowledge.** This project uses batch-mode debuggers (non-interactive), platform-specific commands (cdb/gdb/lldb), and a specific 3-tier strategy that you WILL get wrong without debug.md.
+
+| Excuse | Reality |
+|--------|---------|
+| "I know how to use gdb" | This project uses batch-mode commands, not interactive sessions — the flags are different |
+| "I'll just run with ASAN" | The workflow requires Step 0 (reproduce) FIRST, then sanitizers — skipping Step 0 wastes time |
+| "Debugging is debugging" | Platform-specific debugger selection, hang debugging, and log-based fallback all have specific procedures |
+
+## STOP — Step 0: Reproduce First
+
+Before ANY sanitizer or debugger, you MUST identify which test fails:
+
+```
+ctest --test-dir out -C Debug -R {module} --output-on-failure
+```
+
+Note the signal (SIGSEGV, SIGABRT, SIGBUS) and the failing assertion line. Only then proceed to sanitizers.
+
 ## Common Mistakes
 
 - Jumping to debugger before trying sanitizers — ASAN output is usually clearer

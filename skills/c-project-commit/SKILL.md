@@ -36,6 +36,20 @@ commit.md contains the exact cmake flags, sanitizer options, commit message rule
 
 **Executing without reading commit.md WILL produce incorrect builds or malformed commits.**
 
+### If commit.md Cannot Be Read — STOP COMPLETELY
+
+If the file read fails (file not found, access denied, any error):
+
+1. **Do NOT run any build, test, or git command.**
+2. Tell the user: "I cannot proceed — commit.md is required but could not be read. Please check the file exists at the expected path."
+3. **Do NOT fall back to general git/CMake knowledge.** The commit workflow has specific cmake flags, sanitizer options, and commit message formatting rules that you WILL get wrong without commit.md.
+
+| Excuse | Reality |
+|--------|---------|
+| "I know conventional commits" | This project has specific scope rules, 72-char limits, and body formatting you'll miss |
+| "I'll just build and commit" | The pre-commit checklist requires TWO separate builds (normal + sanitizer) — skipping either pushes broken code |
+| "The change is small, just commit it" | Small changes cause segfaults. The sanitizer step is mandatory. |
+
 ### Red Flags — STOP If You're Thinking This
 
 - "Only changed docs/config, no need to build" → Build system changes can break compilation

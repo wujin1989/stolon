@@ -40,6 +40,20 @@ build.md contains critical details you cannot infer: platform-specific flags, sa
 
 **Running commands without reading build.md WILL produce broken builds.**
 
+### If build.md Cannot Be Read — STOP COMPLETELY
+
+If the file read fails (file not found, access denied, any error):
+
+1. **Do NOT run any cmake, build, or test command.**
+2. Tell the user: "I cannot proceed — build.md is required but could not be read. Please check the file exists at the expected path."
+3. **Do NOT fall back to general CMake knowledge.** This project uses Ninja Multi-Config on all platforms with build type selected at build time via `--config` (NOT `-DCMAKE_BUILD_TYPE`). General CMake patterns WILL produce broken builds.
+
+| Excuse | Reality |
+|--------|---------|
+| "I know how CMake works" | This project uses Ninja Multi-Config, not single-config Ninja — the build type mechanism is different |
+| "I'll just use cmake -DCMAKE_BUILD_TYPE=Debug" | WRONG. Multi-config generators ignore this flag. Build type is `--config Debug` at build time |
+| "The user needs a quick build" | A broken build wastes MORE time than waiting |
+
 ## Common Mistakes
 
 - Forgetting to delete `out/` before every configure
