@@ -1,0 +1,16 @@
+function(svcmon_apply_sanitizer TARGET NAME FLAG)
+    if(${NAME})
+        target_compile_options(${TARGET} PRIVATE "/fsanitize=${FLAG}")
+        target_link_options(${TARGET} PRIVATE "/fsanitize=${FLAG}")
+    endif()
+endfunction()
+
+function(svcmon_add_test test_name)
+    add_executable(test-${test_name} "test-${test_name}.c")
+    target_link_libraries(test-${test_name} PRIVATE svcmon_lib)
+    add_test(NAME ${test_name} COMMAND test-${test_name})
+
+    svcmon_apply_sanitizer(test-${test_name} SVCMON_ENABLE_ASAN address)
+    svcmon_apply_sanitizer(test-${test_name} SVCMON_ENABLE_TSAN thread)
+    svcmon_apply_sanitizer(test-${test_name} SVCMON_ENABLE_UBSAN undefined)
+endfunction()

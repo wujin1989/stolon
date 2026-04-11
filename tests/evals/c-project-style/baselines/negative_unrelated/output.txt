@@ -1,0 +1,26 @@
+In JavaScript, `async/await` is syntactic sugar over Promises that makes asynchronous code look synchronous.
+
+An `async` function always returns a Promise. Inside it, `await` pauses execution until the awaited Promise resolves:
+
+```javascript
+async function fetchData() {
+  const response = await fetch("https://api.example.com/data");
+  const data = await response.json();
+  return data;
+}
+```
+
+Error handling uses try/catch:
+
+```javascript
+async function safeFetch() {
+  try {
+    const data = await fetchData();
+    console.log(data);
+  } catch (err) {
+    console.error("Failed:", err);
+  }
+}
+```
+
+Under the hood, the engine transforms async/await into a state machine that yields at each `await` point, similar to generators.

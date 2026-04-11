@@ -1,30 +1,36 @@
 # Stolon
 
-Reusable AI skills and agents that extend from one domain to another — like stolons in nature.
+Reusable AI skills that extend from one domain to another — like stolons in nature.
 
 ## Structure
 
 ```
 stolon/
 ├── skills/
-│   └── c-scaffold/
-│       ├── SKILL.md            # Skill definition (metadata + routing table)
-│       ├── README.md           # Human documentation
-│       ├── references/         # Docs loaded into context as needed
-│       └── assets/
-│           └── templates/      # Project scaffolding
-├── sub-agents/
-│   ├── code-expert/
-│   │   ├── system-prompt.md    # Agent behavior and instructions
-│   │   └── README.md           # Human documentation
-│   └── self-auditor/
-│       ├── system-prompt.md    # Agent behavior and instructions
-│       ├── principles.md       # Self-check rules
-│       └── README.md           # Human documentation
+│   ├── c-project-init/
+│   │   ├── SKILL.md
+│   │   └── references/
+│   │       └── setup.md        # Project scaffolding instructions
+│   ├── c-project-build/
+│   │   ├── SKILL.md
+│   │   └── references/
+│   │       └── build.md        # Build/test/coverage workflow
+│   ├── c-project-commit/
+│   │   ├── SKILL.md
+│   │   └── references/
+│   │       └── commit.md       # Pre-commit validation + message format
+│   └── c-project-style/
+│       ├── SKILL.md
+│       └── references/
+│           └── style.md        # C11 cross-platform code style guide
 ├── tests/
 │   ├── run_eval.py             # Universal eval runner
 │   ├── README.md               # Eval harness documentation
-│   └── evals/                  # One directory per skill
+│   └── evals/
+│       ├── c-project-init/     # 5 prompts, 86 checks
+│       ├── c-project-build/    # 7 prompts, 31 checks
+│       ├── c-project-commit/   # 5 prompts, 29 checks
+│       └── c-project-style/    # 11 prompts, 38 checks
 ├── .gitignore
 └── LICENSE
 ```
@@ -33,34 +39,24 @@ stolon/
 
 | Name | Description |
 |------|-------------|
-| [c-scaffold](skills/c-scaffold/) | Scaffold cross-platform C projects from templates |
-
-## Agents
-
-| Name | Description |
-|------|-------------|
-| [code-expert](sub-agents/code-expert/) | Subagent: coding expert |
-| [self-auditor](sub-agents/self-auditor/) | Subagent: rule compliance auditor |
+| [c-project-init](skills/c-project-init/) | Scaffold a new C project (library or application) |
+| [c-project-build](skills/c-project-build/) | Build, test, sanitizer, and coverage workflow |
+| [c-project-commit](skills/c-project-commit/) | Pre-commit validation and conventional commit format |
+| [c-project-style](skills/c-project-style/) | Cross-platform C11 code style reference (naming, layout, memory, tests) |
 
 ## Usage
 
-### Claude Code
-
-Copy `skills/` and `sub-agents/` into your project's `.claude/` directory. Skills are auto-discovered via `SKILL.md`, agents available via subagent spawn.
-
-### Kiro
-
-Copy `skills/` into `.kiro/skills/`, `sub-agents/` into `.kiro/agents/`.
+Copy `skills/` into your project's skill directory (e.g. `.kiro/skills/`). Skills are self-contained and independent of each other.
 
 ### Sync Rules
 
-Stolon is the **source of truth** for all shared steering content. Changes flow in one direction:
+Stolon is the source of truth for all shared skill content. Changes flow in one direction:
 
 ```
 stolon  →  target projects
 ```
 
-- Modify stolon first, then sync to projects.
+Modify stolon first, then sync to projects.
 
 ## License
 

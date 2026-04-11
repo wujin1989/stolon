@@ -1,0 +1,26 @@
+Test rules for xylem:
+
+Use the custom `ASSERT` macro from `tests/assert.h`. Do not use `<assert.h>` -- the standard assert has no file:line output and may be disabled by NDEBUG.
+
+```c
+#include "xylem.h"
+#include "assert.h"
+```
+
+Each test function should test one behavior (one concern per test). Don't combine unrelated assertions in a single function.
+
+No global or file-scope mutable state between tests. Each `test_*` function sets up its own state from scratch. Initialize all state inside the function.
+
+Register tests in `tests/CMakeLists.txt` using the helper:
+
+```cmake
+xylem_add_test(dns)
+```
+
+Do not create test executables manually with `add_executable`.
+
+Other rules:
+- No `sleep()` or `thrd_sleep()` -- use callbacks for synchronization
+- No `printf` as the only validation -- use `ASSERT()`
+- Use designated initializers: `my_ctx_t ctx = {0};`
+- Clean up all resources in every test (deinit/destroy/close)

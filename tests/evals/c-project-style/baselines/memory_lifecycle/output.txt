@@ -1,0 +1,18 @@
+Memory ownership determines the naming pattern:
+
+`create`/`destroy` -- for opaque types where the module owns the memory (malloc inside). The caller can't `sizeof` the struct since it's only forward-declared in the header.
+
+```c
+xylem_logger_t* logger = xylem_logger_create(cfg);
+xylem_logger_destroy(logger);
+```
+
+`init`/`deinit` -- for caller-owned memory (stack or embedded in another struct). The caller provides the memory, the module only initializes/cleans up fields. Used for intrusive data structures.
+
+```c
+xylem_list_t list;
+xylem_list_init(&list);
+xylem_list_deinit(&list);
+```
+
+Rule of thumb: if the struct definition is hidden (opaque), use create/destroy. If the struct is visible and the caller allocates it, use init/deinit.

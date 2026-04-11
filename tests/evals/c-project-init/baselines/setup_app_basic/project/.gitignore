@@ -1,0 +1,5 @@
+.vs/
+out/
+.cache/
+compile_commands.json
+.DS_Store

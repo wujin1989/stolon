@@ -1,0 +1,16 @@
+Use `/* */` style comments only. Do not use `//` C++ style comments.
+
+```c
+/* Single-line comment. */
+
+/**
+ * Multi-line comment for internal/static functions.
+ * Use this format when spanning multiple lines.
+ */
+```
+
+For public function declarations in headers, use Doxygen `/** ... */` blocks with `@brief`, `@param`, `@return` tags.
+
+All comments must be ASCII only -- no em dashes, arrows, or CJK characters. Use ASCII equivalents (`--`, `->`, `>=`). This prevents MSVC C4819 warnings on non-Unicode code pages.
+
+Comments should explain *why*, not *what*. If the comment restates the code, remove it. No decorative dividers (lines of `===`, `---`, `***`).

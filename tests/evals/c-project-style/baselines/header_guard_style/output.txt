@@ -1,0 +1,11 @@
+Use `_Pragma("once")` immediately after the license block. Do not use `#ifndef`/`#define` include guards.
+
+```c
+/** license text ... */
+
+_Pragma("once")
+
+#include <stdint.h>
+```
+
+The `#ifndef` pattern is not used in this project. `_Pragma("once")` is cleaner and avoids the risk of name collisions in guard macros.

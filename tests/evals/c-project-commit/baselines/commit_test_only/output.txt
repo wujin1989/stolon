@@ -1,0 +1,34 @@
+Let's validate before committing:
+
+1. Build:
+
+```bash
+cmake -B out -G Ninja -DCMAKE_BUILD_TYPE=Debug -DXYLEM_ENABLE_TESTING=ON
+cmake --build out -j $(nproc)
+```
+
+2. Run tests:
+
+```bash
+ctest --test-dir out --output-on-failure
+```
+
+3. Sanitizer check:
+
+```bash
+rm -rf out
+cmake -B out -G Ninja \
+  -DCMAKE_BUILD_TYPE=Debug \
+  -DXYLEM_ENABLE_TESTING=ON \
+  -DXYLEM_ENABLE_ASAN=ON \
+  -DXYLEM_ENABLE_UBSAN=ON
+cmake --build out -j $(nproc)
+ctest --test-dir out --output-on-failure
+```
+
+4. Commit:
+
+```bash
+git add -u
+git commit -m "test(tls): add ALPN negotiation test"
+```

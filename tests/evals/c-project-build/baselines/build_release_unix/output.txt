@@ -1,0 +1,27 @@
+For a production release build of xylem on macOS, use MinSizeRel (not Release) to get the smallest binary with -Os optimization:
+
+1. Configure:
+
+```bash
+cmake -B out -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel
+```
+
+2. Build:
+
+```bash
+cmake --build out -j $(sysctl -n hw.ncpu)
+```
+
+3. Copy compile_commands.json:
+
+```bash
+cp -f out/compile_commands.json compile_commands.json 2>/dev/null || true
+```
+
+4. Strip debug symbols from the final binary:
+
+```bash
+strip out/libxylem.dylib
+```
+
+Do not strip static libraries (.a) since strip removes symbols needed by the linker.

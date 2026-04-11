@@ -1,0 +1,7 @@
+To run only the TCP module test:
+
+```bash
+ctest --test-dir out -R tcp --output-on-failure
+```
+
+This filters test names matching "tcp". Make sure the project is already built before running ctest.

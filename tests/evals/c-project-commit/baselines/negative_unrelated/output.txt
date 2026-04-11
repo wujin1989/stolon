@@ -1,0 +1,17 @@
+To set up PostgreSQL with Docker:
+
+```bash
+docker run -d \
+  --name postgres \
+  -e POSTGRES_PASSWORD=mysecretpassword \
+  -p 5432:5432 \
+  postgres:16
+```
+
+Connect with:
+
+```bash
+psql -h localhost -U postgres
+```
+
+For persistent data, add a volume: `-v pgdata:/var/lib/postgresql/data`

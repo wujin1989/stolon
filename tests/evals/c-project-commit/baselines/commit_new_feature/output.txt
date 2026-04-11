@@ -1,0 +1,47 @@
+Before committing, let's run the pre-commit checks:
+
+1. Build (Debug):
+
+```bash
+cmake -B out -G Ninja -DCMAKE_BUILD_TYPE=Debug -DXYLEM_ENABLE_TESTING=ON
+cmake --build out -j $(sysctl -n hw.ncpu 2>/dev/null || nproc 2>/dev/null || echo 4)
+```
+
+2. Test:
+
+```bash
+ctest --test-dir out --output-on-failure
+```
+
+3. Sanitizer check (ASAN + UBSAN):
+
+```bash
+rm -rf out
+cmake -B out -G Ninja \
+  -DCMAKE_BUILD_TYPE=Debug \
+  -DXYLEM_ENABLE_TESTING=ON \
+  -DXYLEM_ENABLE_ASAN=ON \
+  -DXYLEM_ENABLE_UBSAN=ON
+cmake --build out -j $(sysctl -n hw.ncpu 2>/dev/null || nproc 2>/dev/null || echo 4)
+ctest --test-dir out --output-on-failure
+```
+
+4. Review changes:
+
+```bash
+git diff
+git status
+```
+
+5. Stage and commit:
+
+```bash
+git add -u
+git commit -m "feat(tcp): add heartbeat timeout support"
+```
+
+6. Push:
+
+```bash
+git push origin main
+```

@@ -1,0 +1,20 @@
+First, review what changed:
+
+```bash
+git diff
+git status
+```
+
+Review untracked files carefully before staging. Use `git add -u` to stage only tracked files, or selectively add specific files:
+
+```bash
+git add -u
+```
+
+Then commit with a conventional message:
+
+```bash
+git commit -m "feat(udp): add datagram boundary handling"
+```
+
+Avoid `git add .` without checking `git status` first -- it may pick up untracked files you don't want.

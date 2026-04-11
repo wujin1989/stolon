@@ -1,0 +1,15 @@
+ASAN and TSAN cannot coexist -- they are incompatible and conflict at the compiler level. You need to do a clean rebuild when switching between them.
+
+Delete the build directory and reconfigure from scratch:
+
+```bash
+rm -rf out
+cmake -B out -G Ninja \
+  -DCMAKE_BUILD_TYPE=Debug \
+  -DXYLEM_ENABLE_TESTING=ON \
+  -DXYLEM_ENABLE_TSAN=ON
+cmake --build out -j $(nproc)
+ctest --test-dir out --output-on-failure
+```
+
+Always start fresh when switching build type or sanitizer options.

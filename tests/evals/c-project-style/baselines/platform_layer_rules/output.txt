@@ -1,0 +1,21 @@
+All platform-specific code must live exclusively under `src/platform/`. You must not use `#ifdef _WIN32`, `#ifdef __linux__`, or any platform conditionals outside that directory.
+
+Structure:
+
+```
+src/platform/
+  platform.h              # umbrella (includes per-module headers)
+  platform-socket.h       # per-module API header
+  unix/platform-socket.c  # Unix implementation
+  win/platform-socket.c   # Windows implementation
+```
+
+Platform functions use the `platform_<module>_<action>` prefix:
+
+```c
+platform_socket_create(...)
+platform_socket_close(...)
+platform_io_poll(...)
+```
+
+Public API functions belong in `src/xylem-<module>.c` and call `platform_*` helpers for OS-dependent parts. Never put public API implementations directly in platform files.

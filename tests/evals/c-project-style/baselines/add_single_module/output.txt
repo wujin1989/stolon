@@ -1,0 +1,21 @@
+Steps to add a single-file `dns` module to xylem:
+
+1. Create the public header at `include/xylem/xylem-dns.h` with the API declarations (use `extern` on all function declarations, `_Pragma("once")` guard)
+
+2. Create the implementation at `src/xylem-dns.c`
+
+3. Add `src/xylem-dns.c` to the `SRCS` list in the root `CMakeLists.txt`
+
+4. Include the new header in the umbrella header `include/xylem.h`:
+   ```c
+   #include "xylem/xylem-dns.h"
+   ```
+
+5. Create the test file at `tests/test-dns.c`
+
+6. Register the test in `tests/CMakeLists.txt`:
+   ```cmake
+   xylem_add_test(dns)
+   ```
+
+That's it. The `xylem_add_test` helper creates the executable, links it against xylem, and applies sanitizers and coverage automatically.

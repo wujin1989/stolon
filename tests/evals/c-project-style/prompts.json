@@ -1,0 +1,115 @@
+[
+  {
+    "id": "naming_public_function",
+    "prompt": "What should I name a public function in the TCP module that flushes the write queue? The project is called xylem.",
+    "skill_ref": "style.md",
+    "expected_checks": [
+      "public_func_has_project_prefix",
+      "public_func_has_module_segment",
+      "public_func_uses_snake_case"
+    ]
+  },
+  {
+    "id": "naming_static_callback",
+    "prompt": "I need to name a static callback for the TCP connection IO event in xylem. What's the convention?",
+    "skill_ref": "style.md",
+    "expected_checks": [
+      "static_cb_has_underscore_prefix",
+      "static_cb_has_cb_suffix",
+      "static_cb_no_project_prefix"
+    ]
+  },
+  {
+    "id": "header_guard_style",
+    "prompt": "Should I use #ifndef guards or #pragma once in xylem header files?",
+    "skill_ref": "style.md",
+    "expected_checks": [
+      "recommends_pragma_once",
+      "no_ifndef_guards"
+    ]
+  },
+  {
+    "id": "include_ordering",
+    "prompt": "What's the correct include ordering for a .c implementation file in xylem?",
+    "skill_ref": "style.md",
+    "expected_checks": [
+      "mentions_own_header_first",
+      "mentions_grouped_includes",
+      "mentions_stdlib_last"
+    ]
+  },
+  {
+    "id": "memory_lifecycle",
+    "prompt": "When should I use create/destroy vs init/deinit in xylem?",
+    "skill_ref": "style.md",
+    "expected_checks": [
+      "mentions_create_destroy_for_opaque",
+      "mentions_init_deinit_for_caller_owned",
+      "mentions_malloc_ownership"
+    ]
+  },
+  {
+    "id": "add_single_module",
+    "prompt": "Walk me through adding a new single-file 'dns' module to the xylem project.",
+    "skill_ref": "style.md",
+    "expected_checks": [
+      "mentions_public_header_path",
+      "mentions_src_implementation",
+      "mentions_add_to_srcs",
+      "mentions_umbrella_header",
+      "mentions_test_file",
+      "mentions_add_test_cmake"
+    ]
+  },
+  {
+    "id": "banned_functions",
+    "prompt": "Can I use sprintf and strcpy in xylem source files?",
+    "skill_ref": "style.md",
+    "expected_checks": [
+      "bans_sprintf",
+      "bans_strcpy",
+      "recommends_snprintf"
+    ]
+  },
+  {
+    "id": "comment_style",
+    "prompt": "What comment style should I use in xylem .c files?",
+    "skill_ref": "style.md",
+    "expected_checks": [
+      "uses_c_style_comments",
+      "no_cpp_style_comments",
+      "mentions_ascii_only"
+    ]
+  },
+  {
+    "id": "platform_layer_rules",
+    "prompt": "Where should I put platform-specific code in xylem? Can I use #ifdef _WIN32 in my module?",
+    "skill_ref": "style.md",
+    "expected_checks": [
+      "platform_code_in_platform_dir",
+      "no_ifdefs_outside_platform",
+      "mentions_platform_prefix"
+    ]
+  },
+  {
+    "id": "test_code_rules",
+    "prompt": "What are the rules for writing test code in xylem?",
+    "skill_ref": "style.md",
+    "expected_checks": [
+      "uses_custom_assert",
+      "no_standard_assert",
+      "one_concern_per_test",
+      "no_global_state_in_tests",
+      "mentions_add_test_helper"
+    ]
+  },
+  {
+    "id": "negative_unrelated",
+    "prompt": "Explain how async/await works in JavaScript.",
+    "skill_ref": null,
+    "should_trigger": false,
+    "expected_checks": [
+      "no_c_style_content"
+    ]
+  }
+]

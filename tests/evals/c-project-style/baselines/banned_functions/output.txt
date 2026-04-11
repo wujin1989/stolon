@@ -1,0 +1,13 @@
+No. Both `sprintf` and `strcpy` are banned in this project. They have no bounds checking and risk buffer overflows.
+
+Use `snprintf` instead:
+
+```c
+/* Instead of sprintf(buf, "hello %s", name) */
+snprintf(buf, sizeof(buf), "hello %s", name);
+
+/* Instead of strcpy(dst, src) */
+snprintf(dst, sizeof(dst), "%s", src);
+```
+
+Other restricted functions include `strcat`, `gets`, `atoi`, `atof`, `atol`, `strtok`, `strerror`, `localtime`, `gmtime`. See the style guide for the full list and recommended replacements.

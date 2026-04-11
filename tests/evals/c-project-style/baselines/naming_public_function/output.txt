@@ -1,0 +1,9 @@
+Public functions follow the pattern `<project>_<module>_<action>`, with the action being verb-first in snake_case.
+
+For flushing the write queue in the TCP module:
+
+```c
+xylem_tcp_flush_writes
+```
+
+Three segments: `xylem` (project), `tcp` (module), `flush_writes` (action). The module is a single identifier without underscores, and the action starts with a verb.

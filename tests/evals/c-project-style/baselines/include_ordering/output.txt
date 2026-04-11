@@ -1,0 +1,32 @@
+Includes are grouped with blank lines between groups, in this order:
+
+1. The module's own public header (first)
+2. Other project public headers
+3. Internal project headers (platform layer, sibling modules)
+4. Third-party bundled headers
+5. Standard library headers (last)
+
+Example for a UDP module implementation file:
+
+```c
+#include "xylem/xylem-udp.h"
+#include "xylem/xylem-logger.h"
+
+#include "platform/platform-socket.h"
+#include "xylem-loop-io.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+```
+
+For test files:
+
+```c
+#include "xylem.h"
+#include "assert.h"
+
+#include <string.h>
+```
+
+Each group is separated by a blank line. Standard library headers always come last.

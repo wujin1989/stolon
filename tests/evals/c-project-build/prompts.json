@@ -1,0 +1,84 @@
+[
+  {
+    "id": "build_debug_unix",
+    "prompt": "Build the xylem project in Debug mode on Linux.",
+    "skill_ref": "build.md",
+    "expected_checks": [
+      "uses_ninja_generator",
+      "uses_cmake_b_out",
+      "build_type_debug",
+      "has_build_command",
+      "has_parallel_jobs",
+      "copies_compile_commands",
+      "no_msbuild_or_visual_studio"
+    ]
+  },
+  {
+    "id": "build_release_unix",
+    "prompt": "Build the xylem project for production release on macOS.",
+    "skill_ref": "build.md",
+    "expected_checks": [
+      "uses_ninja_generator",
+      "uses_cmake_b_out",
+      "build_type_minsizerel",
+      "has_build_command",
+      "has_strip_command",
+      "no_build_type_release_raw"
+    ]
+  },
+  {
+    "id": "build_asan",
+    "prompt": "Build xylem with AddressSanitizer and run the tests.",
+    "skill_ref": "build.md",
+    "expected_checks": [
+      "uses_ninja_generator",
+      "uses_cmake_b_out",
+      "build_type_debug",
+      "enables_asan",
+      "has_ctest_command",
+      "has_output_on_failure",
+      "no_tsan_with_asan"
+    ]
+  },
+  {
+    "id": "build_coverage",
+    "prompt": "Generate code coverage for the xylem project on Linux.",
+    "skill_ref": "build.md",
+    "expected_checks": [
+      "uses_ninja_generator",
+      "uses_cmake_b_out",
+      "enables_coverage",
+      "has_coverage_target",
+      "enables_testing"
+    ]
+  },
+  {
+    "id": "build_single_test",
+    "prompt": "Run only the TCP module test for the xylem project.",
+    "skill_ref": "build.md",
+    "expected_checks": [
+      "has_ctest_command",
+      "has_ctest_r_filter",
+      "has_output_on_failure"
+    ]
+  },
+  {
+    "id": "build_switch_sanitizer",
+    "prompt": "I was building with ASAN, now I want to switch to TSAN. What should I do?",
+    "skill_ref": "build.md",
+    "expected_checks": [
+      "mentions_clean_rebuild",
+      "mentions_rm_out",
+      "no_asan_tsan_together"
+    ]
+  },
+  {
+    "id": "negative_unrelated",
+    "prompt": "Write a Python web scraper using BeautifulSoup.",
+    "skill_ref": null,
+    "should_trigger": false,
+    "expected_checks": [
+      "no_cmake_content"
+    ]
+  }
+]

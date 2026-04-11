@@ -1,0 +1,20 @@
+function(logkit_apply_sanitizer TARGET NAME FLAG)
+    if(${NAME})
+        target_compile_options(${TARGET} PRIVATE "-fsanitize=${FLAG}" -fno-omit-frame-pointer)
+        target_link_options(${TARGET} PUBLIC "-fsanitize=${FLAG}")
+    endif()
+endfunction()
+
+function(logkit_add_test test_name)
+    add_executable(test-${test_name} "test-${test_name}.c")
+    target_link_libraries(test-${test_name} PRIVATE logkit)
+    add_test(NAME ${test_name} COMMAND test-${test_name})
+
+    logkit_apply_sanitizer(test-${test_name} LOGKIT_ENABLE_ASAN address)
+    logkit_apply_sanitizer(test-${test_name} LOGKIT_ENABLE_TSAN thread)
+    logkit_apply_sanitizer(test-${test_name} LOGKIT_ENABLE_UBSAN undefined)
+
+    if(LOGKIT_ENABLE_COVERAGE)
+        target_link_options(test-${test_name} PRIVATE --coverage)
+    endif()
+endfunction()

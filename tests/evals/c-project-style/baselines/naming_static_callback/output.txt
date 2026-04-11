@@ -1,0 +1,13 @@
+Static callbacks follow the pattern `_<module>_<subject>_<event>_cb`:
+
+```c
+static void _tcp_conn_io_cb(xylem_loop_t* loop, xylem_loop_io_t* io, int events, void* ud);
+```
+
+Three segments after the underscore prefix: `tcp` (module), `conn` (subject -- the resource being monitored), `io` (event). Always ends with `_cb` suffix.
+
+Static callbacks do NOT use the project prefix (`xylem_`). That's reserved for public functions only.
+
+More examples:
+- `_tcp_read_timeout_cb` -- module=tcp, subject=read, event=timeout
+- `_tcp_reconnect_timeout_cb` -- module=tcp, subject=reconnect, event=timeout

@@ -1,0 +1,32 @@
+The commit message format follows conventional commits:
+
+```
+<type>(<scope>): <summary>
+```
+
+Types:
+- `feat` -- new feature or public API addition
+- `fix` -- bug fix
+- `refactor` -- code restructuring, no behavior change
+- `test` -- adding or updating tests
+- `docs` -- documentation only
+- `chore` -- build system, CI, tooling
+- `perf` -- performance improvement
+
+Scope is the module name (e.g. `tcp`, `udp`, `tls`, `loop`, `platform`). Omit scope for cross-cutting changes.
+
+Summary rules:
+- Imperative mood ("add", not "added" or "adds")
+- Lowercase first letter
+- No period at end
+- Max 72 characters
+
+Examples:
+
+```
+feat(tcp): add heartbeat timeout callback
+fix(udp): handle EAGAIN in sendto path
+test(tls): add ALPN negotiation test
+refactor(loop): extract timer reset logic
+chore: update CMakeLists.txt for new module
+```

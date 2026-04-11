@@ -1,0 +1,66 @@
+[
+  {
+    "id": "commit_new_feature",
+    "prompt": "I just finished adding heartbeat timeout support to the TCP module in xylem. Commit and push my changes.",
+    "skill_ref": "commit.md",
+    "expected_checks": [
+      "has_build_step",
+      "has_test_step",
+      "has_sanitizer_step",
+      "sanitizer_uses_asan",
+      "sanitizer_uses_ubsan",
+      "has_git_diff_or_status",
+      "has_git_add",
+      "has_git_commit",
+      "commit_msg_conventional",
+      "commit_msg_imperative",
+      "commit_msg_has_scope",
+      "has_git_push"
+    ]
+  },
+  {
+    "id": "commit_test_only",
+    "prompt": "I added ALPN negotiation tests to the TLS module. Commit this.",
+    "skill_ref": "commit.md",
+    "expected_checks": [
+      "has_build_step",
+      "has_test_step",
+      "has_sanitizer_step",
+      "has_git_commit",
+      "commit_msg_conventional",
+      "commit_type_test"
+    ]
+  },
+  {
+    "id": "commit_review_before_stage",
+    "prompt": "Commit all my changes to the UDP module.",
+    "skill_ref": "commit.md",
+    "expected_checks": [
+      "has_git_diff_or_status",
+      "has_git_add",
+      "no_blind_git_add_dot",
+      "has_git_commit",
+      "commit_msg_conventional"
+    ]
+  },
+  {
+    "id": "commit_message_format",
+    "prompt": "What's the correct commit message format for this project?",
+    "skill_ref": "commit.md",
+    "expected_checks": [
+      "mentions_type_scope_summary",
+      "mentions_imperative_mood",
+      "lists_commit_types",
+      "mentions_scope_is_module"
+    ]
+  },
+  {
+    "id": "negative_unrelated",
+    "prompt": "How do I set up a PostgreSQL database with Docker?",
+    "skill_ref": null,
+    "should_trigger": false,
+    "expected_checks": [
+      "no_commit_content"
+    ]
+  }
+]

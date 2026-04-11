@@ -1,0 +1,14 @@
+I can help you create a Python script for reading CSV files and plotting charts. Here's a simple example using pandas and matplotlib:
+
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("data.csv")
+df.plot(x="date", y="value")
+plt.title("Data Over Time")
+plt.savefig("chart.png")
+plt.show()
+```
+
+You'll need to install the dependencies: `pip install pandas matplotlib`
