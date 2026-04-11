@@ -9,7 +9,7 @@ description: >
 
 ## Overview
 
-Build, test, and generate coverage for C/C++ CMake projects. Uses Ninja generator on all platforms for `compile_commands.json` support.
+Build, test, and generate coverage for C/C++ CMake projects. Uses Ninja Multi-Config generator on all platforms for `compile_commands.json` support. Build type is selected at build time via `--config`, not at configure time.
 
 ## When to Use
 
@@ -49,10 +49,10 @@ You MUST ask the user before running any cmake command:
 
 | Task | Command |
 |------|---------|
-| Configure | `cmake -B out -G Ninja -DCMAKE_BUILD_TYPE={type}` |
-| Build | `cmake --build out -j {ncpu}` |
-| Test | `ctest --test-dir out --output-on-failure` |
-| Coverage | `cmake --build out --target coverage` |
+| Configure | `cmake -B out -G "Ninja Multi-Config"` |
+| Build | `cmake --build out --config {type} -j {ncpu}` |
+| Test | `ctest --test-dir out --config {type} --output-on-failure` |
+| Coverage | `cmake --build out --config Debug --target coverage` |
 
 See [build.md](references/build.md) for platform-specific flags, sanitizers, and full details.
 
