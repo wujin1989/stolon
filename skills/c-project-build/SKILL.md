@@ -51,7 +51,7 @@ You MUST ask the user before running any cmake command:
 |------|---------|
 | Configure | `cmake -B out -G "Ninja Multi-Config"` |
 | Build | `cmake --build out --config {type} -j {ncpu}` |
-| Test | `ctest --test-dir out --config {type} --output-on-failure` |
+| Test | `ctest --test-dir out -C {type} --output-on-failure` |
 | Coverage | `cmake --build out --config Debug --target coverage` |
 
 See [build.md](references/build.md) for platform-specific flags, sanitizers, and full details.

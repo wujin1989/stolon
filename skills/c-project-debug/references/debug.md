@@ -29,7 +29,7 @@ If `out/` was built with Release or another type, you MUST reconfigure and rebui
 **Always start here.** Before any debugger or sanitizer, identify WHICH test function fails:
 
 ```bash
-ctest --test-dir out -R {module} --output-on-failure
+ctest --test-dir out -C Debug -R {module} --output-on-failure
 ```
 
 The project's `ASSERT` macro calls `abort()` on failure, printing `Test failed at {file}:{line}` to stderr before aborting. This output alone often pinpoints the exact assertion and line number.
@@ -58,7 +58,7 @@ cmake -B out -G Ninja \
   -D{NAME}_ENABLE_ASAN=ON \
   -D{NAME}_ENABLE_UBSAN=ON
 cmake --build out -j $(nproc)
-ctest --test-dir out -R {module} --output-on-failure
+ctest --test-dir out -C Debug -R {module} --output-on-failure
 ```
 
 #### Windows
@@ -67,7 +67,7 @@ ctest --test-dir out -R {module} --output-on-failure
 rmdir /s /q out
 cmake -B out -G Ninja -DCMAKE_BUILD_TYPE=Debug -D{NAME}_ENABLE_TESTING=ON -D{NAME}_ENABLE_ASAN=ON
 cmake --build out -j %NUMBER_OF_PROCESSORS%
-ctest --test-dir out -R {module} --output-on-failure
+ctest --test-dir out -C Debug -R {module} --output-on-failure
 ```
 
 **Windows note:** MSVC supports `/fsanitize=address` (ASAN) only. UBSAN and TSAN are NOT available on MSVC. The project's CMake handles this — just enable the option and rebuild.
@@ -307,7 +307,7 @@ fprintf(stderr, "DEBUG: reached checkpoint A\n");
 
 ```bash
 cmake --build out -j {ncpu}
-ctest --test-dir out -R {module} --output-on-failure
+ctest --test-dir out -C Debug -R {module} --output-on-failure
 ```
 
 4. If "checkpoint A" prints → crash is AFTER that point. Move log forward.

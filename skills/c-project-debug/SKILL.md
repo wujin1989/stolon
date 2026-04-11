@@ -51,7 +51,7 @@ Only proceed to debugger if sanitizer output doesn't identify the bug or you nee
 
 | Step | Command | Purpose |
 |------|---------|---------|
-| Identify failing test | `ctest --test-dir out -R {module} --output-on-failure` | See which test function aborts/crashes |
+| Identify failing test | `ctest --test-dir out -C Debug -R {module} --output-on-failure` | See which test function aborts/crashes |
 | ASAN rebuild | Reconfigure with `-D{NAME}_ENABLE_ASAN=ON`, rebuild, run | Best crash diagnostics |
 | Backtrace (Unix) | `gdb -batch -ex run -ex "bt full" out/test-{module}` | Crash location + locals |
 | Backtrace (Windows) | `cdb -g -G -c "kb;q" out\test-{module}.exe` | Crash location + stack |

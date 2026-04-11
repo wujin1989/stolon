@@ -126,13 +126,13 @@ After build, copy compile_commands.json to project root (see above).
 ### Test
 
 ```bash
-ctest --test-dir out --config {build_type} --output-on-failure
+ctest --test-dir out -C {build_type} --output-on-failure
 ```
 
 Run a single test module:
 
 ```bash
-ctest --test-dir out --config {build_type} -R {module} --output-on-failure
+ctest --test-dir out -C {build_type} -R {module} --output-on-failure
 ```
 
 ### Sanitizers
@@ -145,7 +145,7 @@ cmake -B out -G "Ninja Multi-Config" \
   -D{NAME}_ENABLE_ASAN=ON
 
 cmake --build out --config Debug -j {ncpu}
-ctest --test-dir out --config Debug --output-on-failure
+ctest --test-dir out -C Debug --output-on-failure
 ```
 
 | Sanitizer | Option | Catches |
