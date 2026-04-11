@@ -10,6 +10,7 @@ endfunction()
 function(netkit_add_test test_name)
     add_executable(test-${test_name} "test-${test_name}.c")
     target_link_libraries(test-${test_name} PRIVATE netkit)
+    target_include_directories(test-${test_name} PRIVATE ${CMAKE_SOURCE_DIR}/src)
     add_test(NAME ${test_name} COMMAND test-${test_name})
 
     netkit_apply_sanitizer(test-${test_name} NETKIT_ENABLE_ASAN address)
