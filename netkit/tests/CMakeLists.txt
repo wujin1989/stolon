@@ -5,6 +5,7 @@ project(tests LANGUAGES C)
 include(netkit-utils)
 
 # netkit_add_test(<module>)
+netkit_add_test(err)
 
 if(NETKIT_ENABLE_COVERAGE)
     find_program(OPENCPPCOVERAGE_BIN OpenCppCoverage)

@@ -26,6 +26,7 @@ set(CMAKE_C_STANDARD 11)
 add_compile_options("/experimental:c11atomics")
 
 set(SRCS
+    src/netkit-err.c
 )
 
 if(NETKIT_ENABLE_DYNAMIC_LIBRARY)
@@ -39,7 +40,7 @@ target_include_directories(netkit
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-target_link_libraries(netkit PRIVATE ${CMAKE_DL_LIBS})
+target_link_libraries(netkit PRIVATE ws2_32 mswsock)
 
 netkit_apply_sanitizer(netkit NETKIT_ENABLE_ASAN address)
 netkit_apply_sanitizer(netkit NETKIT_ENABLE_TSAN thread)
