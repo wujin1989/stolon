@@ -34,7 +34,7 @@ Feature flags are project-specific `option()` entries in `CMakeLists.txt` (e.g. 
 
 Always ask the user which of the four CMake build types to use before configuring:
 
-| Build type | `CMAKE_BUILD_TYPE` | Use case |
+| Build type | `--config` value | Use case |
 |------------|--------------------|----------|
 | Debug | `Debug` | Development, testing, sanitizers, coverage |
 | Release | `Release` | Speed optimization (`-O2` / `/O2`) |
@@ -44,19 +44,19 @@ Always ask the user which of the four CMake build types to use before configurin
 On Unix, additionally strip debug symbols from the final binary after build:
 
 ```bash
-strip out/{target}
+strip out/{build_type}/{target}
 ```
 
-Where `{target}` is the executable or shared library (`{name}` / `lib{name}.so` / `lib{name}.dylib`). Do not strip static libraries (`.a`) -- `strip` removes symbols needed by the linker.
+Where `{target}` is the executable or shared library (`{name}` / `lib{name}.so` / `lib{name}.dylib`). Do not strip static libraries (`.a`) -- `strip` removes symbols needed by the linker. With Ninja Multi-Config, binaries are placed under `out/{build_type}/`.
 
 ## Platform Strategy
 
 | Platform | Generator | Type | Reason |
 |----------|-----------|------|--------|
-| Windows | Ninja (via MSVC Developer Shell) | Single-config | Produces `compile_commands.json` for clangd |
-| Linux/macOS | Ninja | Single-config | Produces `compile_commands.json` for clangd |
+| Windows | Ninja Multi-Config (via MSVC Developer Shell) | Multi-config | Produces `compile_commands.json` for clangd; build type selected at build time |
+| Linux/macOS | Ninja Multi-Config | Multi-config | Produces `compile_commands.json` for clangd; build type selected at build time |
 
-All platforms use Ninja as the generator. This ensures `CMAKE_EXPORT_COMPILE_COMMANDS` produces `compile_commands.json` in the build directory. Visual Studio generators do not produce this file.
+All platforms use Ninja Multi-Config as the generator. Build type is NOT set at configure time; instead it is selected at build time via `--config {build_type}`. This ensures `CMAKE_EXPORT_COMPILE_COMMANDS` produces `compile_commands.json` in the build directory. Visual Studio generators do not produce this file.
 
 On Windows, Ninja requires the MSVC environment. When running commands manually, the user must have the MSVC environment active (e.g. via `vcvarsall.bat x64`, "Developer PowerShell for VS", or `Launch-VsDevShell.ps1`).
 
@@ -84,37 +84,35 @@ rm -rf out   # Unix
 rmdir /s /q out   &:: Windows
 ```
 
-All platforms use single-config Ninja. Build type is set at configure time via `-DCMAKE_BUILD_TYPE`.
+All platforms use Ninja Multi-Config. Build type is selected at build time via `--config`, not at configure time.
 
 #### Unix (Linux / macOS)
 
 ```bash
-cmake -B out -G Ninja \
-  -DCMAKE_BUILD_TYPE={build_type} \
+cmake -B out -G "Ninja Multi-Config" \
   [-D{NAME}_ENABLE_TESTING=ON] \
   [-D{NAME}_ENABLE_COVERAGE=OFF] \
   [-D{NAME}_ENABLE_{FEATURE}=ON]
 ```
 
-#### Windows (MSVC + Ninja)
+#### Windows (MSVC + Ninja Multi-Config)
 
 Requires MSVC environment active (e.g. `vcvarsall.bat x64` or Developer PowerShell for VS).
 
 ```bat
-cmake -B out -G Ninja ^
-  -DCMAKE_BUILD_TYPE={build_type} ^
+cmake -B out -G "Ninja Multi-Config" ^
   -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ^
   [-D{NAME}_ENABLE_TESTING=ON] ^
   [-D{NAME}_ENABLE_COVERAGE=OFF] ^
   [-D{NAME}_ENABLE_{FEATURE}=ON]
 ```
 
-Note: On Unix, `CMAKE_EXPORT_COMPILE_COMMANDS` is already set to `ON` in the project's `CMakeLists.txt`. On Windows with Ninja, pass it explicitly as a safety measure since some environments may not honor the CMakeLists.txt setting.
+Note: On Unix, `CMAKE_EXPORT_COMPILE_COMMANDS` is already set to `ON` in the project's `CMakeLists.txt`. On Windows with Ninja Multi-Config, pass it explicitly as a safety measure since some environments may not honor the CMakeLists.txt setting.
 
 ### Build
 
 ```bash
-cmake --build out -j {ncpu}
+cmake --build out --config {build_type} -j {ncpu}
 ```
 
 Detect CPU count:
@@ -128,13 +126,13 @@ After build, copy compile_commands.json to project root (see above).
 ### Test
 
 ```bash
-ctest --test-dir out --output-on-failure
+ctest --test-dir out --config {build_type} --output-on-failure
 ```
 
 Run a single test module:
 
 ```bash
-ctest --test-dir out -R {module} --output-on-failure
+ctest --test-dir out --config {build_type} -R {module} --output-on-failure
 ```
 
 ### Sanitizers
@@ -142,13 +140,12 @@ ctest --test-dir out -R {module} --output-on-failure
 Enable one sanitizer at a time. ASAN and TSAN cannot coexist.
 
 ```bash
-cmake -B out -G Ninja \
-  -DCMAKE_BUILD_TYPE=Debug \
+cmake -B out -G "Ninja Multi-Config" \
   -D{NAME}_ENABLE_TESTING=ON \
   -D{NAME}_ENABLE_ASAN=ON
 
-cmake --build out -j {ncpu}
-ctest --test-dir out --output-on-failure
+cmake --build out --config Debug -j {ncpu}
+ctest --test-dir out --config Debug --output-on-failure
 ```
 
 | Sanitizer | Option | Catches |
@@ -164,13 +161,12 @@ UBSAN can be combined with ASAN or TSAN.
 #### Unix
 
 ```bash
-cmake -B out -G Ninja \
-  -DCMAKE_BUILD_TYPE=Debug \
+cmake -B out -G "Ninja Multi-Config" \
   -D{NAME}_ENABLE_TESTING=ON \
   -D{NAME}_ENABLE_COVERAGE=ON
 
-cmake --build out -j {ncpu}
-cmake --build out --target coverage
+cmake --build out --config Debug -j {ncpu}
+cmake --build out --config Debug --target coverage
 ```
 
 Requires `lcov` and `genhtml`. HTML report at `out/coverage/html/index.html`.
@@ -182,14 +178,13 @@ Windows coverage uses OpenCppCoverage, an external runtime instrumentation tool 
 Because OpenCppCoverage instruments at runtime (not compile time), the library itself does not need recompilation. Only the `{NAME}_ENABLE_COVERAGE=ON` flag is needed so CMake creates the `coverage` target.
 
 ```bat
-cmake -B out -G Ninja ^
-  -DCMAKE_BUILD_TYPE=Debug ^
+cmake -B out -G "Ninja Multi-Config" ^
   -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ^
   -D{NAME}_ENABLE_TESTING=ON ^
   -D{NAME}_ENABLE_COVERAGE=ON
 
-cmake --build out -j 8
-cmake --build out --target coverage
+cmake --build out --config Debug -j 8
+cmake --build out --config Debug --target coverage
 ```
 
 HTML report at `out/coverage/index.html`.
@@ -203,7 +198,7 @@ Important: Do NOT assume Windows lacks coverage support just because the root `C
 | Scenario | Action |
 |----------|--------|
 | Changed source files only | Build only (cmake --build out) |
-| Any other change (options, build type, CMakeLists.txt, sanitizer) | Delete `out/` and reconfigure from scratch |
+| Any other change (options, CMakeLists.txt, sanitizer) | Delete `out/` and reconfigure from scratch |
 
 **Rule: Every configure = delete `out/` first.** This prevents stale cache from producing incorrect builds (e.g. TLS code linking in after disabling TLS option).
 
