@@ -160,6 +160,10 @@ Requires `lcov` and `genhtml`. HTML report at `out/coverage/html/index.html`.
 
 #### Windows
 
+Windows coverage uses OpenCppCoverage, an external runtime instrumentation tool — no compiler flags needed. The `coverage` CMake target is typically defined in `tests/CMakeLists.txt` (not the root), guarded by `if({NAME}_ENABLE_COVERAGE AND WIN32)` with `find_program(OPENCPPCOVERAGE_BIN OpenCppCoverage)`.
+
+Because OpenCppCoverage instruments at runtime (not compile time), the library itself does not need recompilation. Only the `{NAME}_ENABLE_COVERAGE=ON` flag is needed so CMake creates the `coverage` target.
+
 ```bat
 cmake -B out -G Ninja ^
   -DCMAKE_BUILD_TYPE=Debug ^
@@ -171,7 +175,11 @@ cmake --build out -j 8
 cmake --build out --target coverage
 ```
 
-Requires OpenCppCoverage. HTML report at `out/coverage/index.html`.
+HTML report at `out/coverage/index.html`.
+
+If `cmake --build out --target coverage` fails with "no rule to make target 'coverage'", OpenCppCoverage is not installed or not on PATH. Install it from https://github.com/OpenCppCoverage/OpenCppCoverage/releases and ensure `OpenCppCoverage.exe` is on PATH, then reconfigure.
+
+Important: Do NOT assume Windows lacks coverage support just because the root `CMakeLists.txt` only has `if({NAME}_ENABLE_COVERAGE AND UNIX)`. Always check `tests/CMakeLists.txt` (or subdirectory CMakeLists) for the Windows coverage target before concluding coverage is unavailable.
 
 ## Reconfigure vs Rebuild
 

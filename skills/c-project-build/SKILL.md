@@ -9,7 +9,7 @@ description: >
 
 ## Overview
 
-Build, test, and generate coverage for cross-platform C11 CMake projects. Uses Ninja generator on all platforms for `compile_commands.json` support.
+Build, test, and generate coverage for C/C++ CMake projects. Uses Ninja generator on all platforms for `compile_commands.json` support.
 
 ## When to Use
 
@@ -44,6 +44,7 @@ Build, test, and generate coverage for cross-platform C11 CMake projects. Uses N
 - Not copying `compile_commands.json` to project root after configure
 - Using `Release` instead of `MinSizeRel` for production builds
 - Missing MSVC environment (vcvarsall.bat) on Windows with Ninja
+- Assuming Windows lacks coverage because root CMakeLists.txt only has Unix coverage flags (check tests/CMakeLists.txt)
 
 ## Workflow Routing
 
