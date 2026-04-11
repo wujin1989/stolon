@@ -7,6 +7,7 @@ include(netkit-utils)
 # netkit_add_test(<module>)
 netkit_add_test(err)
 netkit_add_test(heap)
+netkit_add_test(loop)
 
 if(NETKIT_ENABLE_COVERAGE)
     find_program(OPENCPPCOVERAGE_BIN OpenCppCoverage)

@@ -19,42 +19,14 @@
  *  IN THE SOFTWARE.
  */
 
-_Pragma("once")
+#include "netkit-timer.h"
 
-#include "netkit-types.h"
+#include "handle.h"
 
-/**
- * @brief Create a new event loop.
- *
- * Initializes Winsock (WSAStartup) and creates an IOCP handle.
- *
- * @return New loop, or NULL on failure.
- */
-extern netkit_loop_t* netkit_loop_create(void);
+struct netkit_timer_s {
+    _handle_t base;
+};
 
-/**
- * @brief Run the event loop.
- *
- * Blocks until there are no active handles or netkit_loop_stop() is called.
- *
- * @param loop  The event loop.
- *
- * @return 0 on normal exit, -1 on error.
- */
-extern int netkit_loop_run(netkit_loop_t* loop);
-
-/**
- * @brief Signal the loop to stop after the current iteration.
- *
- * @param loop  The event loop.
- */
-extern void netkit_loop_stop(netkit_loop_t* loop);
-
-/**
- * @brief Destroy the event loop and free all resources.
- *
- * Force-closes any remaining handles. Calls WSACleanup.
- *
- * @param loop  The event loop. NULL is safe.
- */
-extern void netkit_loop_destroy(netkit_loop_t* loop);
+void _timer_fire(netkit_timer_t* timer) {
+    (void)timer;
+}

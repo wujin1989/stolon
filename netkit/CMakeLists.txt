@@ -29,6 +29,10 @@ set(SRCS
     src/netkit-err.c
     src/heap.c
     src/op.c
+    src/netkit-loop.c
+    src/netkit-tcp.c
+    src/netkit-udp.c
+    src/netkit-timer.c
 )
 
 if(NETKIT_ENABLE_DYNAMIC_LIBRARY)
