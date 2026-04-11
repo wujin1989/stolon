@@ -23,8 +23,24 @@ _Pragma("once")
 
 #include "netkit/netkit-types.h"
 
+#include "handle.h"
+
+#include <stdint.h>
+#include <stdbool.h>
+
+struct netkit_timer_s {
+    _handle_t                 base;        /**< Embedded handle base. */
+    uint64_t                  timeout_ms;  /**< Initial delay. */
+    uint64_t                  repeat_ms;   /**< Repeat interval (0 = one-shot). */
+    bool                      active;      /**< True if timer is scheduled. */
+    netkit_timer_timeout_fn_t cb;          /**< User timeout callback. */
+    void*                     user_data;   /**< User data for callback. */
+};
+
 /**
  * @brief Fire a timer that has expired. Called by the loop.
+ *
+ * Invokes the user callback. If repeat_ms > 0, re-inserts into the heap.
  *
  * @param timer  The timer handle.
  */
