@@ -16,6 +16,7 @@ Before committing, run these checks in order. Stop on first failure.
 ### 1. Build (Debug)
 
 ```bash
+rm -rf out
 cmake -B out -G Ninja -DCMAKE_BUILD_TYPE=Debug -D{NAME}_ENABLE_TESTING=ON
 cmake --build out -j $(sysctl -n hw.ncpu 2>/dev/null || nproc 2>/dev/null || echo 4)
 ```
@@ -154,6 +155,7 @@ Full cycle for a typical change:
 
 ```bash
 # 1. Build + test
+rm -rf out
 cmake -B out -G Ninja -DCMAKE_BUILD_TYPE=Debug -D{NAME}_ENABLE_TESTING=ON
 cmake --build out -j $(nproc)
 ctest --test-dir out --output-on-failure

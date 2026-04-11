@@ -1,4 +1,4 @@
-To build xylem in Release mode on macOS:
+To build xylem with MinSizeRel for smallest binary on Linux:
 
 1. Clean the build directory:
 
@@ -9,13 +9,13 @@ rm -rf out
 2. Configure with CMake using Ninja:
 
 ```bash
-cmake -B out -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake -B out -G Ninja -DCMAKE_BUILD_TYPE=MinSizeRel
 ```
 
 3. Build:
 
 ```bash
-cmake --build out -j $(sysctl -n hw.ncpu)
+cmake --build out -j $(nproc)
 ```
 
 4. Copy compile_commands.json:

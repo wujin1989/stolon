@@ -1,6 +1,12 @@
 To build xylem in Debug mode on Linux:
 
-1. Configure with CMake using Ninja:
+1. Clean the build directory:
+
+```bash
+rm -rf out
+```
+
+2. Configure with CMake using Ninja:
 
 ```bash
 cmake -B out -G Ninja \
@@ -8,19 +14,19 @@ cmake -B out -G Ninja \
   -DXYLEM_ENABLE_TESTING=ON
 ```
 
-2. Build:
+3. Build:
 
 ```bash
 cmake --build out -j $(nproc)
 ```
 
-3. Copy compile_commands.json to the project root for clangd:
+4. Copy compile_commands.json to the project root for clangd:
 
 ```bash
 cp -f out/compile_commands.json compile_commands.json 2>/dev/null || true
 ```
 
-4. Run tests:
+5. Run tests:
 
 ```bash
 ctest --test-dir out --output-on-failure

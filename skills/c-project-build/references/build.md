@@ -15,7 +15,7 @@ Placeholders:
 | Input | How to obtain | Default |
 |-------|---------------|---------|
 | Project name | Read `project(...)` from root `CMakeLists.txt` | (required) |
-| Build type | **Ask user**: Debug or Release | **(required, must ask)** |
+| Build type | **Ask user**: Debug / Release / RelWithDebInfo / MinSizeRel | **(required, must ask)** |
 | Feature flags | **Ask user** which optional features to enable | None |
 | Sanitizer | **Ask user** if needed | None |
 | Coverage | **Ask user** if needed | OFF |
@@ -32,14 +32,14 @@ Feature flags are project-specific `option()` entries in `CMakeLists.txt` (e.g. 
 
 ## Build Type
 
-Always ask the user whether to build Debug or Release before configuring.
+Always ask the user which of the four CMake build types to use before configuring:
 
 | Build type | `CMAKE_BUILD_TYPE` | Use case |
 |------------|--------------------|----------|
 | Debug | `Debug` | Development, testing, sanitizers, coverage |
-| Release | `MinSizeRel` | Production, smallest binary size |
-
-When the user says "Release", use `MinSizeRel` (not `Release`). This enables `-Os` (GCC/Clang) or `/O1` (MSVC), producing the smallest library or executable. `Release` uses `-O3` which optimizes for speed and often increases binary size -- not what we want here.
+| Release | `Release` | Speed optimization (`-O2` / `/O2`) |
+| RelWithDebInfo | `RelWithDebInfo` | Speed optimization + debug info |
+| MinSizeRel | `MinSizeRel` | Size optimization (`-Os` / `/O1`) |
 
 On Unix, additionally strip debug symbols from the final binary after build:
 
@@ -74,6 +74,15 @@ This file should be in `.gitignore`.
 ## Commands
 
 ### Configure
+
+**MANDATORY: Always delete `out/` before configuring.** CMake caches option values; if a previous configure had `TLS=ON` and you now configure with `TLS=OFF`, stale object files from the previous build may remain and link into the final binary. Always start fresh:
+
+```bash
+rm -rf out   # Unix
+```
+```bat
+rmdir /s /q out   &:: Windows
+```
 
 All platforms use single-config Ninja. Build type is set at configure time via `-DCMAKE_BUILD_TYPE`.
 
@@ -193,12 +202,10 @@ Important: Do NOT assume Windows lacks coverage support just because the root `C
 
 | Scenario | Action |
 |----------|--------|
-| Changed CMakeLists.txt or options | Re-run configure (cmake -B out ...) then build |
 | Changed source files only | Build only (cmake --build out) |
-| Switching build type or sanitizer | Delete `out/` and reconfigure from scratch |
-| Added new source files to SRCS | Re-run configure then build |
+| Any other change (options, build type, CMakeLists.txt, sanitizer) | Delete `out/` and reconfigure from scratch |
 
-When switching between Debug/Release or toggling sanitizers, always start fresh:
+**Rule: Every configure = delete `out/` first.** This prevents stale cache from producing incorrect builds (e.g. TLS code linking in after disabling TLS option).
 
 ```bash
 rm -rf out

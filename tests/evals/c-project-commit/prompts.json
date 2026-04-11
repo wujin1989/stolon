@@ -9,6 +9,7 @@
       "has_sanitizer_step",
       "sanitizer_uses_asan",
       "sanitizer_uses_ubsan",
+      "cleans_out_before_build",
       "has_git_diff_or_status",
       "has_git_add",
       "has_git_commit",
@@ -26,6 +27,7 @@
       "has_build_step",
       "has_test_step",
       "has_sanitizer_step",
+      "cleans_out_before_build",
       "has_git_commit",
       "commit_msg_conventional",
       "commit_type_test"

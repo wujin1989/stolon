@@ -1,0 +1,14 @@
+Before I compile, which build type would you like? CMake supports four options:
+
+- **Debug** — no optimization, with debug info
+- **Release** — speed optimization (`-O2`)
+- **RelWithDebInfo** — speed optimization + debug info
+- **MinSizeRel** — size optimization (`-Os`)
+
+Also, do you want to enable any of these features?
+
+- `XYLEM_ENABLE_TESTING` — unit tests
+- `XYLEM_ENABLE_TLS` — TLS/DTLS support (requires OpenSSL)
+- `XYLEM_ENABLE_ASAN` / `XYLEM_ENABLE_TSAN` / `XYLEM_ENABLE_UBSAN` — sanitizers
+- `XYLEM_ENABLE_COVERAGE` — code coverage
+- `XYLEM_ENABLE_DYNAMIC_LIBRARY` — build as shared library

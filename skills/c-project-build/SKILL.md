@@ -29,7 +29,8 @@ You MUST ask the user before running any cmake command:
    - **RelWithDebInfo** — speed optimization + debug info
    - **MinSizeRel** — size optimization (`/O1` or `-Os`)
 3. Scan `CMakeLists.txt` for `option(...)` lines and **ask the user** which features to enable
-4. Only then proceed
+4. **Delete `out/` before configure** — always start fresh to prevent stale cache (e.g. TLS objects lingering after disabling TLS)
+5. Only then proceed
 
 **An existing `out/` does NOT exempt you.** If you catch yourself thinking "out/ exists, I'll just build" or "it was Debug last time" — STOP and ask.
 
@@ -46,10 +47,9 @@ See [build.md](references/build.md) for platform-specific flags, sanitizers, and
 
 ## Common Mistakes
 
-- Forgetting to delete `out/` when switching build type or sanitizer
+- Forgetting to delete `out/` before every configure
 - Enabling ASAN and TSAN simultaneously (they conflict)
 - Not copying `compile_commands.json` to project root after configure
-- Using `Release` instead of `MinSizeRel` for production builds
 - Missing MSVC environment on Windows with Ninja
 - Assuming Windows lacks coverage — check tests/CMakeLists.txt
 

@@ -1,6 +1,12 @@
 To build xylem with AddressSanitizer and run tests:
 
-1. Configure with ASAN enabled (requires Debug build):
+1. Clean the build directory:
+
+```bash
+rm -rf out
+```
+
+2. Configure with ASAN enabled:
 
 ```bash
 cmake -B out -G Ninja \
@@ -9,16 +15,16 @@ cmake -B out -G Ninja \
   -DXYLEM_ENABLE_ASAN=ON
 ```
 
-2. Build:
+3. Build:
 
 ```bash
 cmake --build out -j $(nproc)
 ```
 
-3. Run tests:
+4. Run tests:
 
 ```bash
 ctest --test-dir out --output-on-failure
 ```
 
-Note: ASAN and TSAN cannot be enabled simultaneously -- they conflict. If you need thread sanitizer, do a separate clean build with only TSAN. You can combine ASAN with UBSAN though.
+Note: ASAN and TSAN cannot be enabled simultaneously -- they conflict at the compiler level.

@@ -36,17 +36,15 @@ def check_build_type_debug(text: str) -> bool:
 
 
 @text_check
-def check_build_type_minsizerel(text: str) -> bool:
-    """Release builds must use MinSizeRel, not Release."""
-    return bool(re.search(r"CMAKE_BUILD_TYPE[=\s]+MinSizeRel", text, re.I))
+def check_build_type_release(text: str) -> bool:
+    """Output must set CMAKE_BUILD_TYPE=Release."""
+    return bool(re.search(r"CMAKE_BUILD_TYPE[=\s]+Release\b", text, re.I))
 
 
 @text_check
-def check_no_build_type_release_raw(text: str) -> bool:
-    """Must not use CMAKE_BUILD_TYPE=Release (should be MinSizeRel)."""
-    return not bool(
-        re.search(r"CMAKE_BUILD_TYPE[=\s]+Release\b", text, re.I)
-    )
+def check_build_type_minsizerel(text: str) -> bool:
+    """Output must set CMAKE_BUILD_TYPE=MinSizeRel."""
+    return bool(re.search(r"CMAKE_BUILD_TYPE[=\s]+MinSizeRel", text, re.I))
 
 
 @text_check
@@ -72,6 +70,45 @@ def check_no_msbuild_or_visual_studio(text: str) -> bool:
     """Should not suggest MSBuild or Visual Studio generators on Unix."""
     lower = text.lower()
     return "msbuild" not in lower and '"visual studio' not in lower
+
+
+# --- Clean before configure ---
+
+
+@text_check
+def check_cleans_out_before_configure(text: str) -> bool:
+    """Must delete out/ before running cmake configure."""
+    return bool(
+        re.search(r"rm\s+(-rf\s+)?out", text)
+        or re.search(r"rmdir\s+/s\s+/q\s+out", text, re.I)
+        or re.search(r"Remove-Item.*out", text, re.I)
+        or re.search(r"delete.*out", text, re.I)
+    )
+
+
+# --- Four build types ---
+
+
+@text_check
+def check_asks_build_type(text: str) -> bool:
+    """When user doesn't specify build type, agent must ask."""
+    lower = text.lower()
+    return (
+        "which" in lower or "what" in lower or "choose" in lower
+        or "select" in lower or "?" in text
+    )
+
+
+@text_check
+def check_presents_four_build_types(text: str) -> bool:
+    """Agent must present all four CMake build types."""
+    lower = text.lower()
+    return (
+        "debug" in lower
+        and "release" in lower
+        and "minsizerel" in lower
+        and ("relwithdebinfo" in lower or "rel with deb" in lower)
+    )
 
 
 # --- Test commands ---
@@ -117,7 +154,7 @@ def check_no_asan_tsan_together(text: str) -> bool:
     """Output should warn that ASAN and TSAN cannot coexist."""
     lower = text.lower()
     return (
-        ("cannot" in lower or "conflict" in lower or "coexist" not in lower
+        ("cannot" in lower or "conflict" in lower
          or "simultaneously" in lower or "same time" in lower
          or "incompatible" in lower or "not" in lower)
         and ("asan" in lower or "address" in lower)
@@ -166,16 +203,20 @@ def check_mentions_clean_rebuild(text: str) -> bool:
 @text_check
 def check_mentions_rm_out(text: str) -> bool:
     """Should mention removing the out directory."""
-    return bool(re.search(r"rm\s+(-rf\s+)?out", text))
+    return bool(
+        re.search(r"rm\s+(-rf\s+)?out", text)
+        or re.search(r"rmdir\s+/s\s+/q\s+out", text, re.I)
+        or re.search(r"Remove-Item.*out", text, re.I)
+    )
 
 
-# --- Release ---
+# --- TLS ---
 
 
 @text_check
-def check_has_strip_command(text: str) -> bool:
-    """Release builds on Unix should strip the binary."""
-    return "strip" in text
+def check_no_tls_enabled(text: str) -> bool:
+    """When building without TLS, must not enable TLS option."""
+    return not bool(re.search(r"ENABLE_TLS[=\s]+ON", text, re.I))
 
 
 # --- Negative ---

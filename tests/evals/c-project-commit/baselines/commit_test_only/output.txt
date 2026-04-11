@@ -3,6 +3,7 @@ Let's validate before committing:
 1. Build:
 
 ```bash
+rm -rf out
 cmake -B out -G Ninja -DCMAKE_BUILD_TYPE=Debug -DXYLEM_ENABLE_TESTING=ON
 cmake --build out -j $(nproc)
 ```

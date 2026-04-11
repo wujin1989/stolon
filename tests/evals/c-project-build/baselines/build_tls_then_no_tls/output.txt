@@ -1,0 +1,23 @@
+Since you previously built with TLS enabled, you must delete the build directory before reconfiguring without TLS. Otherwise stale TLS object files from the previous build will remain and link into the final binary.
+
+1. Remove the old build:
+
+```bash
+rm -rf out
+```
+
+2. Configure without TLS:
+
+```bash
+cmake -B out -G Ninja \
+  -DCMAKE_BUILD_TYPE=Debug \
+  -DXYLEM_ENABLE_TESTING=ON
+```
+
+3. Build:
+
+```bash
+cmake --build out -j $(nproc)
+```
+
+This ensures no TLS-related code is included in the output.

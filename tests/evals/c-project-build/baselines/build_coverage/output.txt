@@ -1,6 +1,12 @@
 To generate code coverage for xylem on Linux:
 
-1. Configure with coverage and testing enabled:
+1. Clean the build directory:
+
+```bash
+rm -rf out
+```
+
+2. Configure with coverage and testing enabled:
 
 ```bash
 cmake -B out -G Ninja \
@@ -9,16 +15,16 @@ cmake -B out -G Ninja \
   -DXYLEM_ENABLE_COVERAGE=ON
 ```
 
-2. Build:
+3. Build:
 
 ```bash
 cmake --build out -j $(nproc)
 ```
 
-3. Generate the coverage report:
+4. Generate coverage report:
 
 ```bash
 cmake --build out --target coverage
 ```
 
-This runs the tests and produces an HTML report at `out/coverage/html/index.html`. Requires `lcov` and `genhtml` to be installed.
+HTML report will be at `out/coverage/html/index.html`.

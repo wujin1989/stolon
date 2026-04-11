@@ -36,6 +36,16 @@ def check_has_sanitizer_step(text: str) -> bool:
 
 
 @text_check
+def check_cleans_out_before_build(text: str) -> bool:
+    """Must clean out/ before configure to prevent stale cache."""
+    return bool(
+        re.search(r"rm\s+(-rf\s+)?out", text)
+        or re.search(r"rmdir\s+/s\s+/q\s+out", text, re.I)
+        or re.search(r"Remove-Item.*out", text, re.I)
+    )
+
+
+@text_check
 def check_sanitizer_uses_asan(text: str) -> bool:
     """Pre-commit sanitizer should include ASAN."""
     return bool(re.search(r"ENABLE_ASAN[=\s]+ON", text, re.I))

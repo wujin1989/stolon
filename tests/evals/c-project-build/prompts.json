@@ -10,20 +10,33 @@
       "has_build_command",
       "has_parallel_jobs",
       "copies_compile_commands",
-      "no_msbuild_or_visual_studio"
+      "no_msbuild_or_visual_studio",
+      "cleans_out_before_configure"
     ]
   },
   {
     "id": "build_release_unix",
-    "prompt": "Build the xylem project for production release on macOS.",
+    "prompt": "Build the xylem project in Release mode on macOS.",
+    "skill_ref": "build.md",
+    "expected_checks": [
+      "uses_ninja_generator",
+      "uses_cmake_b_out",
+      "build_type_release",
+      "has_build_command",
+      "has_parallel_jobs",
+      "cleans_out_before_configure"
+    ]
+  },
+  {
+    "id": "build_minsizerel_unix",
+    "prompt": "Build the xylem project with MinSizeRel for smallest binary on Linux.",
     "skill_ref": "build.md",
     "expected_checks": [
       "uses_ninja_generator",
       "uses_cmake_b_out",
       "build_type_minsizerel",
       "has_build_command",
-      "has_strip_command",
-      "no_build_type_release_raw"
+      "cleans_out_before_configure"
     ]
   },
   {
@@ -37,7 +50,8 @@
       "enables_asan",
       "has_ctest_command",
       "has_output_on_failure",
-      "no_tsan_with_asan"
+      "no_tsan_with_asan",
+      "cleans_out_before_configure"
     ]
   },
   {
@@ -49,7 +63,8 @@
       "uses_cmake_b_out",
       "enables_coverage",
       "has_coverage_target",
-      "enables_testing"
+      "enables_testing",
+      "cleans_out_before_configure"
     ]
   },
   {
@@ -70,6 +85,25 @@
       "mentions_clean_rebuild",
       "mentions_rm_out",
       "no_asan_tsan_together"
+    ]
+  },
+  {
+    "id": "build_ask_type",
+    "prompt": "Compile xylem for me.",
+    "skill_ref": "build.md",
+    "expected_checks": [
+      "asks_build_type",
+      "presents_four_build_types"
+    ]
+  },
+  {
+    "id": "build_tls_then_no_tls",
+    "prompt": "I previously built with TLS enabled. Now build without TLS.",
+    "skill_ref": "build.md",
+    "expected_checks": [
+      "cleans_out_before_configure",
+      "mentions_rm_out",
+      "no_tls_enabled"
     ]
   },
   {
