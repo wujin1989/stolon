@@ -34,7 +34,12 @@ You MUST ask the user for ALL of these inputs first:
 
 After collecting all inputs, you MUST read this skill's `references/setup.md` in full before writing a single file. Do NOT generate from memory or general knowledge.
 
-**How to locate setup.md:** The file `references/setup.md` is located relative to this skill's SKILL.md. Use `fileSearch` for `c-project-init/references/setup.md` (covers workspace-level and global-level skills). Read the file at the returned path. Do NOT guess the path. Do NOT read any other file with a similar name in the project tree.
+**How to locate setup.md:** The file `references/setup.md` is located relative to this skill's SKILL.md. Use the following search strategy in order — stop at the first hit:
+
+1. `fileSearch` for `c-project-init/references/setup.md`
+2. If step 1 returns nothing, `fileSearch` for `references/setup.md` and pick the result whose path contains `c-project-init`
+
+Read the file at whichever path you find first. Do NOT guess the path. Do NOT read any other file with a similar name in the project tree. If NONE of the above steps find the file, **STOP and tell the user** the skill reference is missing — do NOT fall back to any other file.
 
 setup.md contains project-specific conventions that CANNOT be inferred from general C/CMake knowledge — non-standard license formatting, specific CMake options, exact file contents, and platform-conditional logic. Every file you generate must match setup.md verbatim.
 

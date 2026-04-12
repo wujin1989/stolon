@@ -38,9 +38,10 @@ After collecting inputs, you MUST read this skill's `references/build.md` before
 
 **How to locate build.md:** The file `references/build.md` is located relative to this skill's SKILL.md. Use the following search strategy in order — stop at the first hit:
 
-1. `fileSearch` for `c-project-build/references/build.md` (covers workspace-level and global-level skills)
+1. `fileSearch` for `c-project-build/references/build.md`
+2. If step 1 returns nothing, `fileSearch` for `references/build.md` and pick the result whose path contains `c-project-build`
 
-Read the file at whichever path you find first. Do NOT guess the path. Do NOT read any other file with a similar name in the project tree (e.g. `docs/build.md`).
+Read the file at whichever path you find first. Do NOT guess the path. Do NOT read any other file with a similar name in the project tree. If NONE of the above steps find the file, **STOP and tell the user** the skill reference is missing — do NOT fall back to any other file.
 
 build.md contains critical details you cannot infer: platform-specific flags, sanitizer cmake options, compile_commands.json handling, Windows MSVC environment setup, coverage workflows, and CPU detection.
 
@@ -53,7 +54,7 @@ build.md contains critical details you cannot infer: platform-specific flags, sa
 | "I know how CMake works" | This project uses Ninja Multi-Config, not single-config Ninja — the build type mechanism is different |
 | "I'll just use cmake -DCMAKE_BUILD_TYPE=Debug" | WRONG. Multi-config generators ignore this flag. Build type is `--config Debug` at build time |
 | "The user needs a quick build" | A broken build wastes MORE time than waiting |
-| "The project has its own docs/build.md" | That's a different file. This skill's build.md has Ninja Multi-Config specifics you won't find elsewhere |
+| "The project has its own build docs" | That's a different file. This skill's build.md has Ninja Multi-Config specifics you won't find elsewhere |
 | "I already read it last session" | Skill context resets each session. Read it again. |
 
 ## Red Flags — STOP and Re-read build.md
@@ -62,7 +63,7 @@ build.md contains critical details you cannot infer: platform-specific flags, sa
 - Using `-DCMAKE_BUILD_TYPE=` anywhere (Multi-Config uses `--config` at build time)
 - Skipping `out/` deletion "because config hasn't changed"
 - Guessing platform flags instead of reading build.md
-- Using the project's own docs/build.md instead of this skill's references/build.md
+- Using the project's own build documentation instead of this skill's references/build.md
 
 **Any of these mean: STOP. Read build.md. Then proceed.**
 

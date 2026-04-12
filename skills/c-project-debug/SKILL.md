@@ -35,7 +35,12 @@ Only proceed to debugger if sanitizer output doesn't identify the bug.
 
 You MUST read this skill's `references/debug.md` before running any debugger or sanitizer command. Do NOT use commands from memory.
 
-**How to locate debug.md:** The file `references/debug.md` is located relative to this skill's SKILL.md. Use `fileSearch` for `c-project-debug/references/debug.md` (covers workspace-level and global-level skills). Read the file at the returned path. Do NOT guess the path. Do NOT read any other file with a similar name in the project tree.
+**How to locate debug.md:** The file `references/debug.md` is located relative to this skill's SKILL.md. Use the following search strategy in order — stop at the first hit:
+
+1. `fileSearch` for `c-project-debug/references/debug.md`
+2. If step 1 returns nothing, `fileSearch` for `references/debug.md` and pick the result whose path contains `c-project-debug`
+
+Read the file at whichever path you find first. Do NOT guess the path. Do NOT read any other file with a similar name in the project tree. If NONE of the above steps find the file, **STOP and tell the user** the skill reference is missing — do NOT fall back to any other file.
 
 debug.md contains the complete step-by-step workflow, platform-specific debugger commands (cdb/gdb/lldb), sanitizer interpretation, hang debugging, log-based debugging strategy, and debugger installation guides. None of this is in this file.
 
