@@ -3,52 +3,7 @@
 ## Overview
 
 This skill drives the commit/push cycle for C11 CMake projects. It enforces
-pre-commit validation and consistent commit message formatting.
-
-Placeholders:
-- `{name}` -- lowercase project name from `CMakeLists.txt`
-- `{NAME}` -- uppercase form
-
-## Pre-Commit Checklist
-
-Before committing, run these checks in order. Stop on first failure.
-
-### 1. Build (Debug)
-
-```bash
-rm -rf out
-cmake -B out -G Ninja -DCMAKE_BUILD_TYPE=Debug -D{NAME}_ENABLE_TESTING=ON
-cmake --build out -j $(sysctl -n hw.ncpu 2>/dev/null || nproc 2>/dev/null || echo 4)
-```
-
-### 2. Test
-
-```bash
-ctest --test-dir out --output-on-failure
-```
-
-### 3. Sanitizer (ASAN + UBSAN)
-
-```bash
-rm -rf out
-cmake -B out -G Ninja \
-  -DCMAKE_BUILD_TYPE=Debug \
-  -D{NAME}_ENABLE_TESTING=ON \
-  -D{NAME}_ENABLE_ASAN=ON \
-  -D{NAME}_ENABLE_UBSAN=ON
-cmake --build out -j $(sysctl -n hw.ncpu 2>/dev/null || nproc 2>/dev/null || echo 4)
-ctest --test-dir out --output-on-failure
-```
-
-If any step fails, fix the issue before committing. Do not skip sanitizer checks.
-
-### 4. Format Check (optional)
-
-If the project has `.clang-format`, verify formatting:
-
-```bash
-find src include -name '*.c' -o -name '*.h' | xargs clang-format --dry-run --Werror
-```
+consistent commit message formatting and careful staging.
 
 ## Staging
 
@@ -154,21 +109,12 @@ git push -u origin <branch>
 Full cycle for a typical change:
 
 ```bash
-# 1. Build + test
-rm -rf out
-cmake -B out -G Ninja -DCMAKE_BUILD_TYPE=Debug -D{NAME}_ENABLE_TESTING=ON
-cmake --build out -j $(nproc)
-ctest --test-dir out --output-on-failure
-
-# 2. Sanitizer check
-rm -rf out
-cmake -B out -G Ninja -DCMAKE_BUILD_TYPE=Debug \
-  -D{NAME}_ENABLE_TESTING=ON -D{NAME}_ENABLE_ASAN=ON -D{NAME}_ENABLE_UBSAN=ON
-cmake --build out -j $(nproc)
-ctest --test-dir out --output-on-failure
-
-# 3. Stage + commit + push
+# 1. Review + stage
+git diff
+git status
 git add -u
+
+# 2. Commit + push
 git commit -m "feat(tcp): add write timeout support"
 git push origin main
 ```
