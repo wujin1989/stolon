@@ -36,6 +36,7 @@ typedef struct _handle_s {
     _handle_type_t    type;           /**< Handle type discriminator. */
     netkit_loop_t*    loop;           /**< Owning event loop. */
     bool              closing;        /**< True if close has been requested. */
+    bool              in_dispatch;    /**< True while inside a dispatch handler. */
     int32_t           pending_ops;    /**< Number of outstanding async ops. */
     netkit_close_fn_t close_cb;       /**< User close callback. */
     void*             close_data;     /**< User data for close callback. */

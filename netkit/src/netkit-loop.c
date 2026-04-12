@@ -72,6 +72,7 @@ static void _loop_dispatch(
 
     _handle_t* h = (_handle_t*)op->handle;
     h->pending_ops--;
+    h->in_dispatch = true;
 
     switch (op->type) {
     case _OP_ACCEPT:
@@ -94,7 +95,9 @@ static void _loop_dispatch(
         break;
     }
 
-    /* If handle is closing and no more pending ops, finish the close. */
+    h->in_dispatch = false;
+
+    /* If handle is closing and no more pending ops, finalize. */
     if (h->closing && h->pending_ops == 0) {
         if (h->close_cb) {
             h->close_cb(op->handle, h->close_data);

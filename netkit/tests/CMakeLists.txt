@@ -9,6 +9,7 @@ netkit_add_test(err)
 netkit_add_test(heap)
 netkit_add_test(loop)
 netkit_add_test(timer)
+netkit_add_test(tcp)
 
 if(NETKIT_ENABLE_COVERAGE)
     find_program(OPENCPPCOVERAGE_BIN OpenCppCoverage)

@@ -21,9 +21,20 @@
 
 _Pragma("once")
 
+#include "netkit/netkit-types.h"
+
+#include "handle.h"
 #include "op.h"
 
+#include <winsock2.h>
 #include <windows.h>
+
+struct netkit_tcp_s {
+    _handle_t              base;         /**< Embedded handle base. */
+    SOCKET                 sock;         /**< Winsock socket. */
+    netkit_tcp_accept_fn_t accept_cb;    /**< Accept callback (server). */
+    void*                  accept_data;  /**< Accept callback user data. */
+};
 
 /**
  * @brief Handle AcceptEx completion.
