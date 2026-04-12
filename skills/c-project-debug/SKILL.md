@@ -21,70 +21,40 @@ Non-interactive debugging workflow for C projects. Three-tier strategy: sanitize
 
 **When NOT to Use:** build failures (use c-project-build), code style issues (use c-project-style)
 
-## STOP — Sanitizers Before Debugger
+## STOP — Read debug.md Before ANY Debug Action
 
-Before launching ANY debugger (gdb, lldb, cdb), you MUST:
+Read this skill's `references/debug.md` before running any debugger or sanitizer command. Do NOT use commands from memory.
 
-1. Rebuild with ASAN (+ UBSAN on Unix)
-2. Run the failing test
-3. Read the sanitizer output
+**How to locate:** Read `references/debug.md` relative to the directory containing this `SKILL.md`. Derive the path from where you loaded this file. Do NOT guess. Do NOT use `fileSearch`.
 
-Only proceed to debugger if sanitizer output doesn't identify the bug.
+**If not found, STOP. Tell the user the reference is missing. Do NOT proceed.**
 
-## STOP — You MUST Read debug.md Before ANY Debug Action
+debug.md contains the complete workflow, platform-specific debugger commands (cdb/gdb/lldb), sanitizer interpretation, hang debugging, and log-based debugging strategy. This project uses batch-mode debuggers (non-interactive) with specific flags — general debugging knowledge will miss the root cause.
 
-You MUST read this skill's `references/debug.md` before running any debugger or sanitizer command. Do NOT use commands from memory.
+## STOP — Reproduce First, Sanitizers Before Debugger
 
-**How to locate debug.md:** Use `fileSearch` to find this skill's own `SKILL.md` (query: `c-project-debug/SKILL.md`), then read `references/debug.md` relative to that path. If not found, **STOP and tell the user** the skill reference is missing — do NOT fall back to any other file.
+1. **Reproduce:** Run `ctest --test-dir out -C Debug -R {module} --output-on-failure` — note the signal and failing assertion
+2. **Sanitizers:** Rebuild with ASAN (+ UBSAN on Unix), run the failing test, read output
+3. **Debugger:** Only if sanitizer output doesn't identify the bug
 
-debug.md contains the complete step-by-step workflow, platform-specific debugger commands (cdb/gdb/lldb), sanitizer interpretation, hang debugging, log-based debugging strategy, and debugger installation guides. None of this is in this file.
+Re-run ctest even if you saw output earlier — stale information is not a substitute for a fresh reproduce.
 
-**Debugging without reading debug.md WILL waste time and miss the root cause.**
-
-**Do NOT fall back to general debugging knowledge.** This project uses batch-mode debuggers (non-interactive), platform-specific commands (cdb/gdb/lldb), and a specific 3-tier strategy that you WILL get wrong without debug.md.
-
-| Excuse | Reality |
-|--------|---------|
-| "I know how to use gdb" | This project uses batch-mode commands, not interactive sessions — the flags are different |
-| "I'll just run with ASAN" | The workflow requires Step 0 (reproduce) FIRST, then sanitizers — skipping Step 0 wastes time |
-| "Debugging is debugging" | Platform-specific debugger selection, hang debugging, and log-based fallback all have specific procedures |
-| "The crash is obvious, I don't need sanitizers" | Obvious crashes often have non-obvious root causes. ASAN finds the real bug, not the symptom |
-| "I'll just add a printf and see" | C requires recompilation. Sanitizers give better output with zero code changes |
-
-## STOP — Step 0: Reproduce First
-
-Before ANY sanitizer or debugger, you MUST identify which test fails:
-
-```
-ctest --test-dir out -C Debug -R {module} --output-on-failure
-```
-
-Note the signal (SIGSEGV, SIGABRT, SIGBUS) and the failing assertion line. Only then proceed to sanitizers.
-
-**Even if you already saw test output earlier in this session, you MUST re-run ctest to confirm the current state.** Stale information from earlier in the conversation is not a substitute for a fresh reproduce.
-
-## Red Flags — STOP and Follow the 3-Tier Strategy
+## Red Flags
 
 - About to launch gdb/lldb/cdb without trying sanitizers first
-- About to run sanitizers without reproducing the failure first (Step 0)
-- Debugging without having read debug.md this session
+- Running sanitizers without reproducing the failure first
 - Running GDB on Windows or CDB on Unix
-- Adding printf/log statements as first debugging step (try sanitizers first)
-
-**Any of these mean: STOP. Follow the workflow: reproduce → sanitizers → debugger → logs.**
+- Adding printf as first debugging step (try sanitizers first)
 
 ## Common Mistakes
 
-- Jumping to debugger before trying sanitizers — ASAN output is usually clearer
-- Forgetting Debug build type — always rebuild in Debug before debugging
-- Running GDB on Windows or CDB on Unix — use the platform's native debugger
+- Jumping to debugger before trying sanitizers
+- Forgetting Debug build type before debugging
+- Running GDB on Windows or CDB on Unix
 - Adding logs without rebuilding — C requires recompilation
 
+## Reference
 
-## Workflow Routing — You MUST Read ALL Referenced Files
-
-| Intent | Reference |
-|--------|-----------|
+| Intent | File |
+|--------|------|
 | Debug a crash or unexpected behavior | [debug.md](references/debug.md) |
-
-**You MUST read every file listed above before executing.** No exceptions.
