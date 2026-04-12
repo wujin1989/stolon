@@ -20,7 +20,7 @@ Every commit requires reading commit.md first — no exceptions. Enforces conven
 
 You MUST read this skill's `references/commit.md` before running any git command. Do NOT execute from memory.
 
-**How to locate commit.md:** You MUST use fileSearch to find `c-project-commit/references/commit.md`, then read the file at the returned path. Do NOT guess the path. Do NOT read any other file with a similar name in the project tree.
+**How to locate commit.md:** The file `references/commit.md` is located relative to this skill's SKILL.md. Use `fileSearch` for `c-project-commit/references/commit.md` (covers workspace-level and global-level skills). Read the file at the returned path. Do NOT guess the path. Do NOT read any other file with a similar name in the project tree.
 
 commit.md contains the commit message rules (72-char wrap, imperative mood, body format), and staging workflow. These details are NOT in this file.
 

@@ -36,7 +36,11 @@ You MUST do these before running any cmake command:
 
 After collecting inputs, you MUST read this skill's `references/build.md` before executing. Do NOT use the commands below as-is — they are orientation only, not executable recipes.
 
-**How to locate build.md:** You MUST use fileSearch to find `c-project-build/references/build.md`, then read the file at the returned path. Do NOT guess the path. Do NOT read any other file with a similar name in the project tree.
+**How to locate build.md:** The file `references/build.md` is located relative to this skill's SKILL.md. Use the following search strategy in order — stop at the first hit:
+
+1. `fileSearch` for `c-project-build/references/build.md` (covers workspace-level and global-level skills)
+
+Read the file at whichever path you find first. Do NOT guess the path. Do NOT read any other file with a similar name in the project tree (e.g. `docs/build.md`).
 
 build.md contains critical details you cannot infer: platform-specific flags, sanitizer cmake options, compile_commands.json handling, Windows MSVC environment setup, coverage workflows, and CPU detection.
 
