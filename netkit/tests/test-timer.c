@@ -1,13 +1,16 @@
 #include "netkit.h"
 #include "assert.h"
 
-static int32_t _fire_count = 0;
+typedef struct _repeat_ctx_s {
+    int32_t        fire_count;
+    netkit_timer_t* timer;
+} _repeat_ctx_t;
 
 static void _on_timeout(netkit_timer_t* timer, void* data) {
-    (void)data;
-    _fire_count++;
+    _repeat_ctx_t* ctx = (_repeat_ctx_t*)data;
+    ctx->fire_count++;
     /* Stop after 3 fires for repeat test. */
-    if (_fire_count >= 3) {
+    if (ctx->fire_count >= 3) {
         netkit_timer_stop(timer);
         netkit_timer_close(timer, NULL, NULL);
     }
@@ -49,10 +52,11 @@ static void test_repeat(void) {
     netkit_loop_t* loop = netkit_loop_create();
     ASSERT(loop != NULL);
 
-    _fire_count = 0;
+    _repeat_ctx_t ctx = {.fire_count = 0, .timer = NULL};
     netkit_timer_t* timer = netkit_timer_create(loop);
     ASSERT(timer != NULL);
-    ASSERT(netkit_timer_start(timer, 10, 10, _on_timeout, NULL) == 0);
+    ctx.timer = timer;
+    ASSERT(netkit_timer_start(timer, 10, 10, _on_timeout, &ctx) == 0);
 
     /* Safety timer. */
     netkit_timer_t* safety = netkit_timer_create(loop);
@@ -60,7 +64,7 @@ static void test_repeat(void) {
     ASSERT(netkit_timer_start(safety, 2000, 0, _on_safety_timeout, &loop) == 0);
 
     netkit_loop_run(loop);
-    ASSERT(_fire_count >= 3);
+    ASSERT(ctx.fire_count >= 3);
     netkit_loop_destroy(loop);
 }
 

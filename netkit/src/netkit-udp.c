@@ -22,9 +22,9 @@
 #include "netkit/netkit-udp.h"
 #include "netkit/netkit-err.h"
 
-#include "netkit-udp.h"
-#include "netkit-loop.h"
-#include "netkit-err.h"
+#include "udp.h"
+#include "loop.h"
+#include "err.h"
 
 #include <ws2tcpip.h>
 #include <stdlib.h>

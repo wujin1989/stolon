@@ -22,9 +22,9 @@
 #include "netkit/netkit-tcp.h"
 #include "netkit/netkit-err.h"
 
-#include "netkit-tcp.h"
-#include "netkit-loop.h"
-#include "netkit-err.h"
+#include "tcp.h"
+#include "loop.h"
+#include "err.h"
 
 #include <mswsock.h>
 #include <ws2tcpip.h>

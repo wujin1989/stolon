@@ -21,8 +21,8 @@
 
 #include "netkit/netkit-timer.h"
 
-#include "netkit-timer.h"
-#include "netkit-loop.h"
+#include "timer.h"
+#include "loop.h"
 #include "heap.h"
 
 #include <windows.h>
@@ -103,7 +103,7 @@ void netkit_timer_close(
 
     /*
      * If called from inside _timer_fire (in_dispatch == true), defer
-     * the free — _timer_fire will finalize after the callback returns.
+     * the free -- _timer_fire will finalize after the callback returns.
      */
     if (!timer->base.in_dispatch) {
         if (cb) {
@@ -121,7 +121,7 @@ void _timer_fire(netkit_timer_t* timer) {
 
     /*
      * Mark in_dispatch so that netkit_timer_close (if called from the
-     * user callback) defers the free — we still need to access the
+     * user callback) defers the free -- we still need to access the
      * timer struct after the callback returns.
      */
     timer->base.in_dispatch = true;

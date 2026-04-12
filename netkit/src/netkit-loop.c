@@ -21,10 +21,10 @@
 
 #include "netkit/netkit-loop.h"
 
-#include "netkit-loop.h"
-#include "netkit-timer.h"
-#include "netkit-tcp.h"
-#include "netkit-udp.h"
+#include "loop.h"
+#include "timer.h"
+#include "tcp.h"
+#include "udp.h"
 #include "handle.h"
 #include "op.h"
 

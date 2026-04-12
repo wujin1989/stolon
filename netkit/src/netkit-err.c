@@ -21,7 +21,7 @@
 
 #include "netkit/netkit-err.h"
 
-#include "netkit-err.h"
+#include "err.h"
 
 #include <winsock2.h>
 
