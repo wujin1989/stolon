@@ -9,19 +9,13 @@ description: >
 
 # C Project Debug
 
-## When to Use
+## When NOT to Use
 
-- Executable crashes (segfault, abort, bus error)
-- Executable hangs or times out
-- Sanitizer reports errors you need to investigate further
+build failures → c-project-build, code style → c-project-style
 
-**When NOT to Use:** build failures (use c-project-build), code style issues (use c-project-style)
+## STOP — Read Reference Before ANY Debug Action
 
-## STOP — Required Before ANY Debug Action
-
-**MANDATORY — locate and read the debug reference before any debugger or sanitizer command:**
-
-Search for `c-project-debug/references/debug.md` under the current working directory and `$HOME`. Use the platform-appropriate command:
+Locate and read `c-project-debug/references/debug.md` under the current working directory and `$HOME`:
 
 **Unix:**
 ```
@@ -36,11 +30,3 @@ find . ~ -maxdepth 6 -path "*/c-project-debug/references/debug.md" -print -quit 
 Call `readFile` on the result. If not found, STOP and tell the user.
 
 Follow the three-tier strategy in `debug.md` (reproduce → sanitizers → debugger). No shortcuts.
-
-## Red Flags
-
-- Running `cmake` or debugger without having read debug.md this session
-- Launching gdb/lldb/cdb without trying sanitizers first
-- Running sanitizers without reproducing the failure first
-- Running GDB on Windows or CDB on Unix
-- Adding printf as first debugging step (try sanitizers first)

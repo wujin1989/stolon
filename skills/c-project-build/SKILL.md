@@ -7,18 +7,13 @@ description: >
 
 # C Project Build
 
-## When to Use
+## When NOT to Use
 
-- Configuring or building a CMake project
-- Running tests, sanitizers (ASAN, TSAN, UBSAN), or coverage
+code style review → c-project-style, scaffolding → c-project-init, committing → c-project-commit
 
-**When NOT to Use:** code style review, scaffolding new projects, committing code
+## STOP — Read Reference Before ANY Build Command
 
-## STOP — Required Before ANY Build Command
-
-**MANDATORY — locate and read the build reference before any cmake command:**
-
-Search for `c-project-build/references/build.md` under the current working directory and `$HOME`. Use the platform-appropriate command:
+Locate and read `c-project-build/references/build.md` under the current working directory and `$HOME`:
 
 **Unix:**
 ```
@@ -35,10 +30,3 @@ Call `readFile` on the result. If not found, STOP and tell the user.
 Follow the **Inputs — MANDATORY Pre-Flight** section in `build.md` before running any cmake command. No exceptions.
 
 **Rebuild only?** If the user explicitly says they only changed `.c`/`.h` files AND you have completed a full configure in this session, skip confirmation and run `cmake --build out --config {build_type}` directly.
-
-## Red Flags
-
-- Running `cmake` without having read build.md this session
-- Using `-DCMAKE_BUILD_TYPE=` (Ninja Multi-Config selects type at build time)
-- Skipping `out/` deletion before configure
-- Enabling ASAN and TSAN simultaneously
