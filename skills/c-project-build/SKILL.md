@@ -36,6 +36,8 @@ You MUST do these before running any cmake command:
 
 After collecting inputs, you MUST read [build.md](references/build.md) before executing. Do NOT use the commands below as-is — they are orientation only, not executable recipes.
 
+**CRITICAL: You MUST read the skill's own `references/build.md` — NOT any other file with a similar name in the project tree. If the relative link fails, search for the file by name within the skill directory and retry.**
+
 build.md contains critical details you cannot infer: platform-specific flags, sanitizer cmake options, compile_commands.json handling, Windows MSVC environment setup, coverage workflows, and CPU detection.
 
 **Running commands without reading build.md WILL produce broken builds.**
@@ -44,9 +46,10 @@ build.md contains critical details you cannot infer: platform-specific flags, sa
 
 If the file read fails (file not found, access denied, any error):
 
-1. **Do NOT run any cmake, build, or test command.**
-2. Tell the user: "I cannot proceed — build.md is required but could not be read. Please check the file exists at the expected path."
-3. **Do NOT fall back to general CMake knowledge.** This project uses Ninja Multi-Config on all platforms with build type selected at build time via `--config` (NOT `-DCMAKE_BUILD_TYPE`). General CMake patterns WILL produce broken builds.
+1. Try the absolute path `~/.kiro/skills/c-project-build/references/build.md`.
+2. If that also fails, **do NOT run any cmake, build, or test command.**
+3. Tell the user: "I cannot proceed — build.md is required but could not be read. Please check the file exists at the expected path."
+4. **Do NOT fall back to general CMake knowledge or the project's own docs/build.md.** This skill uses Ninja Multi-Config on all platforms with build type selected at build time via `--config` (NOT `-DCMAKE_BUILD_TYPE`). General CMake patterns WILL produce broken builds.
 
 | Excuse | Reality |
 |--------|---------|
