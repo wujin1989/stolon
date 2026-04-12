@@ -1,0 +1,35 @@
+Here's the full debug workflow for a segfault in test-tcp:
+
+Step 0: Reproduce the failure
+
+```bash
+ctest --test-dir out -C Debug -R tcp --output-on-failure
+```
+
+Note the signal (SIGSEGV) and any assertion line.
+
+Step 1: Rebuild with ASAN
+
+```bash
+rm -rf out
+cmake -B out -G Ninja \
+  -DCMAKE_BUILD_TYPE=Debug \
+  -DXYLEM_ENABLE_TESTING=ON \
+  -DXYLEM_ENABLE_ASAN=ON
+cmake --build out -j $(nproc)
+ctest --test-dir out -C Debug -R tcp --output-on-failure
+```
+
+Read the ASAN output carefully. It will show the exact allocation, use, and free sites.
+
+Step 2: If ASAN doesn't pinpoint the bug, use gdb in batch mode
+
+```bash
+gdb -batch -ex run -ex bt -ex quit out/Debug/test-tcp
+```
+
+Step 3: Set breakpoints and inspect variables
+
+```bash
+gdb -batch -ex 'break _tcp_conn_readable_cb' -ex run -ex 'print conn->state' -ex bt -ex quit out/Debug/test-tcp
+```

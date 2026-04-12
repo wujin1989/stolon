@@ -1,0 +1,97 @@
+[
+  {
+    "id": "init_to_build",
+    "prompt": "Verify that a scaffolded project from c-project-init can be built by c-project-build.",
+    "skill_ref": null,
+    "source_skill": "c-project-init",
+    "source_baseline": "setup_lib_basic",
+    "expected_checks": [
+      "init_has_cmake_for_build",
+      "init_has_ninja_compatible_cmake",
+      "init_has_test_target",
+      "init_has_sanitizer_options",
+      "init_has_coverage_for_build"
+    ]
+  },
+  {
+    "id": "init_to_style",
+    "prompt": "Verify that scaffolded code from c-project-init follows c-project-style rules.",
+    "skill_ref": null,
+    "source_skill": "c-project-init",
+    "source_baseline": "setup_lib_basic",
+    "expected_checks": [
+      "init_uses_pragma_once",
+      "init_uses_c_comments",
+      "init_has_license_headers",
+      "init_no_banned_functions"
+    ]
+  },
+  {
+    "id": "init_to_commit",
+    "prompt": "Verify that a scaffolded project from c-project-init is ready for c-project-commit.",
+    "skill_ref": null,
+    "source_skill": "c-project-init",
+    "source_baseline": "setup_lib_basic",
+    "expected_checks": [
+      "init_has_gitignore",
+      "init_gitignore_excludes_build"
+    ]
+  },
+  {
+    "id": "init_app_to_build",
+    "prompt": "Verify that a scaffolded app project from c-project-init can be built.",
+    "skill_ref": null,
+    "source_skill": "c-project-init",
+    "source_baseline": "setup_app_basic",
+    "expected_checks": [
+      "init_has_cmake_for_build",
+      "init_has_ninja_compatible_cmake",
+      "init_has_test_target",
+      "init_has_sanitizer_options"
+    ]
+  },
+  {
+    "id": "init_app_to_style",
+    "prompt": "Verify that a scaffolded app project follows style rules.",
+    "skill_ref": null,
+    "source_skill": "c-project-init",
+    "source_baseline": "setup_app_basic",
+    "expected_checks": [
+      "init_uses_pragma_once",
+      "init_uses_c_comments",
+      "init_has_license_headers",
+      "init_no_banned_functions"
+    ]
+  },
+  {
+    "id": "build_to_debug",
+    "prompt": "Verify that build skill ASAN output is compatible with debug skill workflow.",
+    "skill_ref": null,
+    "source_skill": "c-project-build",
+    "source_baseline": "build_asan",
+    "expected_checks": [
+      "build_debug_enables_sanitizer_rebuild",
+      "build_uses_debug_for_sanitizers"
+    ]
+  },
+  {
+    "id": "build_to_commit",
+    "prompt": "Verify that build skill output includes test step needed by commit skill.",
+    "skill_ref": null,
+    "source_skill": "c-project-build",
+    "source_baseline": "build_debug_unix",
+    "expected_checks": [
+      "build_has_ctest_for_commit"
+    ]
+  },
+  {
+    "id": "debug_to_commit",
+    "prompt": "Verify that debug skill output identifies root cause for commit.",
+    "skill_ref": null,
+    "source_skill": "c-project-debug",
+    "source_baseline": "crash_segfault_linux",
+    "expected_checks": [
+      "debug_identifies_root_cause"
+    ]
+  }
+]

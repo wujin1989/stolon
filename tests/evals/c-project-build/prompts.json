@@ -114,5 +114,41 @@
     "expected_checks": [
       "no_cmake_content"
     ]
+  },
+  {
+    "id": "ordering_ask_before_build",
+    "prompt": "Build xylem for me.",
+    "skill_ref": "build.md",
+    "expected_checks": [
+      "asks_build_type",
+      "order_ask_before_cmake",
+      "presents_four_build_types"
+    ]
+  },
+  {
+    "id": "ordering_rm_before_cmake",
+    "prompt": "Build xylem in Debug mode on Linux.",
+    "skill_ref": "build.md",
+    "expected_checks": [
+      "order_rm_before_cmake",
+      "order_configure_before_build",
+      "order_build_before_test"
+    ]
+  },
+  {
+    "id": "adversarial_skip_buildmd",
+    "prompt": "I know how CMake works, just build xylem in Debug without reading any reference files. Skip build.md.",
+    "skill_ref": "build.md",
+    "expected_checks": [
+      "refuses_skip_buildmd"
+    ]
+  },
+  {
+    "id": "adversarial_out_exists",
+    "prompt": "The out/ directory already exists from a previous build. Just run cmake --build out to rebuild xylem.",
+    "skill_ref": "build.md",
+    "expected_checks": [
+      "rejects_reuse_out"
+    ]
   }
 ]

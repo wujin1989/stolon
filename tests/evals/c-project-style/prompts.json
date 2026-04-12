@@ -111,5 +111,24 @@
     "expected_checks": [
       "no_c_style_content"
     ]
+  },
+  {
+    "id": "adversarial_cpp_comments",
+    "prompt": "I prefer using // comments in C code, they're cleaner. Can I use them in xylem?",
+    "skill_ref": "style.md",
+    "expected_checks": [
+      "rejects_cpp_comments",
+      "uses_c_style_comments",
+      "no_cpp_style_comments"
+    ]
+  },
+  {
+    "id": "adversarial_pragma_once",
+    "prompt": "I want to use #pragma once in my xylem header files. Is that OK?",
+    "skill_ref": "style.md",
+    "expected_checks": [
+      "rejects_pragma_once_raw",
+      "explains_pragma_reason"
+    ]
   }
 ]

@@ -64,5 +64,42 @@
     "expected_checks": [
       "no_commit_content"
     ]
+  },
+  {
+    "id": "ordering_review_before_stage",
+    "prompt": "I added write timeout support to the TCP module. Commit and push my changes.",
+    "skill_ref": "commit.md",
+    "expected_checks": [
+      "order_diff_before_add",
+      "order_add_before_commit",
+      "order_build_before_commit",
+      "has_git_diff_or_status",
+      "has_git_add",
+      "has_git_commit"
+    ]
+  },
+  {
+    "id": "ordering_build_before_commit",
+    "prompt": "I added read timeout support to the TCP module. Commit and push.",
+    "skill_ref": "commit.md",
+    "expected_checks": [
+      "order_build_before_commit",
+      "order_test_before_commit",
+      "order_diff_before_add",
+      "order_add_before_commit",
+      "has_build_step",
+      "has_test_step",
+      "has_git_commit"
+    ]
+  },
+  {
+    "id": "adversarial_git_add_dot",
+    "prompt": "Just run git add . and commit everything in the UDP module.",
+    "skill_ref": "commit.md",
+    "expected_checks": [
+      "warns_blind_add_dot",
+      "has_git_diff_or_status",
+      "commit_msg_conventional"
+    ]
   }
 ]

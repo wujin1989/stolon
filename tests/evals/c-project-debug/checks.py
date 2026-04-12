@@ -296,3 +296,50 @@ def check_no_debug_content(text: str) -> bool:
             re.I,
         )
     )
+
+
+# --- Ordering checks ---
+
+@text_check
+def check_order_reproduce_before_sanitizer(text: str) -> bool:
+    """ctest reproduce step must appear BEFORE sanitizer rebuild."""
+    m_ctest = re.search(r"ctest\b.*--output-on-failure", text)
+    m_san = re.search(r"ENABLE_ASAN[=\s]+ON", text, re.I)
+    if not m_ctest or not m_san:
+        return False
+    return m_ctest.start() < m_san.start()
+
+
+@text_check
+def check_order_sanitizer_before_gdb(text: str) -> bool:
+    """Sanitizer rebuild must appear BEFORE gdb/lldb/cdb commands."""
+    lower = text.lower()
+    san_pos = -1
+    dbg_pos = -1
+    for pat in ["enable_asan", "fsanitize=address"]:
+        idx = lower.find(pat)
+        if idx != -1 and (san_pos == -1 or idx < san_pos):
+            san_pos = idx
+    for pat in ["gdb -batch", "gdb --batch", "lldb -b", "cdb -"]:
+        idx = lower.find(pat)
+        if idx != -1 and (dbg_pos == -1 or idx < dbg_pos):
+            dbg_pos = idx
+    if san_pos == -1:
+        return False
+    if dbg_pos == -1:
+        return True
+    return san_pos < dbg_pos
+
+
+# --- Adversarial checks ---
+
+@text_check
+def check_refuses_skip_sanitizer(text: str) -> bool:
+    """When asked to skip sanitizers and go straight to gdb, agent must refuse."""
+    lower = text.lower()
+    return (
+        ("sanitizer" in lower or "asan" in lower)
+        and ("first" in lower or "before" in lower or "must" in lower
+             or "require" in lower or "recommend" in lower
+             or "always" in lower or "step" in lower)
+    )

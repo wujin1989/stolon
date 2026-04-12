@@ -1,0 +1,39 @@
+Before committing, I need to validate the changes:
+
+1. Review changes:
+
+```bash
+git diff
+git status
+```
+
+2. Build and test with sanitizers:
+
+```bash
+rm -rf out
+cmake -B out -G Ninja \
+  -DCMAKE_BUILD_TYPE=Debug \
+  -DXYLEM_ENABLE_TESTING=ON \
+  -DXYLEM_ENABLE_ASAN=ON \
+  -DXYLEM_ENABLE_UBSAN=ON
+cmake --build out -j $(nproc)
+ctest --test-dir out --output-on-failure
+```
+
+3. Stage the relevant files:
+
+```bash
+git add src/xylem-tcp.c include/xylem/xylem-tcp.h tests/test-tcp.c
+```
+
+4. Commit:
+
+```bash
+git commit -m "feat(tcp): add read timeout support"
+```
+
+5. Push:
+
+```bash
+git push
+```

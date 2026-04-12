@@ -107,7 +107,8 @@ def main():
         skills = [skill_filter]
     else:
         skills = sorted(
-            d.name for d in EVALS_DIR.iterdir() if d.is_dir()
+            d.name for d in EVALS_DIR.iterdir()
+            if d.is_dir() and d.name != "integration"
         )
 
     total_pass = total_fail = total_skip = 0
@@ -136,3 +137,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

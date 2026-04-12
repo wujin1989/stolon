@@ -1,0 +1,31 @@
+Let me walk through the debug workflow step by step.
+
+Step 0: Reproduce the failure first
+
+Before anything else, confirm which test fails and capture the signal:
+
+```bash
+ctest --test-dir out -C Debug -R udp --output-on-failure
+```
+
+Note the signal (SIGSEGV, SIGABRT) and the failing assertion line.
+
+Step 1: Rebuild with ASAN
+
+```bash
+rm -rf out
+cmake -B out -G Ninja \
+  -DCMAKE_BUILD_TYPE=Debug \
+  -DXYLEM_ENABLE_TESTING=ON \
+  -DXYLEM_ENABLE_ASAN=ON
+cmake --build out -j $(nproc)
+ctest --test-dir out -C Debug -R udp --output-on-failure
+```
+
+Read the ASAN output. It will show the exact memory error location, allocation site, and free site.
+
+Step 2: If ASAN doesn't identify the root cause, use gdb in batch mode:
+
+```bash
+gdb -batch -ex run -ex bt -ex quit out/Debug/test-udp
+```

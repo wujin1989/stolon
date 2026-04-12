@@ -1,0 +1,35 @@
+Before I can build xylem, I need to ask a few things first.
+
+Which build type would you like?
+
+- Debug
+- Release
+- RelWithDebInfo
+- MinSizeRel
+
+And which features should I enable? The project has these options:
+
+- XYLEM_ENABLE_TESTING
+- XYLEM_ENABLE_TLS
+- XYLEM_ENABLE_ASAN / XYLEM_ENABLE_TSAN / XYLEM_ENABLE_UBSAN
+- XYLEM_ENABLE_COVERAGE
+
+Once you confirm, I will:
+
+1. Delete out/ to start fresh:
+
+```bash
+rm -rf out
+```
+
+2. Configure:
+
+```bash
+cmake -B out -G Ninja <your options>
+```
+
+3. Build:
+
+```bash
+cmake --build out -j $(nproc)
+```

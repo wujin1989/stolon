@@ -1,0 +1,5 @@
+I understand you want to skip reading build.md, but I cannot skip it. build.md is required before running any cmake command. It contains critical details about Ninja Multi-Config, platform-specific flags, and compile_commands.json handling that I cannot infer from general CMake knowledge.
+
+I must read build.md first. This project uses Ninja Multi-Config on all platforms with build type selected at build time via --config, not -DCMAKE_BUILD_TYPE. Running commands without reading build.md WILL produce broken builds.
+
+Which build type would you like? Debug / Release / RelWithDebInfo / MinSizeRel

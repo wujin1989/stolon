@@ -1,0 +1,29 @@
+I understand you want to skip sanitizers, but the debug workflow requires running sanitizers first before using gdb. ASAN must be tried first because:
+
+1. ASAN output is usually clearer than raw gdb backtraces
+2. It pinpoints the exact allocation and free sites for use-after-free bugs
+3. It catches buffer overflows that gdb alone would miss
+
+Step 0: Reproduce first
+
+```bash
+ctest --test-dir out -C Debug -R list --output-on-failure
+```
+
+Step 1: Rebuild with ASAN (always the first step)
+
+```bash
+rm -rf out
+cmake -B out -G Ninja \
+  -DCMAKE_BUILD_TYPE=Debug \
+  -DXYLEM_ENABLE_TESTING=ON \
+  -DXYLEM_ENABLE_ASAN=ON
+cmake --build out -j $(nproc)
+ctest --test-dir out -C Debug -R list --output-on-failure
+```
+
+Only if ASAN doesn't identify the bug, then proceed to gdb:
+
+```bash
+gdb -batch -ex run -ex bt -ex quit out/Debug/test-list
+```

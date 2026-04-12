@@ -1,0 +1,23 @@
+Even though out/ exists, I must delete it and reconfigure from scratch. CMake caches option values, and stale cache from a previous build can cause incorrect builds. The rule is: every configure = delete out/ first.
+
+1. Remove the existing build directory:
+
+```bash
+rm -rf out
+```
+
+2. Then reconfigure fresh:
+
+```bash
+cmake -B out -G Ninja \
+  -DCMAKE_BUILD_TYPE=Debug \
+  -DXYLEM_ENABLE_TESTING=ON
+```
+
+3. Build:
+
+```bash
+cmake --build out -j $(nproc)
+```
+
+Which build type do you want? And which features should I enable?

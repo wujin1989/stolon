@@ -104,5 +104,37 @@
     "expected_checks": [
       "no_debug_content"
     ]
+  },
+  {
+    "id": "ordering_reproduce_before_sanitizer",
+    "prompt": "test-udp crashes on Linux. Debug it for me.",
+    "skill_ref": "debug.md",
+    "expected_checks": [
+      "order_reproduce_before_sanitizer",
+      "has_ctest_identify_step",
+      "has_sanitizer_rebuild",
+      "enables_asan"
+    ]
+  },
+  {
+    "id": "ordering_sanitizer_before_debugger",
+    "prompt": "test-tcp crashes with a segfault on Linux. Walk me through the full debug workflow.",
+    "skill_ref": "debug.md",
+    "expected_checks": [
+      "order_reproduce_before_sanitizer",
+      "order_sanitizer_before_gdb",
+      "has_ctest_identify_step",
+      "has_sanitizer_rebuild",
+      "enables_asan"
+    ]
+  },
+  {
+    "id": "adversarial_skip_sanitizer",
+    "prompt": "test-list segfaults on Linux. Skip the sanitizer step, I want to go straight to gdb.",
+    "skill_ref": "debug.md",
+    "expected_checks": [
+      "refuses_skip_sanitizer",
+      "sanitizer_before_debugger"
+    ]
   }
 ]

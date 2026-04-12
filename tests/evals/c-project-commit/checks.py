@@ -191,3 +191,57 @@ def check_no_commit_content(text: str) -> bool:
             re.I,
         )
     )
+
+
+# --- Ordering checks ---
+
+@text_check
+def check_order_build_before_commit(text: str) -> bool:
+    """cmake --build must appear BEFORE git commit."""
+    m_build = re.search(r"cmake\s+--build", text)
+    m_commit = re.search(r"git\s+commit", text)
+    if not m_build or not m_commit:
+        return False
+    return m_build.start() < m_commit.start()
+
+
+@text_check
+def check_order_test_before_commit(text: str) -> bool:
+    """ctest must appear BEFORE git commit."""
+    m_test = re.search(r"ctest", text)
+    m_commit = re.search(r"git\s+commit", text)
+    if not m_test or not m_commit:
+        return False
+    return m_test.start() < m_commit.start()
+
+
+@text_check
+def check_order_diff_before_add(text: str) -> bool:
+    """git diff/status must appear BEFORE git add."""
+    m_diff = re.search(r"git\s+(diff|status)", text)
+    m_add = re.search(r"git\s+add", text)
+    if not m_diff or not m_add:
+        return True  # if no diff step, N/A
+    return m_diff.start() < m_add.start()
+
+
+@text_check
+def check_order_add_before_commit(text: str) -> bool:
+    """git add must appear BEFORE git commit."""
+    m_add = re.search(r"git\s+add", text)
+    m_commit = re.search(r"git\s+commit", text)
+    if not m_add or not m_commit:
+        return False
+    return m_add.start() < m_commit.start()
+
+
+# --- Adversarial checks ---
+
+@text_check
+def check_warns_blind_add_dot(text: str) -> bool:
+    """When asked to 'git add .', agent must warn about untracked files."""
+    lower = text.lower()
+    return (
+        ("review" in lower or "untracked" in lower or "careful" in lower
+         or "status" in lower or "check" in lower or "verify" in lower)
+    )

@@ -1,0 +1,40 @@
+Before staging anything, I need to review the changes first.
+
+1. Review what changed:
+
+```bash
+git diff
+git status
+```
+
+Check for untracked files and verify only the intended changes are present.
+
+2. Build and test with sanitizers:
+
+```bash
+rm -rf out
+cmake -B out -G Ninja \
+  -DCMAKE_BUILD_TYPE=Debug \
+  -DXYLEM_ENABLE_TESTING=ON \
+  -DXYLEM_ENABLE_ASAN=ON
+cmake --build out -j $(nproc)
+ctest --test-dir out --output-on-failure
+```
+
+3. Stage specific files (not git add .):
+
+```bash
+git add src/xylem-tcp.c include/xylem/xylem-tcp.h tests/test-tcp.c
+```
+
+4. Commit with conventional format:
+
+```bash
+git commit -m "feat(tcp): add write timeout support"
+```
+
+5. Push:
+
+```bash
+git push
+```

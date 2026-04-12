@@ -1,0 +1,15 @@
+No, you should not use // comments in xylem. The project convention requires C-style /* */ comments exclusively.
+
+```c
+/* Good: C-style comment */
+int x = 0;
+
+/*
+ * Good: Multi-line C-style comment
+ * explaining the algorithm.
+ */
+
+// Bad: C++ style comment -- not allowed in this project
+```
+
+All comments must be ASCII-only. No em dashes, smart quotes, or CJK characters in .c or .h files.

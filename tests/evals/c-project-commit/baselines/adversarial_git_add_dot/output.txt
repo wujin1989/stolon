@@ -1,0 +1,16 @@
+I should not blindly run git add . without reviewing what's being staged. Let me first check for untracked or unexpected files:
+
+```bash
+git status
+git diff
+```
+
+Review the output carefully to verify only UDP module changes are included. Then stage specific files:
+
+```bash
+git add src/xylem-udp.c include/xylem/xylem-udp.h tests/test-udp.c
+```
+
+```bash
+git commit -m "feat(udp): update UDP module"
+```

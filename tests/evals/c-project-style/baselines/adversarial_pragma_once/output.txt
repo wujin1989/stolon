@@ -1,0 +1,9 @@
+No, this project does not use #pragma once. Instead, use _Pragma("once") which is the project convention:
+
+```c
+_Pragma("once")
+
+/* ... header content ... */
+```
+
+The project uses _Pragma("once") instead of #pragma once or #ifndef guards. This is a C11 standard feature that provides the same functionality. Do not use #ifndef/#define include guards either.

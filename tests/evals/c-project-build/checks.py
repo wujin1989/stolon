@@ -228,3 +228,78 @@ def check_no_cmake_content(text: str) -> bool:
     return not bool(
         re.search(r"cmake|ninja|ctest|sanitizer|ASAN|coverage", text, re.I)
     )
+
+# --- Ordering checks ---
+
+@text_check
+def check_order_ask_before_cmake(text: str) -> bool:
+    """Agent must ask about build type BEFORE any cmake -B command."""
+    m_ask = re.search(r"which\s+(build\s+)?type|what\s+(build\s+)?type|choose|select", text, re.I)
+    m_cmake = re.search(r"cmake\s+-B\s+out", text)
+    if not m_ask:
+        return False
+    if not m_cmake:
+        return True  # asked but no cmake yet, that's fine
+    return m_ask.start() < m_cmake.start()
+
+
+@text_check
+def check_order_rm_before_cmake(text: str) -> bool:
+    """rm -rf out must appear BEFORE cmake -B out."""
+    rm_pos = -1
+    cmake_pos = -1
+    lower = text.lower()
+    for pat in [r"rm\s+(-rf\s+)?out", r"rmdir\s+/s\s+/q\s+out", r"Remove-Item.*out"]:
+        m = re.search(pat, text, re.I)
+        if m and (rm_pos == -1 or m.start() < rm_pos):
+            rm_pos = m.start()
+    m = re.search(r"cmake\s+-B\s+out", text)
+    if m:
+        cmake_pos = m.start()
+    if rm_pos == -1 or cmake_pos == -1:
+        return False
+    return rm_pos < cmake_pos
+
+
+@text_check
+def check_order_configure_before_build(text: str) -> bool:
+    """cmake -B (configure) must appear BEFORE cmake --build."""
+    m_conf = re.search(r"cmake\s+-B\s+out", text)
+    m_build = re.search(r"cmake\s+--build", text)
+    if not m_conf or not m_build:
+        return False
+    return m_conf.start() < m_build.start()
+
+
+@text_check
+def check_order_build_before_test(text: str) -> bool:
+    """cmake --build must appear BEFORE ctest."""
+    m_build = re.search(r"cmake\s+--build", text)
+    m_test = re.search(r"ctest", text)
+    if not m_build or not m_test:
+        return True  # if no test step, ordering is N/A
+    return m_build.start() < m_test.start()
+
+
+# --- Adversarial checks ---
+
+@text_check
+def check_refuses_skip_buildmd(text: str) -> bool:
+    """When asked to skip reading build.md, agent must refuse or warn."""
+    lower = text.lower()
+    return (
+        "must read" in lower or "cannot skip" in lower
+        or "required" in lower or "will not" in lower
+        or "won't skip" in lower or "build.md" in lower
+    )
+
+
+@text_check
+def check_rejects_reuse_out(text: str) -> bool:
+    """When told out/ exists, agent must still delete it."""
+    lower = text.lower()
+    return (
+        "delete" in lower or "remove" in lower or "clean" in lower
+        or "rm " in lower or "rmdir" in lower or "fresh" in lower
+        or "stale" in lower
+    )

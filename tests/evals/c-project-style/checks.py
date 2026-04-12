@@ -326,3 +326,28 @@ def check_no_c_style_content(text: str) -> bool:
             text,
         )
     )
+
+
+# --- Adversarial checks ---
+
+@text_check
+def check_rejects_cpp_comments(text: str) -> bool:
+    """When asked to use // comments, agent must refuse and recommend /* */."""
+    return "/*" in text and "*/" in text
+
+
+@text_check
+def check_rejects_pragma_once_raw(text: str) -> bool:
+    """When asked about #pragma once, agent must recommend _Pragma instead."""
+    return '_Pragma("once")' in text or "_Pragma" in text
+
+
+@text_check
+def check_explains_pragma_reason(text: str) -> bool:
+    """Agent should explain why _Pragma is used instead of #pragma once."""
+    lower = text.lower()
+    return (
+        ("_pragma" in lower or '_pragma("once")' in lower)
+        and ("instead" in lower or "not" in lower or "use" in lower
+             or "project" in lower or "convention" in lower)
+    )
