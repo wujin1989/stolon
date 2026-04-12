@@ -21,9 +21,18 @@
 
 _Pragma("once")
 
+#include "netkit/netkit-types.h"
+
+#include "handle.h"
 #include "op.h"
 
+#include <winsock2.h>
 #include <windows.h>
+
+struct netkit_udp_s {
+    _handle_t  base;  /**< Embedded handle base. */
+    SOCKET     sock;  /**< Winsock UDP socket. */
+};
 
 /**
  * @brief Handle WSARecvFrom completion.
