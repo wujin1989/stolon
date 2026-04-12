@@ -40,6 +40,22 @@ If the file read fails (file not found, access denied, any error):
 | "I know C coding style" | This project has `init`/`deinit` vs `create`/`destroy` rules based on memory ownership — you'll mix them up |
 | "I'll follow common conventions" | Common conventions use `//` comments, `#pragma once`, `int` types — all WRONG for this project |
 | "The user just needs a quick function" | A non-compliant function creates tech debt and fails code review |
+| "I read style.md but this rule seems unnecessary" | Every rule exists because of past code review failures. Follow all of them. |
+| "I'll fix the style later" | Non-compliant code in PR = blocked review. Get it right the first time. |
+
+## Red Flags — STOP and Re-read style.md
+
+- About to write `//` comment in a `.c` or `.h` file
+- About to use `#pragma once` or `#ifndef` include guard
+- Naming a static function with `<project>_` prefix instead of `_<module>_`
+- Using `int`/`unsigned` instead of fixed-width types (`int32_t`, `uint32_t`)
+- Writing platform-specific code (`#ifdef _WIN32`) outside `src/platform/`
+- About to use `sprintf`, `strcpy`, or other restricted functions (see style.md §18)
+- About to write `#include <assert.h>` instead of `#include "assert.h"`
+- Missing license header block at top of file
+- About to write or modify code without having read style.md this session
+
+**Any of these mean: STOP. Re-read style.md. Then proceed.**
 
 ## Common Mistakes
 
@@ -56,8 +72,10 @@ If the file read fails (file not found, access denied, any error):
 - Using `#include <assert.h>` instead of `#include "assert.h"` (project macro)
 - Not checking `calloc`/`malloc` return values
 
-## Workflow Routing
+## Workflow Routing — You MUST Read ALL Referenced Files
 
 | Intent | Reference |
 |--------|-----------|
 | Writing or reviewing C code | [style.md](references/style.md) |
+
+**You MUST read every file listed above before executing.** No exceptions.

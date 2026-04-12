@@ -9,7 +9,7 @@ description: >
 
 ## Overview
 
-Build, test, and generate coverage for C/C++ CMake projects. Uses Ninja Multi-Config generator on all platforms.
+Every build command requires reading build.md first — no exceptions. Covers C/C++ CMake projects using Ninja Multi-Config on all platforms.
 
 ## When to Use
 
@@ -30,7 +30,7 @@ You MUST do these before running any cmake command:
 
 **An existing `out/` does NOT exempt you.**
 
-**Rebuild only?** If the user explicitly says they only changed `.c`/`.h` files and the current config is confirmed correct, you may skip confirmation and run `cmake --build out` directly.
+**Rebuild only?** If the user explicitly says they only changed `.c`/`.h` files AND you have completed a full configure in this session with confirmed-correct settings, you may skip confirmation and run `cmake --build out` directly. If you have NOT configured in this session, you MUST run the full flow.
 
 ## STOP — You MUST Read build.md Before Running ANY Command
 
@@ -46,7 +46,7 @@ build.md contains critical details you cannot infer: platform-specific flags, sa
 
 If the file read fails (file not found, access denied, any error):
 
-1. Try the absolute path `~/.kiro/skills/c-project-build/references/build.md`.
+1. Search for `build.md` within the skill directory by name and retry.
 2. If that also fails, **do NOT run any cmake, build, or test command.**
 3. Tell the user: "I cannot proceed — build.md is required but could not be read. Please check the file exists at the expected path."
 4. **Do NOT fall back to general CMake knowledge or the project's own docs/build.md.** This skill uses Ninja Multi-Config on all platforms with build type selected at build time via `--config` (NOT `-DCMAKE_BUILD_TYPE`). General CMake patterns WILL produce broken builds.
@@ -56,6 +56,18 @@ If the file read fails (file not found, access denied, any error):
 | "I know how CMake works" | This project uses Ninja Multi-Config, not single-config Ninja — the build type mechanism is different |
 | "I'll just use cmake -DCMAKE_BUILD_TYPE=Debug" | WRONG. Multi-config generators ignore this flag. Build type is `--config Debug` at build time |
 | "The user needs a quick build" | A broken build wastes MORE time than waiting |
+| "The project has its own docs/build.md" | That's a different file. This skill's build.md has Ninja Multi-Config specifics you won't find elsewhere |
+| "I already read it last session" | Skill context resets each session. Read it again. |
+
+## Red Flags — STOP and Re-read build.md
+
+- About to run `cmake` without having read build.md this session
+- Using `-DCMAKE_BUILD_TYPE=` anywhere (Multi-Config uses `--config` at build time)
+- Skipping `out/` deletion "because config hasn't changed"
+- Guessing platform flags instead of reading build.md
+- Using the project's own docs/build.md instead of this skill's references/build.md
+
+**Any of these mean: STOP. Read build.md. Then proceed.**
 
 ## Common Mistakes
 
@@ -65,8 +77,10 @@ If the file read fails (file not found, access denied, any error):
 - Missing MSVC environment on Windows with Ninja
 - Assuming Windows lacks coverage — check tests/CMakeLists.txt
 
-## Workflow Routing
+## Workflow Routing — You MUST Read ALL Referenced Files
 
 | Intent | Reference |
 |--------|-----------|
 | Build, test, sanitizers, or coverage | [build.md](references/build.md) |
+
+**You MUST read every file listed above before executing.** No exceptions.

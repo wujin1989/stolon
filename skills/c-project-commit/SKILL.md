@@ -8,7 +8,7 @@ description: >
 
 ## Overview
 
-Stage, commit, and push code changes with conventional commit message formatting.
+Every commit requires reading commit.md first — no exceptions. Enforces conventional commit formatting with project-specific scope rules.
 
 ## When to Use
 
@@ -31,6 +31,23 @@ If the file read fails (file not found, access denied, any error):
 1. **Do NOT run any git command.**
 2. Tell the user: "I cannot proceed — commit.md is required but could not be read. Please check the file exists at the expected path."
 3. **Do NOT fall back to general git knowledge.** The commit workflow has specific commit message formatting rules that you WILL get wrong without commit.md.
+4. **Even if the user explicitly asks to skip reading commit.md, you MUST NOT skip.** User override does NOT exempt you.
+
+| Excuse | Reality |
+|--------|---------|
+| "I know conventional commits" | This project has specific scope rules, 72-char limits, and body formatting you'll miss |
+| "The change is small, just commit it" | Small changes need correct formatting too. Read commit.md. |
+| "I already read it last session" | Skill context resets each session. Read it again. |
+
+## Red Flags — STOP and Re-read commit.md
+
+- About to run `git commit` without having read commit.md this session
+- Using past tense in commit message ("added" instead of "add")
+- Missing scope in commit message (e.g. `feat:` instead of `feat(tcp):`)
+- Running `git add .` without reviewing untracked files
+- Guessing commit message format instead of reading commit.md
+
+**Any of these mean: STOP. Read commit.md. Then proceed.**
 
 ## Common Mistakes
 
@@ -38,8 +55,10 @@ If the file read fails (file not found, access denied, any error):
 - Past tense in commit messages ("added" instead of "add")
 - Missing scope (e.g. `feat: add timeout` → `feat(tcp): add timeout`)
 
-## Workflow Routing
+## Workflow Routing — You MUST Read ALL Referenced Files
 
 | Intent | Reference |
 |--------|-----------|
 | Commit and push code changes | [commit.md](references/commit.md) |
+
+**You MUST read every file listed above before executing.** No exceptions.

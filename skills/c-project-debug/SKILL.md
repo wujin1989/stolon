@@ -52,6 +52,8 @@ If the file read fails (file not found, access denied, any error):
 | "I know how to use gdb" | This project uses batch-mode commands, not interactive sessions — the flags are different |
 | "I'll just run with ASAN" | The workflow requires Step 0 (reproduce) FIRST, then sanitizers — skipping Step 0 wastes time |
 | "Debugging is debugging" | Platform-specific debugger selection, hang debugging, and log-based fallback all have specific procedures |
+| "The crash is obvious, I don't need sanitizers" | Obvious crashes often have non-obvious root causes. ASAN finds the real bug, not the symptom |
+| "I'll just add a printf and see" | C requires recompilation. Sanitizers give better output with zero code changes |
 
 ## STOP — Step 0: Reproduce First
 
@@ -63,6 +65,18 @@ ctest --test-dir out -C Debug -R {module} --output-on-failure
 
 Note the signal (SIGSEGV, SIGABRT, SIGBUS) and the failing assertion line. Only then proceed to sanitizers.
 
+**Even if you already saw test output earlier in this session, you MUST re-run ctest to confirm the current state.** Stale information from earlier in the conversation is not a substitute for a fresh reproduce.
+
+## Red Flags — STOP and Follow the 3-Tier Strategy
+
+- About to launch gdb/lldb/cdb without trying sanitizers first
+- About to run sanitizers without reproducing the failure first (Step 0)
+- Debugging without having read debug.md this session
+- Running GDB on Windows or CDB on Unix
+- Adding printf/log statements as first debugging step (try sanitizers first)
+
+**Any of these mean: STOP. Follow the workflow: reproduce → sanitizers → debugger → logs.**
+
 ## Common Mistakes
 
 - Jumping to debugger before trying sanitizers — ASAN output is usually clearer
@@ -70,8 +84,11 @@ Note the signal (SIGSEGV, SIGABRT, SIGBUS) and the failing assertion line. Only 
 - Running GDB on Windows or CDB on Unix — use the platform's native debugger
 - Adding logs without rebuilding — C requires recompilation
 
-## Workflow Routing
+
+## Workflow Routing — You MUST Read ALL Referenced Files
 
 | Intent | Reference |
 |--------|-----------|
 | Debug a crash or unexpected behavior | [debug.md](references/debug.md) |
+
+**You MUST read every file listed above before executing.** No exceptions.

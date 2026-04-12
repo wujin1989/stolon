@@ -30,13 +30,6 @@ You MUST ask the user for ALL of these inputs first:
 
 **Do NOT assume defaults or start generating files before asking.**
 
-### Red Flags — STOP If You're About to Skip Asking
-
-- User gave project name but not type → STILL ASK
-- User gave most inputs but not platform → STILL ASK
-- User said "just do it" or "hurry" → STILL ASK
-- You think you can infer the type from context → STILL ASK
-
 ## STOP — You MUST Read setup.md Before Generating ANY Files
 
 After collecting all inputs, you MUST read [setup.md](references/setup.md) in full before writing a single file. Do NOT generate from memory or general knowledge.
@@ -44,6 +37,8 @@ After collecting all inputs, you MUST read [setup.md](references/setup.md) in fu
 setup.md contains project-specific conventions that CANNOT be inferred from general C/CMake knowledge — non-standard license formatting, specific CMake options, exact file contents, and platform-conditional logic. Every file you generate must match setup.md verbatim.
 
 **Generating without reading setup.md WILL produce wrong output.** Every time.
+
+**You MUST read setup.md in FULL (all 400+ lines).** Skimming the first few sections is not enough — platform-conditional logic, license formatting, and test harness details are spread throughout the file. If you stop reading early, you WILL miss critical conventions.
 
 ### If setup.md Cannot Be Read — STOP COMPLETELY
 
@@ -60,12 +55,16 @@ If the file read fails (file not found, access denied, any error):
 | "I can fix it later after reading setup.md" | You'll miss dozens of subtle differences |
 | "Most C projects look similar" | This one has ====  fences, _Pragma("once"), specific sanitizer functions |
 
-### Red Flags — STOP If You're About to Skip Reading
+## Red Flags — STOP
 
-- "I know what a C project looks like" → setup.md has project-specific conventions you don't know
+- User gave partial inputs but not all 6 → STILL ASK for the rest
+- User said "just do it" or "hurry" → STILL ASK
+- About to generate files without having read setup.md this session
+- "I know what a C project looks like" → setup.md has 400+ lines of project-specific conventions you don't know
 - "I'll just use a standard CMake template" → the template has specific options, versions, and patterns
-- "setup.md is probably just confirming what I know" → it contains 400+ lines of precise specifications
 - setup.md read failed → STOP. Do not generate. Tell the user.
+
+**Any of these mean: STOP. Collect all inputs. Read setup.md. Then generate.**
 
 ## Common Mistakes
 
@@ -82,19 +81,12 @@ If the file read fails (file not found, access denied, any error):
 - Using `#ifndef` include guards instead of `_Pragma("once")`
 - Writing a "standard" README instead of the exact template from setup.md
 - Using default year instead of current year for `{year}` placeholder
+- Not verifying placeholders after generation — see setup.md for the verification regex
 
-## Post-Generation Verification
-
-After generating all files, run this regex across every generated file:
-
-```
-(?<!\$)\{(name|NAME|year|author|email|description|LICENSE_HEADER)\}
-```
-
-No matches should remain (the negative lookbehind `(?<!\$)` excludes cmake `${NAME}` expansions). Any remaining placeholder means you missed a substitution.
-
-## Workflow Routing
+## Workflow Routing — You MUST Read ALL Referenced Files
 
 | Intent | Reference |
 |--------|-----------|
 | Create a new C project | [setup.md](references/setup.md) |
+
+**You MUST read every file listed above before executing.** No exceptions.
