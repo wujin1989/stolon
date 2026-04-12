@@ -36,14 +36,7 @@ You MUST do these before running any cmake command:
 
 After collecting inputs, you MUST read this skill's `references/build.md` before executing. Do NOT use the commands below as-is — they are orientation only, not executable recipes.
 
-**How to locate build.md:** The file `references/build.md` is located relative to this skill's SKILL.md. Use the following search strategy in order — stop at the first hit:
-
-1. `fileSearch` for `c-project-build/references/build.md`
-2. If step 1 returns nothing, `fileSearch` for `references/build.md` and pick the result whose path contains `c-project-build`
-
-Read the file at whichever path you find first. Do NOT guess the path. Do NOT read any other file with a similar name in the project tree. If NONE of the above steps find the file, **STOP and tell the user** the skill reference is missing — do NOT fall back to any other file.
-
-build.md contains critical details you cannot infer: platform-specific flags, sanitizer cmake options, compile_commands.json handling, Windows MSVC environment setup, coverage workflows, and CPU detection.
+**How to locate build.md:** The file `references/build.md` is located relative to this SKILL.md. Since the skill loader already resolved this skill's directory, read `references/build.md` directly using the same directory prefix as this SKILL.md file (e.g. if this file is at `stolon/skills/c-project-build/SKILL.md`, read `stolon/skills/c-project-build/references/build.md`). Do NOT use fileSearch — the path is deterministic. Do NOT read any other file with a similar name in the project tree.
 
 **Running commands without reading build.md WILL produce broken builds.**
 
