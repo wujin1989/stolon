@@ -32,7 +32,9 @@ You MUST ask the user for ALL of these inputs first:
 
 ## STOP — You MUST Read setup.md Before Generating ANY Files
 
-After collecting all inputs, you MUST read [setup.md](references/setup.md) in full before writing a single file. Do NOT generate from memory or general knowledge.
+After collecting all inputs, you MUST read this skill's `references/setup.md` in full before writing a single file. Do NOT generate from memory or general knowledge.
+
+**How to locate setup.md:** You MUST use fileSearch to find `c-project-init/references/setup.md`, then read the file at the returned path. Do NOT guess the path. Do NOT read any other file with a similar name in the project tree.
 
 setup.md contains project-specific conventions that CANNOT be inferred from general C/CMake knowledge — non-standard license formatting, specific CMake options, exact file contents, and platform-conditional logic. Every file you generate must match setup.md verbatim.
 
@@ -40,13 +42,7 @@ setup.md contains project-specific conventions that CANNOT be inferred from gene
 
 **You MUST read setup.md in FULL (all 400+ lines).** Skimming the first few sections is not enough — platform-conditional logic, license formatting, and test harness details are spread throughout the file. If you stop reading early, you WILL miss critical conventions.
 
-### If setup.md Cannot Be Read — STOP COMPLETELY
-
-If the file read fails (file not found, access denied, any error):
-
-1. **Do NOT generate any files.** Not even "standard" ones.
-2. Tell the user: "I cannot proceed — setup.md is required but could not be read. Please check the file exists at the expected path."
-3. **Do NOT fall back to general C/CMake knowledge.** The project has non-standard conventions (====  license fences, specific CMake version, custom file tree, exact comment formatting) that you WILL get wrong without setup.md.
+**Do NOT fall back to general C/CMake knowledge.** The project has non-standard conventions (====  license fences, specific CMake version, custom file tree, exact comment formatting) that you WILL get wrong without setup.md.
 
 | Excuse | Reality |
 |--------|---------|

@@ -21,19 +21,15 @@ Code style reference for C projects. All rules use `<project>` (lowercase from r
 
 ## STOP — You MUST Read style.md Before Writing or Reviewing ANY Code
 
-You MUST read [style.md](references/style.md) before generating or modifying any `.c` or `.h` file. Do NOT write code from memory or general C conventions.
+You MUST read this skill's `references/style.md` before generating or modifying any `.c` or `.h` file. Do NOT write code from memory or general C conventions.
+
+**How to locate style.md:** You MUST use fileSearch to find `c-project-style/references/style.md`, then read the file at the returned path. Do NOT guess the path. Do NOT read any other file with a similar name in the project tree.
 
 style.md contains 23 sections of project-specific rules: file naming, symbol naming, lifecycle patterns, memory management, platform layer rules, test framework, module addition checklists, and more. These conventions CANNOT be inferred from general C knowledge.
 
 **Writing code without reading style.md WILL produce non-compliant output.** The Common Mistakes below cover ~5% of the style surface area.
 
-### If style.md Cannot Be Read — STOP COMPLETELY
-
-If the file read fails (file not found, access denied, any error):
-
-1. **Do NOT write or modify any `.c` or `.h` file.**
-2. Tell the user: "I cannot proceed — style.md is required but could not be read. Please check the file exists at the expected path."
-3. **Do NOT fall back to general C conventions.** This project has 23 sections of specific rules (lifecycle naming, opaque structs, ASCII-only comments, restricted functions, intrusive data structures, etc.) that you WILL get wrong without style.md.
+**Do NOT fall back to general C conventions.** This project has 23 sections of specific rules (lifecycle naming, opaque structs, ASCII-only comments, restricted functions, intrusive data structures, etc.) that you WILL get wrong without style.md.
 
 | Excuse | Reality |
 |--------|---------|

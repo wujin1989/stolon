@@ -33,19 +33,15 @@ Only proceed to debugger if sanitizer output doesn't identify the bug.
 
 ## STOP — You MUST Read debug.md Before ANY Debug Action
 
-You MUST read [debug.md](references/debug.md) before running any debugger or sanitizer command. Do NOT use commands from memory.
+You MUST read this skill's `references/debug.md` before running any debugger or sanitizer command. Do NOT use commands from memory.
+
+**How to locate debug.md:** You MUST use fileSearch to find `c-project-debug/references/debug.md`, then read the file at the returned path. Do NOT guess the path. Do NOT read any other file with a similar name in the project tree.
 
 debug.md contains the complete step-by-step workflow, platform-specific debugger commands (cdb/gdb/lldb), sanitizer interpretation, hang debugging, log-based debugging strategy, and debugger installation guides. None of this is in this file.
 
 **Debugging without reading debug.md WILL waste time and miss the root cause.**
 
-### If debug.md Cannot Be Read — STOP COMPLETELY
-
-If the file read fails (file not found, access denied, any error):
-
-1. **Do NOT run any debugger or sanitizer command.**
-2. Tell the user: "I cannot proceed — debug.md is required but could not be read. Please check the file exists at the expected path."
-3. **Do NOT fall back to general debugging knowledge.** This project uses batch-mode debuggers (non-interactive), platform-specific commands (cdb/gdb/lldb), and a specific 3-tier strategy that you WILL get wrong without debug.md.
+**Do NOT fall back to general debugging knowledge.** This project uses batch-mode debuggers (non-interactive), platform-specific commands (cdb/gdb/lldb), and a specific 3-tier strategy that you WILL get wrong without debug.md.
 
 | Excuse | Reality |
 |--------|---------|

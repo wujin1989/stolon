@@ -34,22 +34,15 @@ You MUST do these before running any cmake command:
 
 ## STOP — You MUST Read build.md Before Running ANY Command
 
-After collecting inputs, you MUST read [build.md](references/build.md) before executing. Do NOT use the commands below as-is — they are orientation only, not executable recipes.
+After collecting inputs, you MUST read this skill's `references/build.md` before executing. Do NOT use the commands below as-is — they are orientation only, not executable recipes.
 
-**CRITICAL: You MUST read the skill's own `references/build.md` — NOT any other file with a similar name in the project tree. If the relative link fails, search for the file by name within the skill directory and retry.**
+**How to locate build.md:** You MUST use fileSearch to find `c-project-build/references/build.md`, then read the file at the returned path. Do NOT guess the path. Do NOT read any other file with a similar name in the project tree.
 
 build.md contains critical details you cannot infer: platform-specific flags, sanitizer cmake options, compile_commands.json handling, Windows MSVC environment setup, coverage workflows, and CPU detection.
 
 **Running commands without reading build.md WILL produce broken builds.**
 
-### If build.md Cannot Be Read — STOP COMPLETELY
-
-If the file read fails (file not found, access denied, any error):
-
-1. Search for `build.md` within the skill directory by name and retry.
-2. If that also fails, **do NOT run any cmake, build, or test command.**
-3. Tell the user: "I cannot proceed — build.md is required but could not be read. Please check the file exists at the expected path."
-4. **Do NOT fall back to general CMake knowledge or the project's own docs/build.md.** This skill uses Ninja Multi-Config on all platforms with build type selected at build time via `--config` (NOT `-DCMAKE_BUILD_TYPE`). General CMake patterns WILL produce broken builds.
+**Do NOT fall back to general CMake knowledge or the project's own docs/build.md.** This skill uses Ninja Multi-Config on all platforms with build type selected at build time via `--config` (NOT `-DCMAKE_BUILD_TYPE`). General CMake patterns WILL produce broken builds.
 
 | Excuse | Reality |
 |--------|---------|

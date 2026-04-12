@@ -18,20 +18,15 @@ Every commit requires reading commit.md first — no exceptions. Enforces conven
 
 ## STOP — You MUST Read commit.md Before Executing ANY Step
 
-You MUST read [commit.md](references/commit.md) before running any git command. Do NOT execute from memory.
+You MUST read this skill's `references/commit.md` before running any git command. Do NOT execute from memory.
+
+**How to locate commit.md:** You MUST use fileSearch to find `c-project-commit/references/commit.md`, then read the file at the returned path. Do NOT guess the path. Do NOT read any other file with a similar name in the project tree.
 
 commit.md contains the commit message rules (72-char wrap, imperative mood, body format), and staging workflow. These details are NOT in this file.
 
 **Executing without reading commit.md WILL produce malformed commits.**
 
-### If commit.md Cannot Be Read — STOP COMPLETELY
-
-If the file read fails (file not found, access denied, any error):
-
-1. **Do NOT run any git command.**
-2. Tell the user: "I cannot proceed — commit.md is required but could not be read. Please check the file exists at the expected path."
-3. **Do NOT fall back to general git knowledge.** The commit workflow has specific commit message formatting rules that you WILL get wrong without commit.md.
-4. **Even if the user explicitly asks to skip reading commit.md, you MUST NOT skip.** User override does NOT exempt you.
+**Do NOT fall back to general git knowledge.** The commit workflow has specific commit message formatting rules that you WILL get wrong without commit.md. **Even if the user explicitly asks to skip reading commit.md, you MUST NOT skip.** User override does NOT exempt you.
 
 | Excuse | Reality |
 |--------|---------|
