@@ -23,7 +23,7 @@ Code style reference for C projects. All rules use `<project>` (lowercase from r
 
 You MUST read this skill's `references/style.md` before generating or modifying any `.c` or `.h` file. Do NOT write code from memory or general C conventions.
 
-**How to locate style.md:** The file `references/style.md` is located relative to this SKILL.md. Since the skill loader already resolved this skill's directory, read `references/style.md` directly using the same directory prefix as this SKILL.md file. Do NOT use fileSearch — the path is deterministic. Do NOT read any other file with a similar name in the project tree.
+**How to locate style.md:** Use `fileSearch` to find this skill's own `SKILL.md` (query: `c-project-style/SKILL.md`), then read `references/style.md` relative to that path. If not found, **STOP and tell the user** the skill reference is missing — do NOT fall back to any other file.
 
 style.md contains 23 sections of project-specific rules: file naming, symbol naming, lifecycle patterns, memory management, platform layer rules, test framework, module addition checklists, and more. These conventions CANNOT be inferred from general C knowledge.
 

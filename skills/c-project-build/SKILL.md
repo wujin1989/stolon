@@ -36,18 +36,24 @@ You MUST do these before running any cmake command:
 
 After collecting inputs, you MUST read this skill's `references/build.md` before executing. Do NOT use the commands below as-is — they are orientation only, not executable recipes.
 
-**How to locate build.md:** The file `references/build.md` is located relative to this SKILL.md. Since the skill loader already resolved this skill's directory, read `references/build.md` directly using the same directory prefix as this SKILL.md file (e.g. if this file is at `stolon/skills/c-project-build/SKILL.md`, read `stolon/skills/c-project-build/references/build.md`). Do NOT use fileSearch — the path is deterministic. Do NOT read any other file with a similar name in the project tree.
+**How to locate build.md:** Use `fileSearch` to find this skill's own `SKILL.md` (query: `c-project-build/SKILL.md`), then read `references/build.md` relative to that path.
+
+Read the file at whichever path you find first. Do NOT guess the path.
+
+**HARD STOP — If NONE of the above steps find the file, you MUST tell the user the skill reference is missing and REFUSE to run any cmake command. Do NOT:**
+- Broaden the search (e.g. searching for just `build.md` without the `c-project-build` qualifier)
+- Read any other file named `build.md` found outside the `c-project-build` skill directory
+- Fall back to general CMake knowledge or memory from previous sessions
+- Proceed with the build in any way
 
 **Running commands without reading build.md WILL produce broken builds.**
-
-**Do NOT fall back to general CMake knowledge or the project's own docs/build.md.** This skill uses Ninja Multi-Config on all platforms with build type selected at build time via `--config` (NOT `-DCMAKE_BUILD_TYPE`). General CMake patterns WILL produce broken builds.
 
 | Excuse | Reality |
 |--------|---------|
 | "I know how CMake works" | This project uses Ninja Multi-Config, not single-config Ninja — the build type mechanism is different |
 | "I'll just use cmake -DCMAKE_BUILD_TYPE=Debug" | WRONG. Multi-config generators ignore this flag. Build type is `--config Debug` at build time |
 | "The user needs a quick build" | A broken build wastes MORE time than waiting |
-| "The project has its own build docs" | That's a different file. This skill's build.md has Ninja Multi-Config specifics you won't find elsewhere |
+| "The project has its own build docs" | That's a DIFFERENT file with DIFFERENT instructions — only `c-project-build/references/build.md` is correct |
 | "I already read it last session" | Skill context resets each session. Read it again. |
 
 ## Red Flags — STOP and Re-read build.md
