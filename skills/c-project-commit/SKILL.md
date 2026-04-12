@@ -14,12 +14,21 @@ description: >
 
 ## STOP — Required Before ANY Git Command
 
-**MANDATORY:** Read `references/commit.md` before executing any git commit command.
+**MANDATORY — locate and read the commit reference before any git commit command:**
 
-1. **Project level:** Use `fileSearch` to search for `c-project-commit/references/commit.md` within the project being committed.
-2. **User level:** Search for `c-project-commit/references/commit.md` under the user home directory (`~` on Unix, `%USERPROFILE%` on Windows).
+Run a shell command to find `c-project-commit/references/commit.md`. Search the project root first, then the user home directory. Use the platform-appropriate command:
 
-**If not found at either level, STOP. Tell the user the reference is missing. Do NOT proceed.**
+**Unix:**
+```
+f=$(find . ~ -maxdepth 6 -path "*/c-project-commit/references/commit.md" -print -quit 2>/dev/null) && echo "$f"
+```
+
+**Windows (PowerShell):**
+```
+@('.', $HOME) | ForEach-Object { Get-ChildItem -Path $_ -Recurse -Depth 5 -Filter 'commit.md' -ErrorAction SilentlyContinue } | Where-Object { $_.FullName -match 'c-project-commit[\\/]references[\\/]commit\.md$' } | Select-Object -First 1 -ExpandProperty FullName
+```
+
+Call `readFile` on the result. If not found, STOP and tell the user.
 
 ## Red Flags
 

@@ -19,21 +19,27 @@ description: >
 
 ## STOP — Required Before ANY Debug Action
 
-**MANDATORY:** Read `references/debug.md` before running any debugger or sanitizer command.
+**MANDATORY — locate and read the debug reference before any debugger or sanitizer command:**
 
-1. **Project level:** Use `fileSearch` to search for `c-project-debug/references/debug.md` within the project being debugged.
-2. **User level:** Search for `c-project-debug/references/debug.md` under the user home directory (`~` on Unix, `%USERPROFILE%` on Windows).
+Run a shell command to find `c-project-debug/references/debug.md`. Search the project root first, then the user home directory. Use the platform-appropriate command:
 
-**If not found at either level, STOP. Tell the user the reference is missing. Do NOT proceed.**
+**Unix:**
+```
+f=$(find . ~ -maxdepth 6 -path "*/c-project-debug/references/debug.md" -print -quit 2>/dev/null) && echo "$f"
+```
 
-Then, before debugging:
+**Windows (PowerShell):**
+```
+@('.', $HOME) | ForEach-Object { Get-ChildItem -Path $_ -Recurse -Depth 5 -Filter 'debug.md' -ErrorAction SilentlyContinue } | Where-Object { $_.FullName -match 'c-project-debug[\\/]references[\\/]debug\.md$' } | Select-Object -First 1 -ExpandProperty FullName
+```
 
-1. **Reproduce:** Run `ctest --test-dir out -C Debug -R {module} --output-on-failure`
-2. **Sanitizers:** Rebuild with ASAN (+ UBSAN on Unix), run the failing test
-3. **Debugger:** Only if sanitizer output doesn't identify the bug
+Call `readFile` on the result. If not found, STOP and tell the user.
+
+Follow the three-tier strategy in `debug.md` (reproduce → sanitizers → debugger). No shortcuts.
 
 ## Red Flags
 
+- Running `cmake` or debugger without having read debug.md this session
 - Launching gdb/lldb/cdb without trying sanitizers first
 - Running sanitizers without reproducing the failure first
 - Running GDB on Windows or CDB on Unix

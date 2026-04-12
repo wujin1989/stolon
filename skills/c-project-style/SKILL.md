@@ -17,12 +17,21 @@ description: >
 
 ## STOP — Required Before Writing or Reviewing ANY Code
 
-**MANDATORY:** Read `references/style.md` before generating or modifying any `.c` or `.h` file.
+**MANDATORY — locate and read the style reference before generating or modifying any `.c` or `.h` file:**
 
-1. **Project level:** Use `fileSearch` to search for `c-project-style/references/style.md` within the project being worked on.
-2. **User level:** Search for `c-project-style/references/style.md` under the user home directory (`~` on Unix, `%USERPROFILE%` on Windows).
+Run a shell command to find `c-project-style/references/style.md`. Search the project root first, then the user home directory. Use the platform-appropriate command:
 
-**If not found at either level, STOP. Tell the user the reference is missing. Do NOT proceed.**
+**Unix:**
+```
+f=$(find . ~ -maxdepth 6 -path "*/c-project-style/references/style.md" -print -quit 2>/dev/null) && echo "$f"
+```
+
+**Windows (PowerShell):**
+```
+@('.', $HOME) | ForEach-Object { Get-ChildItem -Path $_ -Recurse -Depth 5 -Filter 'style.md' -ErrorAction SilentlyContinue } | Where-Object { $_.FullName -match 'c-project-style[\\/]references[\\/]style\.md$' } | Select-Object -First 1 -ExpandProperty FullName
+```
+
+Call `readFile` on the result. If not found, STOP and tell the user.
 
 ## Red Flags
 

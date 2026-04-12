@@ -16,25 +16,29 @@ description: >
 
 ## STOP — Required Before ANY Build Command
 
-**MANDATORY:** Read `references/build.md` before executing any build command.
+**MANDATORY — locate and read the build reference before any cmake command:**
 
-1. **Project level:** Use `fileSearch` to search for `c-project-build/references/build.md` within the project being built.
-2. **User level:** Search for `c-project-build/references/build.md` under the user home directory (`~` on Unix, `%USERPROFILE%` on Windows).
+Run a shell command to find `c-project-build/references/build.md`. Search the project root first, then the user home directory. Use the platform-appropriate command:
 
-**If not found at either level, STOP. Tell the user the reference is missing. Do NOT proceed.**
+**Unix:**
+```
+f=$(find . ~ -maxdepth 6 -path "*/c-project-build/references/build.md" -print -quit 2>/dev/null) && echo "$f"
+```
 
-Then, before configuring:
+**Windows (PowerShell):**
+```
+@('.', $HOME) | ForEach-Object { Get-ChildItem -Path $_ -Recurse -Depth 5 -Filter 'build.md' -ErrorAction SilentlyContinue } | Where-Object { $_.FullName -match 'c-project-build[\\/]references[\\/]build\.md$' } | Select-Object -First 1 -ExpandProperty FullName
+```
 
-1. Read `project(...)` from root `CMakeLists.txt` to get the project name
-2. **Ask the user** which build type: Debug / Release / RelWithDebInfo / MinSizeRel
-3. Scan `CMakeLists.txt` for `option(...)` lines and **ask the user** which features to enable
-4. **Delete `out/` before configure** — always start fresh to prevent stale cache
+Call `readFile` on the result. If not found, STOP and tell the user.
 
-**Rebuild only?** If the user explicitly says they only changed `.c`/`.h` files AND you have completed a full configure in this session, skip confirmation and run `cmake --build out` directly.
+Follow the **Inputs — MANDATORY Pre-Flight** section in `build.md` before running any cmake command. No exceptions.
+
+**Rebuild only?** If the user explicitly says they only changed `.c`/`.h` files AND you have completed a full configure in this session, skip confirmation and run `cmake --build out --config {build_type}` directly.
 
 ## Red Flags
 
 - Running `cmake` without having read build.md this session
-- Using `-DCMAKE_BUILD_TYPE=`
+- Using `-DCMAKE_BUILD_TYPE=` (Ninja Multi-Config selects type at build time)
 - Skipping `out/` deletion before configure
 - Enabling ASAN and TSAN simultaneously
