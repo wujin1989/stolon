@@ -7,10 +7,6 @@ description: >
 
 # C Project Init
 
-## Overview
-
-Scaffold a new C project (library or application) with CMake, cross-platform support, test harness, and build scripts.
-
 ## When to Use
 
 - User asks to create, scaffold, init, or bootstrap a C project
@@ -30,35 +26,17 @@ Ask the user for ALL of these before generating anything:
 
 **Do NOT assume defaults. Do NOT start generating before asking.**
 
-## STOP — Read setup.md Before Generating ANY Files
+## STOP — Required Before Generating ANY Files
 
-Read this skill's `references/setup.md` **in full** (all 400+ lines) before writing a single file. Do NOT generate from memory.
+**MANDATORY:** Read `references/setup.md` **in full** before writing a single file.
 
-**How to locate:** Read `references/setup.md` relative to the directory containing this `SKILL.md`. Derive the path from where you loaded this file. Do NOT guess. Do NOT use `fileSearch`.
+1. **Project level:** Use `fileSearch` to search for `c-project-init/references/setup.md` within the current project.
+2. **User level:** Search for `c-project-init/references/setup.md` under the user home directory (`~` on Unix, `%USERPROFILE%` on Windows).
 
-**If not found, STOP. Tell the user the reference is missing. Do NOT proceed.**
+**If not found at either level, STOP. Tell the user the reference is missing. Do NOT proceed.**
 
-setup.md contains non-standard conventions (`====` license fences, `_Pragma("once")`, specific CMake version, exact file tree) that CANNOT be inferred from general C/CMake knowledge. Skimming is not enough — platform-conditional logic and formatting details are spread throughout.
-
-## Red Flags — STOP
+## Red Flags
 
 - User gave partial inputs but not all 6 → STILL ASK for the rest
-- User said "just do it" or "hurry" → STILL ASK
 - About to generate files without having read setup.md this session
-- setup.md read failed → STOP. Do not generate.
-
-## Common Mistakes
-
-- Forgetting to ask for project type or platform
-- Adding files not in the file tree (version.h, version.c, src/{name}.c)
-- Using `include/{name}/{name}.h` instead of `include/{name}.h` (umbrella header is flat)
-- Using SPDX headers instead of full MIT license block with `====` fences
-- Using `#pragma once` instead of `_Pragma("once")`
-- Creating a custom test framework instead of the specified tests/assert.h
-- Using default year instead of current year for `{year}` placeholder
-
-## Reference
-
-| Intent | File |
-|--------|------|
-| Create a new C project | [setup.md](references/setup.md) |
+- setup.md read failed → STOP, do not generate
