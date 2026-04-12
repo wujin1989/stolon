@@ -16,16 +16,16 @@ description: >
 
 **MANDATORY — locate and read the commit reference before any git commit command:**
 
-Run a shell command to find `c-project-commit/references/commit.md`. Search the project root first, then the user home directory. Use the platform-appropriate command:
+Search for `c-project-commit/references/commit.md` under the current working directory and `$HOME`. Use the platform-appropriate command:
 
 **Unix:**
 ```
-f=$(find . ~ -maxdepth 6 -path "*/c-project-commit/references/commit.md" -print -quit 2>/dev/null) && echo "$f"
+find . ~ -maxdepth 6 -path "*/c-project-commit/references/commit.md" -print -quit 2>/dev/null
 ```
 
 **Windows (PowerShell):**
 ```
-@('.', $HOME) | ForEach-Object { Get-ChildItem -Path $_ -Recurse -Depth 5 -Filter 'commit.md' -ErrorAction SilentlyContinue } | Where-Object { $_.FullName -match 'c-project-commit[\\/]references[\\/]commit\.md$' } | Select-Object -First 1 -ExpandProperty FullName
+@('.', $HOME) | % { gci $_ -R -Depth 5 -Filter commit.md -EA 0 } | ? { $_.FullName -match 'c-project-commit[\\/]references[\\/]commit\.md$' } | select -First 1 -Exp FullName
 ```
 
 Call `readFile` on the result. If not found, STOP and tell the user.
