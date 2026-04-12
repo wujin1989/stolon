@@ -101,17 +101,12 @@ void netkit_timer_close(
         timer->active = false;
     }
 
-    /*
-     * If called from inside _timer_fire (in_dispatch == true), defer
-     * the free — _timer_fire will finalize after the callback returns.
-     */
-    if (!timer->base.in_dispatch) {
-        if (cb) {
-            cb(timer, data);
-        }
-        _loop_handle_unregister(timer->base.loop);
-        free(timer);
+    /* Timers have no pending IOCP ops, so close immediately. */
+    if (cb) {
+        cb(timer, data);
     }
+    _loop_handle_unregister(timer->base.loop);
+    free(timer);
 }
 
 void _timer_fire(netkit_timer_t* timer) {
@@ -119,32 +114,13 @@ void _timer_fire(netkit_timer_t* timer) {
         return;
     }
 
-    /*
-     * Mark in_dispatch so that netkit_timer_close (if called from the
-     * user callback) defers the free — we still need to access the
-     * timer struct after the callback returns.
-     */
-    timer->base.in_dispatch = true;
-
     /* Invoke user callback. */
     if (timer->cb) {
         timer->cb(timer, timer->user_data);
     }
 
-    timer->base.in_dispatch = false;
-
-    /* If closed during callback, finalize now. */
-    if (timer->base.closing) {
-        if (timer->base.close_cb) {
-            timer->base.close_cb(timer, timer->base.close_data);
-        }
-        _loop_handle_unregister(timer->base.loop);
-        free(timer);
-        return;
-    }
-
-    /* Re-schedule if repeating. */
-    if (timer->repeat_ms > 0) {
+    /* Re-schedule if repeating and not closed during callback. */
+    if (timer->repeat_ms > 0 && !timer->base.closing) {
         uint64_t expiry = GetTickCount64() + timer->repeat_ms;
         if (_heap_insert(&timer->base.loop->timers, expiry, timer) != 0) {
             timer->active = false;
