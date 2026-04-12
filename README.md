@@ -42,17 +42,27 @@ stolon/
 
 ## Skills
 
-| Name | Description |
-|------|-------------|
-| [c-project-init](skills/c-project-init/) | Scaffold a new C project (library or application) |
-| [c-project-build](skills/c-project-build/) | Build, test, sanitizer, and coverage workflow |
-| [c-project-debug](skills/c-project-debug/) | Three-tier debugging: sanitizers, batch debugger, log-based fallback |
-| [c-project-commit](skills/c-project-commit/) | Pre-commit validation and conventional commit format |
-| [c-project-style](skills/c-project-style/) | Cross-platform C11 code style reference (naming, layout, memory, tests) |
+| Name | Reference | Trigger |
+|------|-----------|---------|
+| [c-project-init](skills/c-project-init/) | setup.md | Scaffold a new C project |
+| [c-project-build](skills/c-project-build/) | build.md | Build, test, sanitizer, coverage |
+| [c-project-debug](skills/c-project-debug/) | debug.md | Crash, segfault, hang investigation |
+| [c-project-commit](skills/c-project-commit/) | commit.md | Stage, commit, push |
+| [c-project-style](skills/c-project-style/) | style.md | Write or review .c/.h files |
+
+## Architecture
+
+Each SKILL.md is a thin gate — three sections only:
+
+1. **description** (YAML frontmatter) — CSO trigger keywords for skill discovery
+2. **When NOT to Use** — cross-references to sibling skills for routing
+3. **STOP** — forces the agent to locate and `readFile` the heavy reference (`references/*.md`) before any action
+
+All domain knowledge lives in the reference files, not in SKILL.md. This keeps SKILL.md under 200 tokens while the references can be 600+ lines.
 
 ## Usage
 
-Copy `skills/` into your project's skill directory (e.g. `.kiro/skills/`). Skills are self-contained and independent of each other.
+Copy `skills/` into your agent's skill directory (e.g. `~/.kiro/skills/`, `~/.claude/skills/`). Skills are self-contained and independent of each other.
 
 ## License
 
