@@ -2,7 +2,7 @@
 
 ## Overview
 
-This skill drives the commit/push cycle for C11 CMake projects. It enforces
+Reference guide for the commit/push cycle of C (C11+) CMake projects. It enforces
 consistent commit message formatting and careful staging.
 
 ## Staging

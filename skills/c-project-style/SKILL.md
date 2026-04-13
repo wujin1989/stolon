@@ -26,4 +26,9 @@ find . ~ -maxdepth 6 -path "*/c-project-style/references/style.md" -print -quit 
 @('.', $HOME) | % { gci $_ -R -Depth 5 -Filter style.md -EA 0 } | ? { $_.FullName -match 'c-project-style[\\/]references[\\/]style\.md$' } | select -First 1 -Exp FullName
 ```
 
+**Windows (cmd):**
+```
+where /R . style.md 2>nul & where /R "%USERPROFILE%" style.md 2>nul | findstr /I "c-project-style\\references\\style.md"
+```
+
 Call `readFile` on the result. If not found, STOP and tell the user.

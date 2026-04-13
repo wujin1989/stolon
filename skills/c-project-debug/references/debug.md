@@ -2,18 +2,20 @@
 
 ## Overview
 
-Non-interactive debugging for C11 CMake projects. Three-tier strategy applied on all platforms:
+Non-interactive debugging for C (C11+) CMake projects. Three-tier strategy applied on all platforms:
 
 1. **Sanitizer rebuild** — always try first, best diagnostics
 2. **Batch-mode debugger** — when sanitizer output isn't enough
 3. **Log-based debugging** — fallback when no debugger is installed
 
-All commands assume the project is built in Debug mode (`-DCMAKE_BUILD_TYPE=Debug`) with test binaries at `out/test-{module}`.
+All commands assume the project is built in Debug mode (`--config Debug` with Ninja Multi-Config) with test binaries at `out/Debug/test-{module}` (Windows) or `out/Debug/test-{module}` (Unix).
 
 Placeholders:
 - `{name}` — lowercase project name from `CMakeLists.txt`
 - `{NAME}` — uppercase form
 - `{module}` — test module name (e.g. `tcp`, `list`, `udp`)
+
+All commands below use `out` as the default build directory; substitute the actual directory if different.
 
 ## Prerequisites
 
@@ -38,6 +40,8 @@ If the test segfaults without hitting an ASSERT, ctest will show the signal. Eit
 - Which test function was running (the last `printf` or the abort message)
 - The signal: SIGSEGV (null/bad pointer), SIGABRT (assertion/abort), SIGBUS (alignment)
 
+**Binary paths:** With Ninja Multi-Config, test binaries are at `out/Debug/test-{module}` (or `out\Debug\test-{module}.exe` on Windows).
+
 ## Step 1: Sanitizer Rebuild (All Platforms — Always Try First)
 
 Sanitizers instrument the binary at compile time and produce detailed diagnostics at runtime. They catch bugs that debugger backtraces miss (use-after-free, buffer overflow, undefined behavior).
@@ -52,25 +56,24 @@ Delete `out/` and reconfigure:
 
 ```bash
 rm -rf out
-cmake -B out -G Ninja \
-  -DCMAKE_BUILD_TYPE=Debug \
+cmake -B out -G "Ninja Multi-Config" \
   -D{NAME}_ENABLE_TESTING=ON \
   -D{NAME}_ENABLE_ASAN=ON \
   -D{NAME}_ENABLE_UBSAN=ON
-cmake --build out -j $(nproc)
+cmake --build out --config Debug -j $(nproc)
 ctest --test-dir out -C Debug -R {module} --output-on-failure
 ```
 
 #### Windows
 
-```bat
-rmdir /s /q out
-cmake -B out -G Ninja -DCMAKE_BUILD_TYPE=Debug -D{NAME}_ENABLE_TESTING=ON -D{NAME}_ENABLE_ASAN=ON
-cmake --build out -j %NUMBER_OF_PROCESSORS%
-ctest --test-dir out -C Debug -R {module} --output-on-failure
-```
+Use the `cmd /c` + `vcvarsall.bat` pattern from c-project-build. MSVC supports ASAN only (no UBSAN/TSAN).
 
-**Windows note:** MSVC supports `/fsanitize=address` (ASAN) only. UBSAN and TSAN are NOT available on MSVC. The project's CMake handles this — just enable the option and rebuild.
+```powershell
+if (Test-Path out) { Remove-Item -Recurse -Force out }
+cmd /c '"{vcvarsall}" x64 >nul 2>&1 && cmake -B out -G "Ninja Multi-Config" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -D{NAME}_ENABLE_TESTING=ON -D{NAME}_ENABLE_ASAN=ON'
+cmd /c '"{vcvarsall}" x64 >nul 2>&1 && cmake --build out --config Debug -j %NUMBER_OF_PROCESSORS%'
+cmd /c '"{vcvarsall}" x64 >nul 2>&1 && ctest --test-dir out -C Debug -R {module} --output-on-failure'
+```
 
 ### What sanitizers catch
 
@@ -117,7 +120,7 @@ Use when sanitizer output isn't sufficient — e.g. you know WHERE the crash is 
 #### Basic backtrace
 
 ```bat
-cdb -g -G -c "kb;q" out\test-{module}.exe
+cdb -g -G -c "kb;q" out\Debug\test-{module}.exe
 ```
 
 - `-g` — ignore initial breakpoint (run immediately)
@@ -128,7 +131,7 @@ cdb -g -G -c "kb;q" out\test-{module}.exe
 #### With local variables
 
 ```bat
-cdb -g -G -c "kP;q" out\test-{module}.exe
+cdb -g -G -c "kP;q" out\Debug\test-{module}.exe
 ```
 
 - `kP` — backtrace with full parameter and local variable values
@@ -136,7 +139,7 @@ cdb -g -G -c "kP;q" out\test-{module}.exe
 #### Inspect specific variable at breakpoint
 
 ```bat
-cdb -g -G -c "bp {module}!{function_name};g;dv;kb;q" out\test-{module}.exe
+cdb -g -G -c "bp {module}!{function_name};g;dv;kb;q" out\Debug\test-{module}.exe
 ```
 
 - `bp` — set breakpoint
@@ -147,7 +150,7 @@ cdb -g -G -c "bp {module}!{function_name};g;dv;kb;q" out\test-{module}.exe
 #### Analyze crash automatically
 
 ```bat
-cdb -g -G -c "!analyze -v;q" out\test-{module}.exe
+cdb -g -G -c "!analyze -v;q" out\Debug\test-{module}.exe
 ```
 
 - `!analyze -v` — automatic crash analysis with verbose output (best single command for crash diagnosis)
@@ -157,7 +160,7 @@ cdb -g -G -c "!analyze -v;q" out\test-{module}.exe
 #### Basic backtrace
 
 ```bash
-gdb -batch -ex run -ex "bt full" out/test-{module}
+gdb -batch -ex run -ex "bt full" out/Debug/test-{module}
 ```
 
 - `run` — starts the program; GDB stops on crash signal
@@ -166,7 +169,7 @@ gdb -batch -ex run -ex "bt full" out/test-{module}
 #### With registers and faulting instruction
 
 ```bash
-gdb -batch -ex run -ex "info registers" -ex "x/i \$pc" -ex "bt full" out/test-{module}
+gdb -batch -ex run -ex "info registers" -ex "x/i \$pc" -ex "bt full" out/Debug/test-{module}
 ```
 
 - `info registers` — shows which register held the bad address
@@ -182,7 +185,7 @@ gdb -batch \
   -ex "print {variable}" \
   -ex continue \
   -ex "bt full" \
-  out/test-{module}
+  out/Debug/test-{module}
 ```
 
 #### Watchpoint (catch when a value changes)
@@ -194,13 +197,13 @@ gdb -batch \
   -ex "watch {variable}" \
   -ex continue \
   -ex "bt full" \
-  out/test-{module}
+  out/Debug/test-{module}
 ```
 
 #### Pass arguments
 
 ```bash
-gdb -batch -ex run --args out/test-{module} arg1 arg2
+gdb -batch -ex run --args out/Debug/test-{module} arg1 arg2
 ```
 
 ### 2C. LLDB — macOS batch backtrace
@@ -208,7 +211,7 @@ gdb -batch -ex run --args out/test-{module} arg1 arg2
 #### Basic backtrace
 
 ```bash
-lldb -b -o run -o "bt all" out/test-{module}
+lldb -b -o run -o "bt all" out/Debug/test-{module}
 ```
 
 - `-b` — batch mode
@@ -217,7 +220,7 @@ lldb -b -o run -o "bt all" out/test-{module}
 #### With local variables
 
 ```bash
-lldb -b -o run -o "bt all" -o "frame variable" out/test-{module}
+lldb -b -o run -o "bt all" -o "frame variable" out/Debug/test-{module}
 ```
 
 #### Inspect at breakpoint
@@ -229,7 +232,7 @@ lldb -b \
   -o "frame variable" \
   -o continue \
   -o "bt all" \
-  out/test-{module}
+  out/Debug/test-{module}
 ```
 
 ### 2D. Interpreting backtraces
@@ -246,7 +249,7 @@ If a test hangs instead of crashing:
 #### Unix: attach to running process
 
 ```bash
-out/test-{module} &
+out/Debug/test-{module} &
 PID=$!
 sleep 5
 gdb -batch -ex "thread apply all bt full" -p $PID
@@ -256,7 +259,7 @@ kill $PID
 Or with lldb on macOS:
 
 ```bash
-out/test-{module} &
+out/Debug/test-{module} &
 PID=$!
 sleep 5
 lldb -b -o "bt all" -p $PID
@@ -266,7 +269,7 @@ kill $PID
 #### Windows: attach with cdb
 
 ```bat
-start /B out\test-{module}.exe
+start /B out\Debug\test-{module}.exe
 timeout /t 5 >nul
 :: Find PID with tasklist, then:
 cdb -p {PID} -c "~*kb;q"
@@ -277,8 +280,8 @@ taskkill /F /PID {PID}
 
 ```bash
 ulimit -c unlimited
-timeout 10 out/test-{module}
-gdb -batch -ex "bt full" out/test-{module} core
+timeout 10 out/Debug/test-{module}
+gdb -batch -ex "bt full" out/Debug/test-{module} core
 ```
 
 #### Common hang causes in event-loop code

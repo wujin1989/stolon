@@ -27,6 +27,11 @@ find . ~ -maxdepth 6 -path "*/c-project-debug/references/debug.md" -print -quit 
 @('.', $HOME) | % { gci $_ -R -Depth 5 -Filter debug.md -EA 0 } | ? { $_.FullName -match 'c-project-debug[\\/]references[\\/]debug\.md$' } | select -First 1 -Exp FullName
 ```
 
+**Windows (cmd):**
+```
+where /R . debug.md 2>nul & where /R "%USERPROFILE%" debug.md 2>nul | findstr /I "c-project-debug\\references\\debug.md"
+```
+
 Call `readFile` on the result. If not found, STOP and tell the user.
 
 Follow the three-tier strategy in `debug.md` (reproduce → sanitizers → debugger). No shortcuts.

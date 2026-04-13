@@ -25,8 +25,13 @@ find . ~ -maxdepth 6 -path "*/c-project-build/references/build.md" -print -quit 
 @('.', $HOME) | % { gci $_ -R -Depth 5 -Filter build.md -EA 0 } | ? { $_.FullName -match 'c-project-build[\\/]references[\\/]build\.md$' } | select -First 1 -Exp FullName
 ```
 
+**Windows (cmd):**
+```
+where /R . build.md 2>nul & where /R "%USERPROFILE%" build.md 2>nul | findstr /I "c-project-build\\references\\build.md"
+```
+
 Call `readFile` on the result. If not found, STOP and tell the user.
 
-Follow the **Inputs — MANDATORY Pre-Flight** section in `build.md` before running any cmake command. No exceptions.
+Follow the **Inputs — MANDATORY Checks Before Build** section in `build.md` before running any cmake command. No exceptions.
 
 **Rebuild only?** If the user explicitly says they only changed `.c`/`.h` files AND you have completed a full configure in this session, skip confirmation and run `cmake --build out --config {build_type}` directly.

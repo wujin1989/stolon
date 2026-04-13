@@ -24,4 +24,9 @@ find . ~ -maxdepth 6 -path "*/c-project-commit/references/commit.md" -print -qui
 @('.', $HOME) | % { gci $_ -R -Depth 5 -Filter commit.md -EA 0 } | ? { $_.FullName -match 'c-project-commit[\\/]references[\\/]commit\.md$' } | select -First 1 -Exp FullName
 ```
 
+**Windows (cmd):**
+```
+where /R . commit.md 2>nul & where /R "%USERPROFILE%" commit.md 2>nul | findstr /I "c-project-commit\\references\\commit.md"
+```
+
 Call `readFile` on the result. If not found, STOP and tell the user.
