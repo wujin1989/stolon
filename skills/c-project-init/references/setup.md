@@ -339,13 +339,29 @@ cmake -B out -D{NAME}_ENABLE_ASAN=ON
 cmake --build out
 \```
 
-| Sanitizer | What it catches | Option |
-|-----------|----------------|--------|
-| ASAN | Buffer overflow, use-after-free, memory leaks | `-D{NAME}_ENABLE_ASAN=ON` |
-| TSAN | Data races, deadlocks | `-D{NAME}_ENABLE_TSAN=ON` |
-| UBSAN | Undefined behavior | `-D{NAME}_ENABLE_UBSAN=ON` |
+| Sanitizer | What it catches | Option | Windows |
+|-----------|----------------|--------|---------|
+| ASAN | Buffer overflow, use-after-free, memory leaks | `-D{NAME}_ENABLE_ASAN=ON` | Yes |
+| TSAN | Data races, deadlocks | `-D{NAME}_ENABLE_TSAN=ON` | No |
+| UBSAN | Undefined behavior | `-D{NAME}_ENABLE_UBSAN=ON` | No |
 
 ASAN and TSAN cannot be enabled simultaneously.
+
+### Windows ASAN Note
+
+When running ASAN-instrumented binaries on Windows, always use a Developer Command Prompt (e.g., x64 Native Tools Command Prompt for VS 2022). This environment sets up the runtime paths for `clang_rt.asan_dynamic-x86_64.dll`. Running from a plain terminal will fail with a missing DLL error.
+
+### TSAN on Linux
+
+TSAN requires GCC 13+ / glibc 2.36+ to correctly intercept C11 `thrd_create`. On older toolchains, glibc's `thrd_create` calls `pthread_create` via an internal direct call that bypasses TSAN's interception.
+
+When running under WSL, TSAN may report `FATAL: ThreadSanitizer: unexpected memory mapping` due to WSL's non-standard ASLR behavior. Use `setarch -R` to disable ASLR:
+
+\```bash
+setarch -R ctest --test-dir out --output-on-failure
+\```
+
+This is not needed on native Linux or macOS.
 
 ## Code Coverage
 
