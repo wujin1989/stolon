@@ -17,4 +17,8 @@ Read `references/build.md` in this skill's base directory. If not found, STOP an
 
 Follow the **Inputs — MANDATORY Checks Before Build** section in `build.md` before running any cmake command. No exceptions.
 
-**Rebuild only?** If the user explicitly says they only changed `.c`/`.h` files AND you have completed a full configure in this session, skip confirmation and run `cmake --build out --config {build_type}` directly.
+**Skip confirmation when:**
+
+1. **Rebuild only** — the user only changed `.c`/`.h` files AND a full configure was completed in this session. Run `cmake --build out --config {build_type}` directly.
+2. **Re-run tests** — a build already succeeded in this session and the user wants to run tests again (e.g. after a code fix). Run `ctest --test-dir out -C {build_type} ...` directly.
+3. **Iterative fix cycle** — the user is in a fix → rebuild → test loop within the same session. Only rebuild + test; do not re-ask build type or feature flags.

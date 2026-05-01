@@ -50,9 +50,13 @@ Sanitizers instrument the binary at compile time and produce detailed diagnostic
 
 ### ASAN + UBSAN (recommended combo)
 
-Delete `out/` and reconfigure:
+Delete `out/` and reconfigure. Follow the **Sanitizers** section in c-project-build's `build.md` for the full configure/build/test flow. The key flags are:
 
-#### Unix
+- `-D{NAME}_ENABLE_TESTING=ON`
+- `-D{NAME}_ENABLE_ASAN=ON`
+- `-D{NAME}_ENABLE_UBSAN=ON` (Unix only — MSVC does not support UBSAN)
+
+Quick reference (Unix):
 
 ```bash
 rm -rf out
@@ -64,16 +68,7 @@ cmake --build out --config Debug -j $(nproc)
 ctest --test-dir out -C Debug -R {module} --output-on-failure
 ```
 
-#### Windows
-
-Use the `cmd /c` + `vcvarsall.bat` pattern from c-project-build. MSVC supports ASAN only (no UBSAN/TSAN).
-
-```powershell
-if (Test-Path out) { Remove-Item -Recurse -Force out }
-cmd /c '"{vcvarsall}" x64 >nul 2>&1 && cmake -B out -G "Ninja Multi-Config" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -D{NAME}_ENABLE_TESTING=ON -D{NAME}_ENABLE_ASAN=ON'
-cmd /c '"{vcvarsall}" x64 >nul 2>&1 && cmake --build out --config Debug -j %NUMBER_OF_PROCESSORS%'
-cmd /c '"{vcvarsall}" x64 >nul 2>&1 && ctest --test-dir out -C Debug -R {module} --output-on-failure'
-```
+On Windows, use the `out/vcenv.cmd` wrapper described in c-project-build's `build.md` (Windows MSVC Environment Activation section). MSVC supports ASAN only.
 
 ### What sanitizers catch
 
