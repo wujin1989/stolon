@@ -69,7 +69,7 @@ include/
 src/
   <project>.c                                   library init/cleanup
   <project>-<module>.c                          single-file module implementations
-  <project>-<name>.h                            internal headers at src root
+  <name>.h / <name>.c                           cross-module internal utilities
   <module>/                                     multi-file module directories
     <project>-<module>-<sub>.c                  public implementation files
     <module>-<name>.c                           internal implementation files
@@ -87,7 +87,7 @@ tests/
   test-<module>.c                               one test file per module
 
 examples/
-  <topic>-<pattern>-<role>.c                    example programs
+  <topic>[-<pattern>]-<role>.c                  example programs
 ```
 
 ### 6.2 Public vs Internal Distinction
@@ -117,7 +117,20 @@ Headers are shared; implementations are per-platform. One `.c` per module per pl
 ### 6.4 Test and Example Files
 
 - Test: `test-<module>.c`. One test file per module. Multi-file modules have a single test file.
-- Example: `<topic>-<pattern>-<role>.c`. E.g. `tcp-echo-client.c`, `http-static-server.c`.
+- Example: `<topic>-<pattern>-<role>.c`. When no distinct pattern exists, the middle segment may be omitted: `<topic>-<role>.c`. E.g. `tcp-echo-client.c`, `http-static-server.c`, `serial-terminal.c`.
+
+Example files must include a description block immediately after the license header:
+
+```c
+/**
+ * <Title>
+ *
+ * <Brief description of what the example does.>
+ *
+ * Usage: <executable-name>
+ * Pair:  <companion program, if any>
+ */
+```
 
 
 ## 7. Symbol Naming Conventions
@@ -167,7 +180,13 @@ Three segments: `<module>`, `<subject>`, `<event>`, with `_cb` suffix. Subject n
 
 ### 7.5 Enums
 
-Tags use `_e` suffix, typedefs use `_t` suffix. Values are `<PROJECT>_<MODULE>_<NAME>` in UPPER_SNAKE_CASE. Internal (file-scope) enums omit the project prefix.
+Public enums: tags use `_e` suffix, typedefs use `_t` suffix. Values are `<PROJECT>_<MODULE>_<NAME>` in UPPER_SNAKE_CASE.
+
+Internal (file-scope) enums omit the project prefix. Values use `<MODULE>_<NAME>` in UPPER_SNAKE_CASE. Anonymous tags are allowed (same as internal structs):
+
+```c
+typedef enum { TCP_STATE_CONNECTING, TCP_STATE_CONNECTED, ... } _tcp_state_t;
+```
 
 ### 7.6 Structs
 
@@ -196,6 +215,30 @@ Function names use functional sub-categories, not file names. Do not put file-or
 | Static callback | `_<module>_<subcategory>_<subject>_<event>_cb` | `_http_cli_conn_read_cb` |
 
 Sub-categories are functional groupings (`cli`, `srv`, `url`, `header`), not file groupings (`common`, `client`).
+
+### 7.8 Example and Test Static Functions
+
+The rules in 7.3/7.4 apply to library source code. Examples and tests use simplified naming:
+
+**Examples** -- single-file programs with one clear topic. No module prefix needed:
+
+```c
+static void _on_connect(xylem_tcp_conn_t* conn) { ... }
+static void _on_read(xylem_tcp_conn_t* conn, void* data, size_t len) { ... }
+static void _on_close(xylem_tcp_conn_t* conn, int err, const char* errmsg) { ... }
+```
+
+Pattern: `_on_<event>` for callbacks, `_<action>` for helpers.
+
+**Tests** -- all functions belong to the same module, so the module prefix adds no information. Use role/scenario prefixes instead:
+
+| Prefix | Meaning | Example |
+|--------|---------|---------|
+| `_srv_` | Server-side callback | `_srv_accept_cb`, `_srv_read_one_cb` |
+| `_cli_` | Client-side callback | `_cli_send_8bytes_cb` |
+| `_<scenario>_` | Test-case specific | `_hb_reset_send_cb`, `_xt_send_worker` |
+
+Pattern: `_<role/scenario>_<action>[_cb]`. Test functions themselves use `test_<case>` (see Section 21).
 
 
 ## 8. Types
@@ -370,16 +413,21 @@ static inline void _heap_swap_node(...) { ... }
 uint8_t buf[len + 1];
 ```
 
-### 14.5 Struct Field Comments
+### 14.5 Struct Field and Enum Value Comments
 
-Trailing `/**< ... */` for inline Doxygen on struct fields in public headers:
+Trailing `/*< ... */` for inline field/value documentation in public headers:
 
 ```c
 typedef struct <project>_opts_s {
-    int      mtu;           /**< MTU size, 0 for default (1400). */
-    bool     stream;        /**< true: byte-stream mode. */
-    uint64_t timeout_ms;    /**< Timeout in ms, 0 to disable. */
+    int      mtu;           /*< MTU size, 0 for default (1400). */
+    bool     stream;        /*< true: byte-stream mode. */
+    uint64_t timeout_ms;    /*< Timeout in ms, 0 to disable. */
 } <project>_opts_t;
+
+typedef enum <project>_foo_type_e {
+    <PROJECT>_FOO_NONE,   /*< No action. */
+    <PROJECT>_FOO_READ,   /*< Read operation. */
+} <project>_foo_type_t;
 ```
 
 ## 15. Unused Parameters
