@@ -13,24 +13,7 @@ code style review → c-project-style, scaffolding → c-project-init, committin
 
 ## STOP — Read Reference Before ANY Build Command
 
-Locate and read `c-project-build/references/build.md` under the current working directory and `$HOME`:
-
-**Unix:**
-```
-find . ~ -maxdepth 6 -path "*/c-project-build/references/build.md" -print -quit 2>/dev/null
-```
-
-**Windows (PowerShell):**
-```
-@('.', $HOME) | % { gci $_ -R -Depth 5 -Filter build.md -EA 0 } | ? { $_.FullName -match 'c-project-build[\\/]references[\\/]build\.md$' } | select -First 1 -Exp FullName
-```
-
-**Windows (cmd):**
-```
-where /R . build.md 2>nul & where /R "%USERPROFILE%" build.md 2>nul | findstr /I "c-project-build\\references\\build.md"
-```
-
-Call `readFile` on the result. If not found, STOP and tell the user.
+Read `references/build.md` in this skill's base directory. If not found, STOP and tell the user.
 
 Follow the **Inputs — MANDATORY Checks Before Build** section in `build.md` before running any cmake command. No exceptions.
 

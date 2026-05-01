@@ -46,32 +46,61 @@ All platforms use Ninja Multi-Config. Build type is selected at build time via `
 
 ### Windows MSVC Environment Activation
 
-On Windows, Ninja and MSVC compiler require the Visual Studio developer environment. The reliable approach is to wrap **every** cmake/ctest command in a `cmd /c` call that first activates the environment:
+On Windows, Ninja and MSVC compiler require the Visual Studio developer environment.
 
 **Step 1 — Locate `vcvarsall.bat`:**
 
-```powershell
-$vsPath = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath 2>$null
-# vcvarsall.bat is at: "$vsPath\VC\Auxiliary\Build\vcvarsall.bat"
+Run `vswhere.exe` to find the VS installation path:
+
+```
+"{ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath
 ```
 
-Cache the full path to `vcvarsall.bat` for the session. If `vswhere.exe` is not found, tell the user to install Visual Studio Build Tools.
+The `vcvarsall.bat` is at: `{installationPath}\VC\Auxiliary\Build\vcvarsall.bat`
 
-**Step 2 — Run cmake commands via `cmd /c`:**
+If `vswhere.exe` is not found, tell the user to install Visual Studio Build Tools.
 
-All Windows cmake/ctest commands in this document MUST be executed using this pattern:
+**Step 2 — Generate `out/vcenv.cmd` wrapper (one-time):**
 
-```powershell
-cmd /c '"{vcvarsall}" x64 >nul 2>&1 && {cmake_command}'
+Create the file `out/vcenv.cmd` with this content (substitute the actual vcvarsall path):
+
+```bat
+@echo off
+call "{vcvarsall}" x64 >nul 2>&1
+%*
 ```
 
-Where `{vcvarsall}` is the full path from Step 1. Example:
+Example:
 
-```powershell
-cmd /c '"C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" x64 >nul 2>&1 && cmake -B out -G "Ninja Multi-Config" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
+```bat
+@echo off
+call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat" x64 >nul 2>&1
+%*
 ```
 
-**Important:** The `cmd /c` wrapper causes PowerShell to report exit code -1 even on success. Do NOT treat exit code -1 as a build failure. Instead, check the command output for actual errors (e.g. `FAILED:`, `error C`, `error LNK`, `CMake Error`).
+Generate this file once per configure. The `out/` directory must exist first (create it if needed before writing).
+
+**Step 3 — Run all cmake/ctest commands through the wrapper:**
+
+All Windows cmake/ctest commands in this document MUST be executed via `out/vcenv.cmd`:
+
+| Shell | Pattern |
+|-------|---------|
+| bash | `cmd //c "out\\vcenv.cmd {cmake_command}"` |
+| PowerShell | `& cmd /c "out\vcenv.cmd {cmake_command}"` |
+| cmd | `out\vcenv.cmd {cmake_command}` |
+
+Example (bash):
+```bash
+cmd //c "out\\vcenv.cmd cmake -B out -G \"Ninja Multi-Config\" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+```
+
+Example (PowerShell):
+```powershell
+& cmd /c "out\vcenv.cmd cmake -B out -G `"Ninja Multi-Config`" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+```
+
+The exit code comes directly from cmake/ctest — no spurious -1 issue.
 
 ## compile_commands.json
 
@@ -80,7 +109,8 @@ After every successful configure or build, copy `compile_commands.json` from the
 | Platform | Command |
 |----------|---------|
 | Unix | `cp -f out/compile_commands.json compile_commands.json 2>/dev/null \|\| true` |
-| Windows | `Copy-Item -Force out\compile_commands.json compile_commands.json -ErrorAction SilentlyContinue` |
+| Windows (bash) | `cp -f out/compile_commands.json compile_commands.json 2>/dev/null \|\| true` |
+| Windows (PowerShell) | `Copy-Item -Force out\compile_commands.json compile_commands.json -ErrorAction SilentlyContinue` |
 
 This file should be in `.gitignore`.
 
@@ -91,10 +121,10 @@ This file should be in `.gitignore`.
 **MANDATORY: Always delete `out/` before configuring.** Stale cache can produce incorrect builds.
 
 ```bash
-rm -rf out   # Unix
+rm -rf out   # Unix / Windows (bash)
 ```
 ```powershell
-if (Test-Path out) { Remove-Item -Recurse -Force out }   # Windows
+if (Test-Path out) { Remove-Item -Recurse -Force out }   # Windows (PowerShell)
 ```
 
 #### Unix (Linux / macOS)
@@ -107,10 +137,15 @@ cmake -B out -G "Ninja Multi-Config" \
 
 #### Windows (MSVC + Ninja Multi-Config)
 
-Use the `cmd /c` + `vcvarsall.bat` pattern described in **Windows MSVC Environment Activation**. All flags go on a single line inside the quoted command string:
+Use `out/vcenv.cmd` as described in **Windows MSVC Environment Activation**:
 
+```bash
+# bash
+cmd //c "out\\vcenv.cmd cmake -B out -G \"Ninja Multi-Config\" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON [-D{NAME}_ENABLE_TESTING=ON] [-D{NAME}_ENABLE_{FEATURE}=ON]"
+```
 ```powershell
-cmd /c '"{vcvarsall}" x64 >nul 2>&1 && cmake -B out -G "Ninja Multi-Config" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON [-D{NAME}_ENABLE_TESTING=ON] [-D{NAME}_ENABLE_{FEATURE}=ON]'
+# PowerShell
+& cmd /c "out\vcenv.cmd cmake -B out -G `"Ninja Multi-Config`" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON [-D{NAME}_ENABLE_TESTING=ON] [-D{NAME}_ENABLE_{FEATURE}=ON]"
 ```
 
 ### Build
@@ -128,10 +163,15 @@ strip out/{build_type}/{target}      # shared lib / executable
 strip -g out/{build_type}/lib{name}.a  # static lib: strip debug only, keep symbols
 ```
 
-Windows (via `cmd /c` wrapper):
+Windows (via `out/vcenv.cmd`):
 
+```bash
+# bash
+cmd //c "out\\vcenv.cmd cmake --build out --config {build_type} -j {ncpu}"
+```
 ```powershell
-cmd /c '"{vcvarsall}" x64 >nul 2>&1 && cmake --build out --config {build_type} -j {ncpu}'
+# PowerShell
+& cmd /c "out\vcenv.cmd cmake --build out --config {build_type} -j {ncpu}"
 ```
 
 Detect CPU count:
@@ -148,19 +188,29 @@ Unix:
 ctest --test-dir out -C {build_type} --output-on-failure
 ```
 
-Windows (via `cmd /c` wrapper):
+Windows (via `out/vcenv.cmd`):
 
+```bash
+# bash
+cmd //c "out\\vcenv.cmd ctest --test-dir out -C {build_type} --output-on-failure"
+```
 ```powershell
-cmd /c '"{vcvarsall}" x64 >nul 2>&1 && ctest --test-dir out -C {build_type} --output-on-failure'
+# PowerShell
+& cmd /c "out\vcenv.cmd ctest --test-dir out -C {build_type} --output-on-failure"
 ```
 
-Run a single test module (same pattern, add `-R {module}`):
+Run a single test module (add `-R {module}`):
 
 ```bash
 ctest --test-dir out -C {build_type} -R {module} --output-on-failure        # Unix
 ```
+```bash
+# Windows (bash)
+cmd //c "out\\vcenv.cmd ctest --test-dir out -C {build_type} -R {module} --output-on-failure"
+```
 ```powershell
-cmd /c '"{vcvarsall}" x64 >nul 2>&1 && ctest --test-dir out -C {build_type} -R {module} --output-on-failure'   # Windows
+# Windows (PowerShell)
+& cmd /c "out\vcenv.cmd ctest --test-dir out -C {build_type} -R {module} --output-on-failure"
 ```
 
 ### Sanitizers
@@ -178,13 +228,19 @@ cmake --build out --config Debug -j {ncpu}
 ctest --test-dir out -C Debug --output-on-failure
 ```
 
-Windows (via `cmd /c` wrapper):
+Windows (via `out/vcenv.cmd`):
 
+```bash
+# bash
+cmd //c "out\\vcenv.cmd cmake -B out -G \"Ninja Multi-Config\" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -D{NAME}_ENABLE_TESTING=ON -D{NAME}_ENABLE_ASAN=ON"
+cmd //c "out\\vcenv.cmd cmake --build out --config Debug -j {ncpu}"
+cmd //c "out\\vcenv.cmd ctest --test-dir out -C Debug --output-on-failure"
+```
 ```powershell
-cmd /c '"{vcvarsall}" x64 >nul 2>&1 && cmake -B out -G "Ninja Multi-Config" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -D{NAME}_ENABLE_TESTING=ON -D{NAME}_ENABLE_ASAN=ON'
-
-cmd /c '"{vcvarsall}" x64 >nul 2>&1 && cmake --build out --config Debug -j {ncpu}'
-cmd /c '"{vcvarsall}" x64 >nul 2>&1 && ctest --test-dir out -C Debug --output-on-failure'
+# PowerShell
+& cmd /c "out\vcenv.cmd cmake -B out -G `"Ninja Multi-Config`" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -D{NAME}_ENABLE_TESTING=ON -D{NAME}_ENABLE_ASAN=ON"
+& cmd /c "out\vcenv.cmd cmake --build out --config Debug -j {ncpu}"
+& cmd /c "out\vcenv.cmd ctest --test-dir out -C Debug --output-on-failure"
 ```
 
 | Sanitizer | Option | Catches |
@@ -214,11 +270,17 @@ Requires `lcov` and `genhtml`. HTML report at `out/coverage/html/index.html`.
 
 Windows coverage uses OpenCppCoverage (runtime instrumentation, no compiler flags needed). The `{NAME}_ENABLE_COVERAGE=ON` flag is needed so CMake creates the `coverage` target.
 
+```bash
+# bash
+cmd //c "out\\vcenv.cmd cmake -B out -G \"Ninja Multi-Config\" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -D{NAME}_ENABLE_TESTING=ON -D{NAME}_ENABLE_COVERAGE=ON"
+cmd //c "out\\vcenv.cmd cmake --build out --config Debug -j 8"
+cmd //c "out\\vcenv.cmd cmake --build out --config Debug --target coverage"
+```
 ```powershell
-cmd /c '"{vcvarsall}" x64 >nul 2>&1 && cmake -B out -G "Ninja Multi-Config" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -D{NAME}_ENABLE_TESTING=ON -D{NAME}_ENABLE_COVERAGE=ON'
-
-cmd /c '"{vcvarsall}" x64 >nul 2>&1 && cmake --build out --config Debug -j 8'
-cmd /c '"{vcvarsall}" x64 >nul 2>&1 && cmake --build out --config Debug --target coverage'
+# PowerShell
+& cmd /c "out\vcenv.cmd cmake -B out -G `"Ninja Multi-Config`" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -D{NAME}_ENABLE_TESTING=ON -D{NAME}_ENABLE_COVERAGE=ON"
+& cmd /c "out\vcenv.cmd cmake --build out --config Debug -j 8"
+& cmd /c "out\vcenv.cmd cmake --build out --config Debug --target coverage"
 ```
 
 HTML report at `out/coverage/index.html`.

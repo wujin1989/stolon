@@ -94,14 +94,10 @@ This opens the editor. Write the summary line, blank line, then body.
 
 ## Push
 
-```bash
-git push origin <branch>
-```
-
-If the remote branch does not exist yet:
+Always push to the **current branch**. Do NOT create new branches unless the user explicitly asks.
 
 ```bash
-git push -u origin <branch>
+git push origin HEAD
 ```
 
 ## Quick Reference
@@ -114,7 +110,7 @@ git diff
 git status
 git add -u
 
-# 2. Commit + push
+# 2. Commit + push (always current branch)
 git commit -m "feat(tcp): add write timeout support"
-git push origin main
+git push origin HEAD
 ```
