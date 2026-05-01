@@ -1,5 +1,29 @@
 # Project Setup
 
+## Contents
+
+1. [Prerequisites](#prerequisites)
+2. [Inputs](#inputs)
+3. [File Tree](#file-tree)
+4. [File Contents](#file-contents)
+   - [LICENSE](#license)
+   - [License Header Block](#license-header-block)
+   - [AUTHORS](#authors)
+   - [.clang-format](#clang-format)
+   - [.gitignore](#gitignore)
+   - [README.md](#readmemd)
+   - [cmake/{name}-utils.cmake](#cmakename-utilscmake)
+   - [docs/build.md](#docsbuildmd)
+   - [tests/assert.h](#testsasserth)
+   - [tests/CMakeLists.txt](#testscmakeliststxt)
+   - [include/{name}.h](#includenameh-library-only)
+   - [examples/CMakeLists.txt](#examplescmakeliststxt-library-only)
+   - [src/platform/](#srcplatformplatformh)
+   - [CMakeLists.txt — Library](#cmakeliststxt--library)
+   - [CMakeLists.txt — Application](#cmakeliststxt--application)
+   - [src/main.c](#srcmainc-application-only)
+5. [Verification](#verification)
+
 ## Prerequisites
 
 If the project root already contains a `CMakeLists.txt` with a valid `project()` call (no `{...}` placeholders), this setup is already done. Do not run it again.

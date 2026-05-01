@@ -2,6 +2,8 @@
 name: c-project-commit
 description: >
   Use when staging, committing, or pushing code changes in a C project.
+  Also use when amending commits, squashing, writing commit messages,
+  or any git add/commit/push operation in the project.
 ---
 
 # C Project Commit

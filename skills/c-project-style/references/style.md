@@ -2,6 +2,32 @@
 
 The placeholder `<project>` refers to the project name from the root `CMakeLists.txt` (lowercase); `<PROJECT>` is its uppercase form.
 
+## Contents
+
+1. [License Header](#1-license-header)
+2. [Language Standard](#2-language-standard)
+3. [Header Guards](#3-header-guards)
+4. [Extern Keyword](#4-extern-keyword)
+5. [Include Ordering](#5-include-ordering)
+6. [File Naming Conventions](#6-file-naming-conventions)
+7. [Symbol Naming Conventions](#7-symbol-naming-conventions)
+8. [Types](#8-types)
+9. [Opaque Structs](#9-opaque-structs)
+10. [Lifecycle Naming](#10-lifecycle-naming)
+11. [File Organization](#11-file-organization)
+12. [Platform Layer](#12-platform-layer)
+13. [Formatting](#13-formatting)
+14. [Comments](#14-comments)
+15. [Unused Parameters](#15-unused-parameters)
+16. [Memory Management](#16-memory-management)
+17. [Error Handling](#17-error-handling)
+18. [Restricted Functions](#18-restricted-functions)
+19. [Intrusive Data Structures](#19-intrusive-data-structures)
+20. [C11 Generic Selection](#20-c11-generic-selection)
+21. [Test Code](#21-test-code)
+22. [Adding Modules](#22-adding-modules)
+23. [Third-Party Code](#23-third-party-code)
+
 ## 1. License Header
 
 Every `.c` and `.h` file must start with the project license text as a `/** ... */` comment. Read the content from the project root `LICENSE` file. The opening `/**` sits on the same line as the first word. Each continuation line starts with ` *  ` (space-star-two spaces). The closing ` */` is on its own line.

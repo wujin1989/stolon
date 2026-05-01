@@ -100,6 +100,41 @@ Always push to the **current branch**. Do NOT create new branches unless the use
 git push origin HEAD
 ```
 
+## Amend and Fixup
+
+### Amend (modify last commit)
+
+Only amend commits that have NOT been pushed:
+
+```bash
+git add <files>
+git commit --amend
+```
+
+To change only the message (no file changes):
+
+```bash
+git commit --amend -m "<type>(<scope>): <new summary>"
+```
+
+### Fixup (squash into an earlier commit)
+
+For fixing a specific earlier unpushed commit:
+
+```bash
+git add <files>
+git commit --fixup=<sha>
+git rebase --autosquash main
+```
+
+### Rules
+
+| Rule | Detail |
+|------|--------|
+| Never amend pushed commits | Rewriting shared history breaks other collaborators |
+| Prefer new commit over amend | When in doubt, create a new commit — it's safer |
+| Fixup requires interactive rebase | `--autosquash` only works with rebase |
+
 ## Quick Reference
 
 Full cycle for a typical change:

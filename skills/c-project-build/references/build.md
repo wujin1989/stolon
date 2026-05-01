@@ -31,6 +31,8 @@ Sanitizer and coverage are **not** part of the standard checks. Only ask about t
 - "I'll enable TLS because it was on before" → STOP. Ask.
 - "User said compile, they just want a quick build" → STOP. Quick ≠ skip confirmation.
 
+**Exception:** These checks do NOT apply during iterative fix cycles (rebuild-only, re-run tests, or fix→rebuild→test loops). See the skip-confirmation rules in SKILL.md.
+
 ## Build Type
 
 | Build type | `--config` value | Use case |

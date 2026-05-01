@@ -2,7 +2,9 @@
 name: c-project-init
 description: >
   Use when creating a new C project from scratch, or when asked to scaffold,
-  init, or bootstrap a C library or application project with CMake.
+  init, or bootstrap a C library or application project with CMake. Also use
+  when the user says "new project", "start a project", or needs a complete
+  CMake + test + platform-layer skeleton generated.
 ---
 
 # C Project Init

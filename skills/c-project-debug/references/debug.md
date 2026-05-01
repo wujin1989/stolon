@@ -104,7 +104,7 @@ Use when sanitizer output isn't sufficient — e.g. you know WHERE the crash is 
 
 **If the debugger is not installed, guide the user to install it:**
 
-- **cdb (Windows):** Install "Debugging Tools for Windows" from the Windows SDK. Download from https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/ — during installation, select only "Debugging Tools for Windows". After install, `cdb.exe` is at `C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\cdb.exe`. Add to PATH or use full path.
+- **cdb (Windows):** Install "Debugging Tools for Windows" from the Windows SDK. Download from https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/ — during installation, select only "Debugging Tools for Windows". After install, locate `cdb.exe` with `where cdb` or `dir /s /b "C:\Program Files (x86)\Windows Kits" cdb.exe`. Add to PATH or use full path.
 - **gdb (Linux):** `sudo apt install gdb` (Debian/Ubuntu) or `sudo dnf install gdb` (Fedora/RHEL) or `sudo pacman -S gdb` (Arch)
 - **lldb (macOS):** `xcode-select --install` (comes with Xcode Command Line Tools)
 

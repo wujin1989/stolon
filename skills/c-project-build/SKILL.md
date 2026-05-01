@@ -3,6 +3,8 @@ name: c-project-build
 description: >
   Use when building, compiling, testing, or running coverage for a C project,
   or when build fails, sanitizer reports errors, or coverage needs generating.
+  Also use when configuring CMake, enabling sanitizers (ASAN/TSAN/UBSAN),
+  generating compile_commands.json, or any cmake/ctest command is needed.
 ---
 
 # C Project Build
