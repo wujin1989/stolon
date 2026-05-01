@@ -29,13 +29,18 @@ stolon/
 │           └── style.md        # C11 cross-platform code style guide
 ├── tests/
 │   ├── run_eval.py             # Universal eval runner
+│   ├── run_smoke.py            # Live smoke tests against real projects
+│   ├── run_integration.py      # Cross-skill handoff validation
+│   ├── run_regression.py       # Baseline diff against git ref
+│   ├── run_diff.py             # Quick baseline diff tool
 │   ├── README.md               # Eval harness documentation
 │   └── evals/
-│       ├── c-project-init/     # 5 prompts, 86 checks
-│       ├── c-project-build/    # 7 prompts, 31 checks
-│       ├── c-project-debug/
-│       ├── c-project-commit/   # 5 prompts, 29 checks
-│       └── c-project-style/    # 11 prompts, 38 checks
+│       ├── c-project-init/     # 5 prompts, 89 checks
+│       ├── c-project-build/    # 14 prompts, 53 checks
+│       ├── c-project-debug/    # 12 prompts, 53 checks
+│       ├── c-project-commit/   # 8 prompts, 46 checks
+│       ├── c-project-style/    # 13 prompts, 40 checks
+│       └── integration/        # 8 prompts, 23 checks
 ├── .gitignore
 └── LICENSE
 ```
@@ -47,7 +52,7 @@ stolon/
 | [c-project-init](skills/c-project-init/) | setup.md | Scaffold a new C project |
 | [c-project-build](skills/c-project-build/) | build.md | Build, test, sanitizer, coverage |
 | [c-project-debug](skills/c-project-debug/) | debug.md | Crash, segfault, hang investigation |
-| [c-project-commit](skills/c-project-commit/) | commit.md | Stage, commit, push |
+| [c-project-commit](skills/c-project-commit/) | commit.md | Stage, commit, amend, push |
 | [c-project-style](skills/c-project-style/) | style.md | Write or review .c/.h files |
 
 ## Architecture

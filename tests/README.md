@@ -13,39 +13,56 @@ Lightweight Python eval harness for testing agent skill instructions. Each skill
 
 ```
 tests/
-├── run_eval.py              # Universal runner
+├── run_eval.py              # Universal eval runner (baselines vs checks)
+├── run_smoke.py             # Live smoke tests against real projects
+├── run_integration.py       # Cross-skill handoff validation
+├── run_regression.py        # Baseline diff against git ref
+├── run_diff.py              # Quick baseline diff tool
 ├── README.md
 └── evals/
-    ├── c-scaffold/       # One directory per skill
+    ├── c-project-init/      # One directory per skill
     │   ├── prompts.json     # Prompt definitions + expected checks
     │   ├── checks.py        # Deterministic check functions
-    │   └── baselines/        # AI-generated baseline outputs
-    └── <next-skill>/
-        ├── prompts.json
-        ├── checks.py
-        └── baselines/
+    │   └── baselines/       # AI-generated baseline outputs
+    ├── c-project-build/
+    ├── c-project-debug/
+    ├── c-project-commit/
+    ├── c-project-style/
+    └── integration/         # Cross-skill checks
 ```
 
 ## Usage
 
 ```bash
-# Run all skills
+# Run all skill evals
 python tests/run_eval.py
 
-# Run one skill
-python tests/run_eval.py c-scaffold
+# Run one skill eval
+python tests/run_eval.py c-project-build
 
-# Run one skill with custom output directory
-python tests/run_eval.py c-scaffold path/to/outputs
+# Run one skill eval with custom output directory
+python tests/run_eval.py c-project-build path/to/outputs
+
+# Run smoke tests (requires real project)
+python tests/run_smoke.py
+python tests/run_smoke.py init
+
+# Run integration tests (cross-skill)
+python tests/run_integration.py
+
+# Diff baselines against git ref
+python tests/run_regression.py
+python tests/run_regression.py c-project-build --ref HEAD~3
 ```
 
 ## Workflow after changing skill instructions
 
-1. Modify skill references (e.g. `skills/c-scaffold/references/setup.md`)
+1. Modify skill references (e.g. `skills/c-project-build/references/build.md`)
 2. Ask the AI to re-read the updated skill instructions and regenerate sample-outputs
 3. Run `python tests/run_eval.py` to verify checks still pass
-4. If checks fail, either fix the skill instructions or update checks.py
-5. Commit the updated baselines as the new baseline
+4. Run `python tests/run_regression.py` to see what changed in baselines
+5. If checks fail, either fix the skill instructions or update checks.py
+6. Commit the updated baselines as the new baseline
 
 ## Adding a new skill eval
 
@@ -54,7 +71,7 @@ python tests/run_eval.py c-scaffold path/to/outputs
 3. Add `checks.py` — functions named `check_<name>` decorated with `@directory_check` or `@text_check`
 4. Ask the AI to read the skill instructions and generate responses for each prompt
 5. Save AI responses into `baselines/<prompt-id>/output.txt` (text) or `baselines/<prompt-id>/project/` (directory)
-6. Run: `python tests/run_eval.py <skill-name>`
+6. Run: `python tests/run_eval.py <skill-name>` (e.g. `python tests/run_eval.py c-project-style`)
 7. Commit baselines
 
 ## Writing checks
